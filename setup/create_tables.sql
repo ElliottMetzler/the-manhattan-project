@@ -50,4 +50,6 @@ CREATE TABLE all_cocktails (
     strImageAttribution varchar,
     strCreativeCommonsConfirmed varchar, 
     dateModified varchar NOT NULL
-    )
+    );
+    
+CREATE INDEX drink_idx ON all_cocktails (strDrink);
