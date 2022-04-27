@@ -67,3 +67,62 @@ liquid_units = {"oz":1,
                 "small bottle":7,
                }
 
+def frac_to_dec_converter(num_strings):
+    '''Takes a list of strings that contains fractions and convert them into floats.'''
+    
+    result = []
+
+    for frac_str in num_strings:
+        try:
+            converted = float(frac_str)
+        except ValueError:
+            num, denom = frac_str.split('/')
+            try:
+                leading, num = num.split(' ')
+                total = float(leading)
+            except ValueError:
+                total = 0
+            frac = float(num) / float(denom)
+            converted = total + frac
+
+        result.append(converted)
+        
+    return result
+
+def unit_unify(list_of_texts):
+    '''Takes a list of strings that contains liquid units, and converts them into fluid ounces.'''
+    
+    pattern = r"(^[\d -/]+)(oz|ml|cl|tsp|teaspoon|teaspoons|tea spoon|tbsp|tablespoon|tablespoons|table spoon|cup|cups|qt|quart|quarts|drop|drop|shot|shots|cube|cubes|dash|dashes|l|L|liters|Liters|wedge|wedges|pint|pints|slice|slices|twist of|top up|small bottle)"
+
+
+    new_list = []
+     
+    for text in list_of_texts:
+        re_result = re.search(pattern, text)
+        
+        if re_result:
+            amount = re_result.group(1).strip()
+            unit = re_result.group(2).strip()
+
+            if "-" in amount:
+                ranged = True
+            else:
+                ranged = False
+            
+            amount = re.sub(r"(\d) (/\d)",r"\1\2",amount) 
+            amount = amount.replace("-","+").replace(" ","+").strip()
+            amount = re.sub(r"[+]+","+",amount)
+            amount_in_dec = frac_to_dec_converter(amount.split("+"))
+            amount = np.sum(amount_in_dec)
+            
+            if ranged:
+                to_oz = (amount*liquid_units[unit])/2
+            else:
+                to_oz = amount*liquid_units[unit]
+
+            new_list.append(str(round(to_oz,2))+" oz")
+
+        else:
+            new_list.append(text)
+            
+    return new_list
