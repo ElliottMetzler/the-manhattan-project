@@ -5,14 +5,17 @@ import os
 
 if __name__ == "__main__":
     BASE_DIR = "data"
-    CSV_PATH = os.path.join(BASE_DIR, "raw_data.csv")
+    IN_PATH = os.path.join(BASE_DIR, "raw_data.csv")
+    OUT_PATH = os.path.join(BASE_DIR, "parsed_data.csv")
     os.makedirs(BASE_DIR, exist_ok=True)
 
 '''Extract ingredient measurement columns from the csv as a dataframe.'''
 
 df = (
-    pd.read_csv(CSV_PATH, header=None)
+    pd.read_csv(IN_PATH, index_col=None, header=None)
     .iloc[:, 33:47]
+    .fillna(0)
+    .astype(str)
      )
 
 '''Remove all numbers and create a list of unique values of units of measurements'''
@@ -120,9 +123,16 @@ def unit_unify(list_of_texts):
             else:
                 to_oz = amount*liquid_units[unit]
 
-            new_list.append(str(round(to_oz,2))+" oz")
+            new_list.append(str(round(to_oz,2)))
 
         else:
             new_list.append(text)
             
     return new_list
+
+'''Convert units within each measurement column and save results to a csv.'''
+
+for i in df.columns:
+    df[i] = unit_unify(df[i])
+    
+df.to_csv(OUT_PATH, index=False, header=False)
