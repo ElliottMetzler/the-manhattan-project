@@ -33,8 +33,13 @@ With our extensive list of cocktails, we used GCP Buckets to upload the csv file
 
 ### Data
 
+#### Description of the Raw Data
+
 The raw data contains an entry (row) for each drink and many descriptive features (columns) about that drink. In addition to a unique ID for each drink and the drink name, it contains many classification fields such as the the drink category (i.e. cocktail, shot, punch/party drink, etc.), whether or not the drink is alcoholic and the type of glass this drink typically requires. Furthermore, it contains fields containing written instructions in multiple languages including english, german, french and italian. Most importantly, each cocktail has a set of columns reporting the ingredients required and a corresponding set of columns reporting the measurements of those ingredients. In the raw data, these ingredient measurements are non-standard in format and unit, including entries such as "2 shots", "2L", or "3 parts." Because these measurements are non-standard, this represented the biggest data cleaning effort to make our data useable for analysis.
 
+#### Cleaning Process
+
+[[To be continued]]
 
 
 
