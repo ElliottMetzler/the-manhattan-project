@@ -3,7 +3,6 @@ import requests
 import pandas as pd
 import os
 import string
-import json
 
 if __name__ == "__main__":
     BASE_DIR = "data"
