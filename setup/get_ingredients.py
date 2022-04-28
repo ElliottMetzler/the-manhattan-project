@@ -18,4 +18,6 @@ response.raise_for_status()
 response_json = response.json()
 ingredients_frame = json_normalize(response_json["drinks"])
 
+ingredients_frame["strIngredient1"] = ingredients_frame["strIngredient1"].str.lower()
+
 ingredients_frame.to_csv(INGREDIENTS_PATH, index=False)
