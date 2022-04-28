@@ -9,16 +9,16 @@ if __name__ == "__main__":
     OUT_PATH = os.path.join(BASE_DIR, "parsed_data.csv")
     os.makedirs(BASE_DIR, exist_ok=True)
 
-'''Extract ingredient measurement columns from the csv as a dataframe.'''
+"""Extract ingredient measurement columns from the csv as a dataframe."""
 
 df = (
     pd.read_csv(IN_PATH, index_col=None, header=None)
-    .iloc[:, 33:47]
+    .iloc[:, 32:47]
     .fillna(0)
     .astype(str)
      )
 
-'''Remove all numbers and create a list of unique values of units of measurements'''
+"""Remove all numbers and create a list of unique values of units of measurements"""
 
 all_values = list(np.unique(df.values))
 
@@ -29,9 +29,21 @@ for unit in all_values:
     
 no_numbers = list(set(no_numbers))
 
-'''Create a dictionary converting all units of measurement to ounces.'''
+def make_conversion_dict(str_list):
+    """Creates dictionary keys from list items"""
 
-liquid_units = {"oz":1,
+    conversion_dict = {}
+
+    for string in str_list:
+        conversion_dict[string] = None
+
+    return conversion_dict
+
+
+"""Create a dictionary converting all units of measurement to ounces."""
+
+liquid_units = {"":1,
+                "oz":1,
                 "ml":0.033814,
                 "cl":0.33814,
                 "tsp":0.166667,
@@ -75,7 +87,7 @@ liquid_units = {"oz":1,
                }
 
 def frac_to_dec_converter(num_strings):
-    '''Takes a list of strings that contains fractions and convert them into floats.'''
+    """Takes a list of strings that contains fractions and convert them into floats."""
     
     result = []
 
@@ -96,10 +108,17 @@ def frac_to_dec_converter(num_strings):
         
     return result
 
+def make_pattern(str_list):
+    """Divides string list into readable pattern for regex."""
+    str_pattern = ""
+    for string in str_list:
+        str_pattern += f"{string}|" 
+    return str_pattern
+
 def unit_unify(list_of_texts):
-    '''Takes a list of strings that contains liquid units, and converts them into fluid ounces.'''
-    
-    pattern = r"(^[\d -/]*)(oz|ml|cl|tsp|teaspoon|teaspoons|tea spoon|tbsp|tablespoon|tablespoons|table spoon|cup|cups|qt|quart|quarts|drop|drop|shot|shots|cube|cubes|dash|dashes|l|L|liters|Liters|wedge|wedges|pint|pints|slice|slices|twist of|top up|small bottle|Smirnoff red label|Juice of|Fresh)"
+    """Takes a list of strings that contains liquid units, and converts them into fluid ounces."""
+    str_pattern = make_pattern(no_numbers)
+    pattern = fr"(^[\d -/]*)({str_pattern})"
 
 
     new_list = []
@@ -136,7 +155,7 @@ def unit_unify(list_of_texts):
             
     return new_list
 
-'''Convert units within each measurement column and save results to a csv.'''
+"""Convert units within each measurement column and save results to a csv."""
 
 for i in df.columns:
     df[i] = unit_unify(df[i])
