@@ -1,4 +1,3 @@
-from bs4 import BeautifulSoup
 from pandas import json_normalize
 import requests
 import pandas as pd
@@ -8,61 +7,43 @@ import json
 
 if __name__ == "__main__":
     BASE_DIR = "data"
-    CSV_PATH = os.path.join(BASE_DIR, "raw_data.csv")
-    CSV_PATH1 = os.path.join(BASE_DIR, "complete_raw_data.csv")
+    NO_HEADER_PATH = os.path.join(BASE_DIR, "no_header_complete_raw_data.csv")
+    WITH_HEADER_PATH = os.path.join(BASE_DIR, "header_complete_raw_data.csv")
     os.makedirs(BASE_DIR, exist_ok=True)
-    
+    HEADER_PATH = os.path.join(BASE_DIR, "headers_only.csv")
 
 BASE_URL = ("http://www.thecocktaildb.com/api/json/v1/1/search.php?f=")
 
 ALPHA = list(string.ascii_lowercase)
-
-page_links = []
-
-for n in ALPHA:
-    url = '{}{}'.format(BASE_URL, n)
-    page_links.append(url)
-    
-try1 = []
-for url in page_links:
-    response = requests.get(url)
-    response.raise_for_status()
-    response_json = response.json()
-    try1.append(response_json["drinks"])
-    
-
-normalize = json_normalize(try1)
-df = pd.DataFrame(normalize)
-raw_data = pd.DataFrame(df.stack().apply(pd.Series))
-
-raw_data.to_csv(CSV_PATH)
-
-
-BASE_URL2 = ("http://www.thecocktaildb.com/api/json/v1/1/search.php?f=")
-
 NUM = list(string.digits)
 NUM.extend(ALPHA)
 NUM.remove("0")
 NUM.remove("8")
 
-page_links2 = []
+page_links = []
 
 for n in NUM:
-    url2 = '{}{}'.format(BASE_URL2, n)
-    page_links2.append(url2)
+    url = '{}{}'.format(BASE_URL, n)
+    page_links.append(url)
     
-try2 = []
-for url in page_links2:
-    response1 = requests.get(url)
-    response1.raise_for_status()
-    response1_json = response1.json()
-    try2.append(response1_json["drinks"])
+list_of_pages = []
+for url in page_links:
+    response = requests.get(url)
+    response.raise_for_status()
+    response_json = response.json()
+    list_of_pages.append(response_json["drinks"])
 
 
-normalize1 = json_normalize(try2)
-df1 = pd.DataFrame(normalize1)
-raw_data1 = pd.DataFrame(df1.stack().apply(pd.Series))
+normalize = json_normalize(list_of_pages)
+df = pd.DataFrame(normalize)
+raw_data = pd.DataFrame(df.stack().apply(pd.Series))
 
-raw_data1.reset_index(drop=True, inplace=True)
+raw_data.reset_index(drop=True, inplace=True)
 
-raw_data1.to_csv(CSV_PATH1, index=False)
+raw_data.to_csv(NO_HEADER_PATH, index=False, header=False)
+
+raw_data.to_csv(WITH_HEADER_PATH, index=False)
+
+headers = pd.DataFrame(raw_data.columns.values)
+
+headers.to_csv(HEADER_PATH, header = ["column names"], index=False)
