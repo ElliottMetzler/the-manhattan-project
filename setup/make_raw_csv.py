@@ -38,7 +38,7 @@ raw_data = pd.DataFrame(df.stack().apply(pd.Series))
 raw_data.to_csv(CSV_PATH)
 
 
-BASE_URL2 = ("http://www.thecocktaildb.com/api/json/v2/9973533/search.php?f=")
+BASE_URL2 = ("http://www.thecocktaildb.com/api/json/v1/1/search.php?f=")
 
 NUM = list(string.digits)
 NUM.extend(ALPHA)
