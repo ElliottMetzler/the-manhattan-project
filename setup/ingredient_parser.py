@@ -95,6 +95,9 @@ def unit_unify(list_of_texts, unit_dict):
             else:
                 ranged = False
             
+            hyphen_pattern = re.compile(r'(?!(?<=\d)-\d)-')
+            amount = (re.sub(hyphen_pattern, "", amount))
+            
             amount = re.sub(r"(\d) (/\d)",r"\1\2",amount) 
             amount = amount.replace("-","+").replace(" ","+").strip()
             amount = re.sub(r"[+]+","+",amount)
