@@ -20,4 +20,4 @@ ingredients_frame = json_normalize(response_json["drinks"])
 
 ingredients_frame["strIngredient1"] = ingredients_frame["strIngredient1"].str.lower()
 
-ingredients_frame.to_csv(INGREDIENTS_PATH, index=False)
+ingredients_frame.to_csv(INGREDIENTS_PATH, index=False, header=False)
