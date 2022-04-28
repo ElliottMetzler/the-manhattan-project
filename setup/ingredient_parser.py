@@ -63,11 +63,15 @@ liquid_units = {"oz":1,
                 "wedges":0.125,
                 "pint":16,
                 "pints":16,
-                "slice":0.50721,
-                "slices":0.50721,
+                "slice":0.50721, 
+                "slices":0.50721, 
                 "twist of":0.0705479,
                 "top up":1,
                 "small bottle":7,
+                "Smirnoff red label":25.3605,
+                "Juice of":1,
+                "Fresh":1
+                
                }
 
 def frac_to_dec_converter(num_strings):
@@ -95,7 +99,7 @@ def frac_to_dec_converter(num_strings):
 def unit_unify(list_of_texts):
     '''Takes a list of strings that contains liquid units, and converts them into fluid ounces.'''
     
-    pattern = r"(^[\d -/]+)(oz|ml|cl|tsp|teaspoon|teaspoons|tea spoon|tbsp|tablespoon|tablespoons|table spoon|cup|cups|qt|quart|quarts|drop|drop|shot|shots|cube|cubes|dash|dashes|l|L|liters|Liters|wedge|wedges|pint|pints|slice|slices|twist of|top up|small bottle)"
+    pattern = r"(^[\d -/]*)(oz|ml|cl|tsp|teaspoon|teaspoons|tea spoon|tbsp|tablespoon|tablespoons|table spoon|cup|cups|qt|quart|quarts|drop|drop|shot|shots|cube|cubes|dash|dashes|l|L|liters|Liters|wedge|wedges|pint|pints|slice|slices|twist of|top up|small bottle|Smirnoff red label|Juice of|Fresh)"
 
 
     new_list = []
@@ -105,6 +109,8 @@ def unit_unify(list_of_texts):
         
         if re_result:
             amount = re_result.group(1).strip()
+            if not amount:
+                amount = "1.0"
             unit = re_result.group(2).strip()
 
             if "-" in amount:
