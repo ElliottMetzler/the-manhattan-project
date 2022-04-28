@@ -65,4 +65,4 @@ raw_data1 = pd.DataFrame(df1.stack().apply(pd.Series))
 
 raw_data1.reset_index(drop=True, inplace=True)
 
-raw_data1.to_csv(CSV_PATH1)
+raw_data1.to_csv(CSV_PATH1, index=False)
