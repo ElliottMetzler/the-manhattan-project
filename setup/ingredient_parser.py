@@ -8,7 +8,7 @@ def extract_columns(in_path):
     """Extract ingredient measurement columns from the csv as a dataframe and remove commas and paranthesis."""
     df = (
         pd.read_csv(in_path, index_col=None, header=None)
-        .iloc[:, 32:47]
+        .iloc[:, 34:47]
         .fillna(0)
         .astype(str)
          )
