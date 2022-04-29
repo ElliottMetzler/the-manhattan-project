@@ -1,6 +1,7 @@
 column names
 idDrink
 strDrink
+strDrinkAlternate
 strTags
 strVideo
 strCategory
@@ -8,8 +9,12 @@ strIBA
 strAlcoholic
 strGlass
 strInstructions
+strInstructionsES
 strInstructionsDE
+strInstructionsFR
 strInstructionsIT
+strInstructionsZH-HANS
+strInstructionsZH-HANT
 strDrinkThumb
 strIngredient1
 strIngredient2
@@ -23,6 +28,9 @@ strIngredient9
 strIngredient10
 strIngredient11
 strIngredient12
+strIngredient13
+strIngredient14
+strIngredient15
 strMeasure1
 strMeasure2
 strMeasure3
@@ -35,8 +43,10 @@ strMeasure9
 strMeasure10
 strMeasure11
 strMeasure12
+strMeasure13
+strMeasure14
+strMeasure15
 strImageSource
 strImageAttribution
 strCreativeCommonsConfirmed
 dateModified
-NIngredients
