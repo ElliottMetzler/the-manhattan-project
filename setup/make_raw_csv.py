@@ -41,6 +41,9 @@ raw_data.reset_index(drop=True, inplace=True)
 
 raw_data["NIngredients"] = raw_data[["strIngredient1","strIngredient2","strIngredient3","strIngredient4","strIngredient5","strIngredient6","strIngredient7","strIngredient8","strIngredient9","strIngredient10","strIngredient11","strIngredient12"]].count(axis='columns')
 
+
+raw_data = raw_data.drop(raw_data.columns[[2, 10, 12, 14, 15, 29, 30, 31, 44, 45, 46]], axis=1)
+
 raw_data.to_csv(NO_HEADER_PATH, index=False, header=False)
 
 raw_data.to_csv(WITH_HEADER_PATH, index=False)
