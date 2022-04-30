@@ -21,7 +21,7 @@ def add_drop_columns(in_path):
             pd.read_csv(in_path, index_col=None)
             .drop(cols, axis=1)
             .assign(total_ingredients=lambda df: df[cols1].count(axis='columns'))
-            .fillna(0)
+            .fillna(" ")
             .astype(str)
              )
 
@@ -40,6 +40,20 @@ def extract_columns(dataframe):
     df1 = dataframe[cols]
     
     return df1
+
+def create_units_list(dataframe):
+    """Remove all numbers and create a list of unique values of units of measurements"""
+
+    all_values = list(np.unique(dataframe.values))
+
+    units_list = [] 
+
+    for unit in all_values:
+        units_list.append(re.sub("[^a-zA-Z ]","",unit).strip())
+
+    units_list = list(set(units_list))
+    
+    return units_list
     
 def create_dict():
     """Creates a dictionary for converting measurments units to ounces."""
@@ -119,7 +133,7 @@ def create_dict():
      'tblsp ground':0.5,
      'tblsp instant':0.5,
      'tblsp fresh chopped':0.5,
-     'tblsp fresh':0.5
+     'tblsp fresh':0.5,
      'tablespoons':0.5,
      'ml pure':0.033814,
      'ml white':0.033814,
@@ -233,13 +247,13 @@ def create_dict():
      'Whole':0.5,
      'whole':0.5,
      'whole green':0.5, 
-     'About  bottle':,
-     'bottle':,
-     'bottles':,
-     'large bottle':,
-     'small bottle':,     
-     'mikey bottle':,
-     'bottle Boone Strawberry Hill':,
+     'About  bottle':25.4,
+     'bottle':25.4,
+     'bottles':25.4,
+     'large bottle':25.4,
+     'small bottle':12.07,     
+     'mikey bottle':12,
+     'bottle Boone Strawberry Hill':25.4,
      'sticks':0.1,
      'stick':0.1,
      'twist of':0.07, 
@@ -294,6 +308,7 @@ def create_dict():
      
 
             }
+    return convert_dict
 
 def frac_to_dec_converter(num_strings):
     """Takes a list of strings that contains fractions and convert them into floats."""
@@ -370,23 +385,37 @@ def unit_unify(list_of_texts, unit_dict):
             
     return new_list
 
-def convert_columns(dataframe, unit_dict, out_path):
+def convert_columns(dataframe, unit_dict):
     """Convert units within each measurement column and save results to a csv."""
-
+    
     for i in dataframe.columns:
-        dataframe[i] = unit_unify(dataframe[i], unit_dict)
+            dataframe[i] = unit_unify(dataframe[i], unit_dict)
 
-    dataframe.to_csv(out_path, index=False, header=False)
+    return dataframe
+
+def create_csv(dataframe, path1, path2):
+    """Combine converted columns with the original dataframe. Return dataframe as two csv files: a csv without headers and a csv of header names."""
+    
+    df2 = df.assign(**df1).fillna(df)
+    
+    df2.to_csv(path1, index=False, header=False)
+    
+    
+    headers = pd.DataFrame(df2.columns.values)
+
+    headers.to_csv(path2, header = ["column names"], index=False)
 
 
 if __name__ == "__main__":
     BASE_DIR = "data"
-    RAW__DATA_PATH = os.path.join(BASE_DIR, "raw_data.csv")
-    OUT_PATH = os.path.join(BASE_DIR, "parsed_clean_data.csv")
+    IN_PATH = os.path.join(BASE_DIR, "raw_data.csv")
+    NO_HEADER_PATH = os.path.join(BASE_DIR, "parsed_clean_data.csv")
+    HEADER_PATH = os.path.join(BASE_DIR, "headers.csv")
     os.makedirs(BASE_DIR, exist_ok=True)
     
     df = add_drop_columns(IN_PATH)
     df1 = extract_columns(df)
     units_list = create_units_list(df1)
-    convert_dict = append_dict_value(units_list)
-    convert_columns(df, convert_dict, OUT_PATH)
+    convert_dict = create_dict()
+    dataframe = convert_columns(df1, convert_dict)
+    create_csv(dataframe, NO_HEADER_PATH, HEADER_PATH)
