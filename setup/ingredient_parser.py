@@ -4,42 +4,296 @@ import re
 import os
 
 
-def extract_columns(in_path):
-    """Extract ingredient measurement columns from the csv as a dataframe and remove commas and paranthesis."""
+def add_drop_columns(in_path):
+    """Drop extraneous columns, and add a total ingredient count column and 12 new ingredient measurement columns with commas, parentheses, and new line characters removed from the dataframe."""
+
+    cols = ["strDrinkAlternate","strInstructionsES","strInstructionsFR","strInstructionsZH-HANS",
+        "strInstructionsZH-HANT","strIngredient13","strIngredient14","strIngredient15","strMeasure13",
+        "strMeasure14","strMeasure15"]
+
+    cols1 = ["strIngredient1","strIngredient2","strIngredient3","strIngredient4","strIngredient5","strIngredient6",
+            "strIngredient7","strIngredient8","strIngredient9","strIngredient10","strIngredient11","strIngredient12"]
+
+    cols2 = ["strMeasure1","strMeasure2","strMeasure3","strMeasure4","strMeasure5","strMeasure6","strMeasure7",
+             "strMeasure8","strMeasure9","strMeasure10","strMeasure11","strMeasure12"]
+
     df = (
-        pd.read_csv(in_path, index_col=None, header=None)
-        .iloc[:, 34:47]
-        .fillna(0)
-        .astype(str)
-         )
-    for col in df.columns:
-        df[col]=df[col].str.replace(r"\(|\)|,", "")
-        
+            pd.read_csv(in_path, index_col=None)
+            .drop(cols, axis=1)
+            .assign(total_ingredients=lambda df: df[cols1].count(axis='columns'))
+            .fillna(0)
+            .astype(str)
+             )
+
+    df[pd.Index(cols2) + "_clean"] = df[cols2].apply(lambda col: col.str.replace(r"\(|\)|,|\n", ""))
+
+
     return df
+
+def extract_columns(dataframe):
+    """Extract cleaned ingredient measurement columns from the dataframe."""
     
-def create_units_list(dataframe):
-    """Remove all numbers and create a list of unique values of units of measurements"""
-
-    all_values = list(np.unique(dataframe.values))
-
-    units_list = [] 
-
-    for unit in all_values:
-        units_list.append(re.sub("[^a-zA-Z ]","",unit).strip())
-
-    units_list = list(set(units_list))
+    cols = ["strMeasure1_clean","strMeasure2_clean","strMeasure3_clean","strMeasure4_clean","strMeasure5_clean",
+             "strMeasure6_clean","strMeasure7_clean","strMeasure8_clean","strMeasure9_clean","strMeasure10_clean",
+             "strMeasure11_clean","strMeasure12_clean"]
     
-    return units_list
-
-
-def append_dict_value(unit_list):
+    df1 = dataframe[cols]
+    
+    return df1
+    
+def create_dict():
     """Creates a dictionary for converting measurments units to ounces."""
-    
-    dict_value_list = [1, 0.0705479, 1, 8, 1, 8, 1, 0.125, 0.033814, 1, 1, 3.3814, 1, 0.0016907, 0.5, 12, 1.5, 8, 0.033814, 0.035, 8, 0.5, 0.105822, 0.166667, 0.5, 1, 0.0016907, 12, 8, 0.5, 0.125, 8, 8, 0.166667, 3.2, 0.2, 1, 0.26, 0.33814, 0.035274, 0.010, 1, 12, 12.6803, 6, 6, 0.2, 1, 33.814, 1, 33.814, 8, 0.166667, 1, 1, 0.50721, 0.33814,0.50721, 6, 0.554113, 1.5, 1, 0.375, 0.166667, 0.010, 8, 1, 8, 0.03125, 1, 1, 1, 1, 1, 5, 1, 0.166667, 1, 0.166667, 8, 1, 0.03125, 12, 0.31, 0.0705479, 7.5, 1.5, 1, 1, 0.035, 8, 0.105822, 128, 8, 8, 1, 1, 0.01, 0.010, 0.01, 1, 0.166667, 0.03125, 8, 0.125, 1.5, 3, 2, 1, 0.010, 1, 0.166667, 1, 0.26, 3, 1, 0.033814, 0.333333, 8, 1, 16, 0.0016907, 0.5, 8, 0.0705479, 8, 0.5, 6, 0.5, 8, 1, 1, 1, 0.166667, 1.5, 0.125, 1, 1, 0.2, 16, 0.166667, 3.3814, 0.5, 3, 8, 33.814, 1, 1, 8, 7, 1, 1, 1, 0.03125, 1, 8, 1, 1, 1.5, 2, 0.5, 0.033814, 0.166667, 1, 1, 1, 5.08, 0.31, 1.5, 0.33814, 0.5, 1.5, 5, 0.01, 1, 1, 14, 0.03125, 12, 25.4, 1, 0.0705479, 1]
+    convert_dict = {
+     '':1,
+     'oz light':1,
+     'oz hot':1,
+     'oz':1,
+     'oz white or':1,
+     'oz Hazlenut':1,
+     'oz cold':1,
+     'oz Green Ginger':1,
+     'oz Muscatel':1,
+     'oz whole':1,
+     'oz pure':1,
+     'oz dry':1,
+     'oz instant':1,
+     'oz sweetened':1,
+     'oz chopped bittersweet or semisweet':1,
+     'oz skimmed':1,
+     'mlfl oz':1,
+     'oz frozen':1,
+     'oz double':1,
+     'oz lemon':1,
+     'oz sweet':1,
+     'oz Mexican':1,
+     'oz finely chopped dark':1,
+     'oz unsweetened':1,
+     'oz fine':1,
+     'oz Chilled':1,
+     'oz Bacardi':1,
+     'oz Stoli':1,
+     'oz plain':1,
+     'oz white':1,
+     'oz blue':1,
+     'oz Jamaican':1,
+     'oz Blended':1,
+     'oz cream':1,
+     'oz chilled':1,
+     'oz red':1,
+     'oz Grape':1,
+     'oz light or dark':1,
+     'Add  oz':1,
+     'Fill to top':1,
+     'top up with':1,
+     'for topping':1,
+     'Top it up with':1,
+     'Top up with':1,
+     'Top':1,
+     'top up':1,
+     'Fill to top with':1,
+     'to fill':1,
+     'Fill with':1,
+     'fill':1,
+     'Shot':1.5,
+     'shot Jamaican':1.5,
+     'shot Bacardi':1.5,  
+     'shot':1.5,
+     'shots':1.5,
+     'tsp dried':0.166667,
+     'tsp crushed':0.166667,
+     'tsp':0.166667,
+     'tsp sweetened':0.166667,
+     'tsp superfine':0.166667,
+     'tsp dried and chopped':0.166667,
+     'tsp Tropical':0.166667,
+     'tsp ground':0.166667,
+     'tsp grated':0.166667,
+     'tsp powdered':0.166667,
+     'tsp instant':0.166667,
+     'tsp ground roasted':0.166667,
+     'tbsp':0.5,
+     'tblsp chopped':0.5,
+     'tblsp green':0.5,
+     'tblsp hot':0.5,
+     'tblsp':0.5,
+     'tblsp ground':0.5,
+     'tblsp instant':0.5,
+     'tblsp fresh chopped':0.5,
+     'tblsp fresh':0.5
+     'tablespoons':0.5,
+     'ml pure':0.033814,
+     'ml white':0.033814,
+     'ml frozen':0.033814,
+     'ml':0.033814,
+     'Add  ml':0.033814,
+     'cL':0.33814,
+     'cl':0.33814,
+     'cl hot':0.33814,
+     'cl cold':0.33814,
+     'cl Smirnoff':0.33814,
+     'dl':3.3814,
+     'dl Schweppes':3.3814,
+     'L':33.814,
+     'L Jamaican':33.814,
+     'cups white':8,
+     'cup boiling':8,
+     'cup mild':8,
+     'cup plain':8,
+     'cup granulated':8,
+     'cup superfine':8,
+     'Cup':8,
+     'cup iced':8,
+     'cup black':8,
+     'cup cold':8,
+     'cups':8,
+     'cup pure':8,
+     'cup hot':8,
+     'cups fresh':8,
+     'cups cold':8,
+     'cup instant':8,
+     'cup':8,
+     'cups hot':8,
+     'cup Thai':8,
+     'cup fruit':8,
+     'Add  cup':8,
+     'cup crushed':8,
+     'cup skimmed':8,
+     'cups boiling':8,
+     'glass crushed':8,
+     'glass cold':8,
+     'glass strong black':8,   
+     'full glass':8,
+     'Full Glass':8,
+     'glass':8,
+     'Around rim put pinch':0.010,
+     'pinches':0.010,
+     'pinch':0.010,
+     'Pinch':0.010,
+     'oneinch':0.554113,
+     'inch':0.554113,
+     'inch strips':0.554113, 
+     'drops yellow':0.0016907,
+     'drops':0.0016907,
+     'drop green':0.0016907,
+     'drop':0.0016907,
+     'drops blue':0.0016907,
+     'drop yellow':0.0016907,
+     'About  drops':0.0016907,
+     'drops red':0.0016907,
+     'pint':16,
+     'pint Jamaican':16,
+     'pint sweet or dry':16,  
+     'pint hard':16,
+     'Dashes':0.021,
+     'Dash':0.021,
+     'dashes':0.021,
+     'dash':0.021,
+     'can frozen':13.5,
+     'can sweetened':13.5,
+     'cans':13.5,
+     'can':13.5,
+     'gal Tropical Berry':153.722, 
+     'gal':153.722,
+     'quart':32,
+     'quart black':32,
+     'qt':32,
+     'lb':16,
+     'lb frozen':16,
+     'slice':0.5,
+     'Slice':0.5,
+     'part':1,
+     'part Bass pale':1,
+     'parts':1,
+     'Juice of  wedge':1,
+     'wedges':1, 
+     'wedge':1,
+     'Wedges':1,
+     'Sprig':0.08,
+     'Large Sprig':0.08,
+     'sprigs':0.08, 
+     'splash':0.2,
+     'Add splash':0.2,
+     'splashes':0.2,
+     'jiggers':1.5, 
+     'jigger':1.5,
+     'piece textural':1,
+     'piece':1,
+     'pieces':1,
+     'chunk dried':1,
+     'chunks':1,
+     'Fresh':0.2, 
+     'Fresh leaves':0.2,
+     'fresh':0.2,
+     'cubes':4, 
+     'cube':4,
+     'Ground':0.33,
+     'ground':0.33,
+     'crushed':0.33,
+     'cracked':0.33,
+     'Whole':0.5,
+     'whole':0.5,
+     'whole green':0.5, 
+     'About  bottle':,
+     'bottle':,
+     'bottles':,
+     'large bottle':,
+     'small bottle':,     
+     'mikey bottle':,
+     'bottle Boone Strawberry Hill':,
+     'sticks':0.1,
+     'stick':0.1,
+     'twist of':0.07, 
+     'Twist of':0.07,
+     'packages':0.5,
+     'package':0.5,
+     'Garnish':0.05,
+     'Garnish with':0.05,
+     'garnish':0.2,    
+     'gr':0.035274,
+     'kg chopped':35.274,
+     'fifth':0.2,
+     'Chopped':0.0705479,
+     'if needed':1,
+     'or':1,
+     'scoops':2.66664,
+     'fifth Smirnoff red label':5,
+     'pods':1,   
+     'handful':0.5,
+     'Juice of':1,
+     'A little bit of':1,
+     'to taste':0.166667,
+     'By taste':0.166667,
+     'Rimmed':0.166667, 
+     'measures':1.5, 
+     'Chilled':0.5,
+     'frozen':3.6,
+     'Strong cold':0.5, 
+     'Turkish apple':1,
+     'long strip':0.07, 
+     'Coarse':0.010,
+     'or lime':0.5,   
+     'ripe':0.4,
+     'Bacardi':0.5,
+     'Float Bacardi':0.5,
+     'spoons':0.5,
+     'Add':4,
+     'lots':6,  
+     'Squeeze':1,
+     'Unsweetened':0.5,
+     'mini':3,
+     'Claret':0.5,   
+     'seltzer water':1,
+     'black':0.5,
+     'Grated':0.2, 
+     'beaten':0.63,
+     'orange':20,  
+     'very sweet':0.07,
+     'large':2.5,
+     'Over':4,
 
-    convert_dict = dict(zip(unit_list, dict_value_list))
-    return convert_dict
+     
 
+            }
 
 def frac_to_dec_converter(num_strings):
     """Takes a list of strings that contains fractions and convert them into floats."""
@@ -127,11 +381,12 @@ def convert_columns(dataframe, unit_dict, out_path):
 
 if __name__ == "__main__":
     BASE_DIR = "data"
-    IN_PATH = os.path.join(BASE_DIR, "raw_data1.csv")
-    OUT_PATH = os.path.join(BASE_DIR, "parsed_data.csv")
+    RAW__DATA_PATH = os.path.join(BASE_DIR, "raw_data.csv")
+    OUT_PATH = os.path.join(BASE_DIR, "parsed_clean_data.csv")
     os.makedirs(BASE_DIR, exist_ok=True)
     
-    df = extract_columns(IN_PATH)
-    units_list = create_units_list(df)
+    df = add_drop_columns(IN_PATH)
+    df1 = extract_columns(df)
+    units_list = create_units_list(df1)
     convert_dict = append_dict_value(units_list)
     convert_columns(df, convert_dict, OUT_PATH)
