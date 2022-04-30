@@ -5,7 +5,7 @@ import os
 
 
 def add_drop_columns(in_path):
-    """Drop extraneous columns, and add a total ingredient count column and 12 new ingredient measurement columns with commas, parentheses, and new line characters removed from the dataframe."""
+    """Drop extraneous columns, and add a total ingredient count column and 12 new ingredient measurement columns with commas, parentheses, and new line characters removed from the dataframe. Add 1 oz for entries where ingrdient is specified but measurement is not."""
 
     cols = ["strDrinkAlternate","strInstructionsES","strInstructionsFR","strInstructionsZH-HANS",
         "strInstructionsZH-HANT","strIngredient13","strIngredient14","strIngredient15","strMeasure13",
@@ -16,14 +16,17 @@ def add_drop_columns(in_path):
 
     cols2 = ["strMeasure1","strMeasure2","strMeasure3","strMeasure4","strMeasure5","strMeasure6","strMeasure7",
              "strMeasure8","strMeasure9","strMeasure10","strMeasure11","strMeasure12"]
-
+    
     df = (
             pd.read_csv(in_path, index_col=None)
             .drop(cols, axis=1)
+            .dropna(subset=cols2, how="all", axis=0)
             .assign(total_ingredients=lambda df: df[cols1].count(axis='columns'))
-            .fillna(" ")
-            .astype(str)
+
              )
+    
+    for col1, col2 in zip(cols1, cols2):
+        df[col2] = df[col2].mask(df[col1].notna() & df[col2].isna(), "1 oz")
 
     df[pd.Index(cols2) + "_clean"] = df[cols2].apply(lambda col: col.str.replace(r"\(|\)|,|\n", ""))
 
@@ -31,13 +34,17 @@ def add_drop_columns(in_path):
     return df
 
 def extract_columns(dataframe):
-    """Extract cleaned ingredient measurement columns from the dataframe."""
+    """Extract cleaned ingredient measurement columns as a dataframe."""
     
     cols = ["strMeasure1_clean","strMeasure2_clean","strMeasure3_clean","strMeasure4_clean","strMeasure5_clean",
              "strMeasure6_clean","strMeasure7_clean","strMeasure8_clean","strMeasure9_clean","strMeasure10_clean",
              "strMeasure11_clean","strMeasure12_clean"]
     
-    df1 = dataframe[cols]
+    df1 = (
+           dataframe.iloc[:, [df.columns.get_loc(c) for c in cols]]
+           .fillna(0)
+           .astype(str)
+              )
     
     return df1
 
@@ -56,7 +63,7 @@ def create_units_list(dataframe):
     return units_list
     
 def create_dict():
-    """Creates a dictionary for converting measurments units to ounces."""
+    """Create a dictionary for converting measurments units to ounces."""
     convert_dict = {
      '':1,
      'oz light':1,
@@ -305,13 +312,11 @@ def create_dict():
      'large':2.5,
      'Over':4,
 
-     
-
             }
     return convert_dict
 
 def frac_to_dec_converter(num_strings):
-    """Takes a list of strings that contains fractions and convert them into floats."""
+    """Take a list of strings that contains fractions and convert them into floats."""
     
     result_list = []
 
@@ -333,7 +338,7 @@ def frac_to_dec_converter(num_strings):
     return result_list
 
 def make_pattern(str_list):
-    """Divides string list into readable pattern for regex."""
+    """Divide string list into readable pattern for regex."""
     
     str_pattern = ""
     for string in str_list:
@@ -341,7 +346,7 @@ def make_pattern(str_list):
     return str_pattern
 
 def unit_unify(list_of_texts, unit_dict):
-    """Takes a list of strings that contains liquid units, and converts them into fluid ounces."""
+    """Take a list of strings that contains measurement units, and converts them into ounces."""
     
     str_pattern = make_pattern(units_list)
     pattern = fr"(^[\d -/]*)({str_pattern})"
@@ -386,7 +391,7 @@ def unit_unify(list_of_texts, unit_dict):
     return new_list
 
 def convert_columns(dataframe, unit_dict):
-    """Convert units within each measurement column and save results to a csv."""
+    """Convert units within each measurement column."""
     
     for i in dataframe.columns:
             dataframe[i] = unit_unify(dataframe[i], unit_dict)
@@ -409,7 +414,7 @@ def create_csv(dataframe, path1, path2):
 if __name__ == "__main__":
     BASE_DIR = "data"
     IN_PATH = os.path.join(BASE_DIR, "raw_data.csv")
-    NO_HEADER_PATH = os.path.join(BASE_DIR, "parsed_clean_data.csv")
+    NO_HEADER_PATH = os.path.join(BASE_DIR, "clean_data_no_header.csv")
     HEADER_PATH = os.path.join(BASE_DIR, "headers.csv")
     os.makedirs(BASE_DIR, exist_ok=True)
     
