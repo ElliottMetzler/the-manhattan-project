@@ -4,9 +4,9 @@ import re
 import os
 
 BASE_DIR = "data"
-IN_PATH = os.path.join(BASE_DIR, "raw_data.csv")
-NO_HEADER_PATH = os.path.join(BASE_DIR, "clean_data_no_header.csv")
-HEADER_PATH = os.path.join(BASE_DIR, "headers.csv")
+IN_PATH = os.path.join(BASE_DIR, "drinks_data_raw.csv")
+NO_HEADER_PATH = os.path.join(BASE_DIR, "drinks_data_clean_no_header.csv")
+HEADER_PATH = os.path.join(BASE_DIR, "drinks_data_headers.csv")
 
 
 def add_drop_columns(in_path):
