@@ -5,7 +5,7 @@ import os
 
 
 def add_drop_columns(in_path):
-    """Drop extraneous columns with few to no observations. Add a total ingredient count column and 12 new ingredient measurement columns with commas, parentheses, and new line characters removed. Add 1 oz for entries where ingrdient is specified but measurement is not. Replace commas in instructions columns with periods. Replace new line characters in the instructions, and image attribution columns with space."""
+    """Drop extraneous columns with few to no observations. Add a total ingredient count column and 12 new ingredient measurement columns with commas, and parentheses removed. Add 1 oz for entries where ingrdient is specified but measurement is not. Replace commas in instructions columns with periods. Replace new line characters in the measurement, instructions, and image attribution columns with space."""
 
     cols = ["strDrinkAlternate","strInstructionsES","strInstructionsFR","strInstructionsZH-HANS",
         "strInstructionsZH-HANT","strIngredient13","strIngredient14","strIngredient15","strMeasure13",
@@ -32,7 +32,7 @@ def add_drop_columns(in_path):
     for col1, col2 in zip(cols1, cols2):
         df[col2] = df[col2].mask(df[col1].notna() & df[col2].isna(), "1 oz")
 
-    df[pd.Index(cols2) + "_clean"] = df[cols2].apply(lambda col: col.str.replace(r"\(|\)|,|\r\n|\n", ""))   
+    df[pd.Index(cols2) + "_clean"] = df[cols2].apply(lambda col: col.str.replace(r"\(|\)|,", "").replace(r"\r\n|\n", " ")   
     
     df[pd.Index(cols3)] = df[cols3].apply(lambda col: col.str.replace(",",".")).replace(r"\r\n|\n", " ")
 
