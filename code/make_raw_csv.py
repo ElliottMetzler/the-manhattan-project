@@ -6,10 +6,8 @@ import string
 
 if __name__ == "__main__":
     BASE_DIR = "data"
-    NO_HEADER_PATH = os.path.join(BASE_DIR, "no_header_complete_raw_data.csv")
     WITH_HEADER_PATH = os.path.join(BASE_DIR, "header_complete_raw_data.csv")
     INGREDIENTS_PATH = os.path.join(BASE_DIR, "ingredients.csv")
-    HEADER_PATH = os.path.join(BASE_DIR, "headers_only.csv")
     os.makedirs(BASE_DIR, exist_ok=True)
 
 def create_raw_data(BASE_URL):
@@ -59,16 +57,13 @@ def create_data_onevariable(dataframe):
 
 
 def create_data_complete(dataframe):
-    dataframe.to_csv(NO_HEADER_PATH, index=False, header=False)
     dataframe.to_csv(WITH_HEADER_PATH, index=False)
-    headers = pd.DataFrame(dataframe.columns.values)
-    headers.to_csv(HEADER_PATH, header = ["column names"], index=False)
     
     return 
 
 
-raw_data = create_raw_data("http://www.thecocktaildb.com/api/json/v1/1/search.php?f=")
-ingredients = create_ingredients_data("http://www.thecocktaildb.com/api/json/v1/1/list.php?i=list") 
+raw_data = create_raw_data("http://www.thecocktaildb.com/api/json/v2/9973533/search.php?f=")
+ingredients = create_ingredients_data("http://www.thecocktaildb.com/api/json/v2/9973533/list.php?i=list") 
 create_data_onevariable(ingredients)
 create_data_complete(raw_data)
 
