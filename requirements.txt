@@ -1,4 +1,9 @@
 requests
-string
-os
 pandas
+
+streamlit
+
+jupyter
+
+nb_black
+black
