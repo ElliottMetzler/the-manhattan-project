@@ -62,8 +62,8 @@ def create_data_complete(dataframe):
     return 
 
 
-raw_data = create_raw_data("http://www.thecocktaildb.com/api/json/v2/9973533/search.php?f=")
-ingredients = create_ingredients_data("http://www.thecocktaildb.com/api/json/v2/9973533/list.php?i=list") 
+raw_data = create_raw_data("http://www.thecocktaildb.com/api/json/v1/1/search.php?f=")
+ingredients = create_ingredients_data("http://www.thecocktaildb.com/api/json/v1/1/list.php?i=list") 
 create_data_onevariable(ingredients)
 create_data_complete(raw_data)
 
