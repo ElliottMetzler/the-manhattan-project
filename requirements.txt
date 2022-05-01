@@ -8,3 +8,6 @@ jupyter
 
 nb_black
 black
+
+dotenv
+sqlalchemy
