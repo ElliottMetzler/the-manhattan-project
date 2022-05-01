@@ -5,7 +5,7 @@ import os
 
 
 def add_drop_columns(in_path):
-    """Drop extraneous columns, and add a total ingredient count column and 12 new ingredient measurement columns with commas, parentheses, and new line characters removed from the dataframe. Add 1 oz for entries where ingrdient is specified but measurement is not."""
+    """Drop extraneous columns, and add a total ingredient count column and 12 new ingredient measurement columns with commas, parentheses, and new line characters removed from the dataframe. Add 1 oz for entries where ingrdient is specified but measurement is not. Replace commas in instructions columns with periods."""
 
     cols = ["strDrinkAlternate","strInstructionsES","strInstructionsFR","strInstructionsZH-HANS",
         "strInstructionsZH-HANT","strIngredient13","strIngredient14","strIngredient15","strMeasure13",
@@ -16,6 +16,8 @@ def add_drop_columns(in_path):
 
     cols2 = ["strMeasure1","strMeasure2","strMeasure3","strMeasure4","strMeasure5","strMeasure6","strMeasure7",
              "strMeasure8","strMeasure9","strMeasure10","strMeasure11","strMeasure12"]
+    
+    cols3 = ["strInstructions","strInstructionsDE","strInstructionsIT"]
     
     df = (
             pd.read_csv(in_path, index_col=None)
@@ -29,6 +31,8 @@ def add_drop_columns(in_path):
         df[col2] = df[col2].mask(df[col1].notna() & df[col2].isna(), "1 oz")
 
     df[pd.Index(cols2) + "_clean"] = df[cols2].apply(lambda col: col.str.replace(r"\(|\)|,|\n", ""))
+    
+    df[pd.Index(cols3)] = df[cols3].apply(lambda col: col.str.replace(",","."))
 
 
     return df
