@@ -1,5 +1,5 @@
 requests
-pandas
+pandas==1.3.5
 numpy
 
 streamlit
@@ -9,5 +9,5 @@ jupyter
 nb_black
 black
 
-dotenv
-sqlalchemy
+python-dotenv==0.20.0
+SQLAlchemy==1.4.34
