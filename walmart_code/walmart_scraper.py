@@ -3,10 +3,6 @@ import requests
 from bs4 import BeautifulSoup
 import csv
 
-#url_file = 'https://raw.githubusercontent.com/ElliottMetzler/the-manhattan-project/get_data/data/ingredients.csv'
-#ingredients = pd.read_csv(url_file, header=None)
-# will use this later when the code is finished to run through the list
-
 
 header = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:99.0) Gecko/20100101 Firefox/99.0',
 'Accept': '*/*',
@@ -21,11 +17,8 @@ header = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:99.0) Geck
 'Sec-Fetch-Mode': 'cors',
 'Sec-Fetch-Site': 'cross-site'}
 
-#change cookies periodically
 
-
-
-# the actual file is on a different repo so ill replace this github link with the csv once its there
+# the actual file is on a different branch so ill replace this github link with the csv once this is there
 url_file = 'https://raw.githubusercontent.com/ElliottMetzler/the-manhattan-project/get_data/data/ingredients.csv'
 ingredients = pd.read_csv(url_file, header=None)
 
@@ -42,22 +35,27 @@ def get_wm_search(query):
 
 
 def get_item_searches(ingredients):
-    """ Takes the list of ingredients and makes a list of soups. Scared to test this, please do not test it yet. """
-    queries = []
+    """ Takes the list of ingredients and makes a list of soups."""
     search_list = []
+    llist = []
     for i in ingredients:
         response = get_wm_search(i)
         soup = BeautifulSoup(response.content)
         search_list.append(soup)
-    return search
+        queiries.append(i)
+    return llist.extend([search_list, queiries])
 
 
-    # test vodka to make sure it's not taking other items' prices that are suggested from search
-def get_page_prices(soup):
-    price_list = []
-    soup = BeautifulSoup(response.content)
-    page_results = soup.find_all('div', {'class': 'flex flex-wrap justify-start items-center lh-title mb2 mb1-m'})
-    for p in page_results:
-        price_oz = p.find('div', {'class': 'f7 f6-l gray mr1'}).text
-        price_list.append(price_oz)
-    return price_list
+
+def get_page_prices(searches):
+    """ Takes the searches and outputs a dict that has each ingredient's cost"""
+    soup = searches[0]
+    ingredient = searches[1]
+    prices = []
+    price_dict = {}
+        for s in range(len(soup)):
+        page_results = s.find_all('div', {'class': 'flex flex-wrap justify-start items-center lh-title mb2 mb1-m'})
+        for p in page_results:
+            price_oz = p.find('div', {'class': 'f7 f6-l gray mr1'}).text
+            price_dict[ingredient[s]] = price_oz
+    return price_dict
