@@ -1,6 +1,7 @@
 import streamlit as st
 
-st.write("""
+st.write(
+    """
 	# Section 1
 
 	Rather than writing a readme file, we decided to report all of our analysis and results in a Streamlit App
@@ -14,4 +15,5 @@ st.write("""
 
 	
 
-	""")
+	"""
+)
