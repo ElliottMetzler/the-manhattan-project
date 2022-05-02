@@ -1,13 +1,7 @@
 import streamlit as st
 import pandas as pd
 from database import engine
-
-# full_query = """
-# select *
-# from all_cocktails;
-# """
-
-# full_df = pd.read_sql_query(full_query, engine)
+from query_funcs import query_table_1
 
 # Booze List for selector
 boozes = ["Gin",
@@ -39,23 +33,17 @@ primary_booze_selection = st.sidebar.selectbox(
 )
 
 # Add a slider to the sidebar:
-add_slider = st.sidebar.slider(
+num_ingredients_selection = st.sidebar.slider(
 	"Select the Number of Ingredients Available",
-	0, 10
+	1, 10
 )
 
-st.write(f"You Chose {primary_booze_selection} for your booze and {add_slider} for your ingredient count.")
+# Add drink output table  using function from query_funcs.
+table_1_df = query_table_1(primary_booze_selection,num_ingredients_selection)
 
+st.dataframe(table_1_df,
+	width = 1600,
+	height = 1000)
 
-query1 = f"""
-select 
-	strdrink,
-	strinstructions
-from all_cocktails
-where stringredient1 = '{primary_booze_selection}';
-"""
-
-df = pd.read_sql_query(query1, engine)
-st.write(df)
 
 st.write(HEADER_2)
