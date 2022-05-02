@@ -5,8 +5,11 @@ from database import engine
 # Just a proof of concept script for how we will query out from the database
 
 query_1 = """
-select *
-from all_cocktails
+select
+	strdrink,
+	strinstructions
+from
+	all_cocktails;
 """
 
 
