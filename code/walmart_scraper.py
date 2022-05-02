@@ -54,7 +54,7 @@ def get_page_prices(searches):
     prices = []
     price_dict = {}
         for s in range(len(soup)):
-        page_results = s.find('div', {'class': 'flex flex-wrap justify-start items-center lh-title mb2 mb1-m'})
+        page_results = soup[s].find('div', {'class': 'flex flex-wrap justify-start items-center lh-title mb2 mb1-m'})
         for p in page_results:
             price_oz = p.find('div', {'class': 'f7 f6-l gray mr1'}).text
             price_dict[ingredient[s]] = price_oz
