@@ -3,9 +3,6 @@ import requests
 from bs4 import BeautifulSoup
 import csv
 
-#url_file = 'https://raw.githubusercontent.com/ElliottMetzler/the-manhattan-project/get_data/data/ingredients.csv'
-#ingredients = pd.read_csv(url_file, header=None)
-# will use this later when the code is finished to run through the list
 
 
 header = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:99.0) Gecko/20100101 Firefox/99.0',
