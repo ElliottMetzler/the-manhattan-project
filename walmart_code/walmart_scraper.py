@@ -39,7 +39,7 @@ def get_wm_search(query):
 
 
 def get_item_searches(ingredients):
-    """ Takes the list of ingredients and makes a list of soups. Scared to test this, please do not test it yet. """
+    """ Takes the list of ingredients and makes a list of soups. """
     queries = []
     search_list = []
     for i in ingredients:
