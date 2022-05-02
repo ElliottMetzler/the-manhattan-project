@@ -3,7 +3,6 @@ import requests
 from bs4 import BeautifulSoup
 import csv
 
-
 header = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:99.0) Gecko/20100101 Firefox/99.0',
 'Accept': '*/*',
 'Accept-Language': 'en-US,en;q=0.5',
@@ -36,6 +35,7 @@ def get_wm_search(query):
 
 def get_item_searches(ingredients):
     """ Takes the list of ingredients and makes a list of soups."""
+    queries = []
     search_list = []
     llist = []
     for i in ingredients:
@@ -48,13 +48,13 @@ def get_item_searches(ingredients):
 
 
 def get_page_prices(searches):
-    """ Takes the searches and outputs a dict that has each ingredient's cost"""
+    """ Takes the ingredient searches and outputs the first option's price/oz"""
     soup = searches[0]
     ingredient = searches[1]
     prices = []
     price_dict = {}
         for s in range(len(soup)):
-        page_results = s.find_all('div', {'class': 'flex flex-wrap justify-start items-center lh-title mb2 mb1-m'})
+        page_results = s.find('div', {'class': 'flex flex-wrap justify-start items-center lh-title mb2 mb1-m'})
         for p in page_results:
             price_oz = p.find('div', {'class': 'f7 f6-l gray mr1'}).text
             price_dict[ingredient[s]] = price_oz
