@@ -23,25 +23,29 @@ The remainder of this report is structured as follows: first, we discuss the dat
 
 Since the Cocktail Database (hereafter "cocktailDB") has a JSON API and richer extraction capabilities with a $2 fee to [Patreon](https://www.patreon.com/thedatadb) (not to be confused with [Patron](https://www.patrontequila.com/age-gate/age-gate.html?origin=%2F&flc=homepage&fln=Post_Homepage_Patron)), we purchased full access. We extracted the data using python, wrote schema in Postgres, and used Google Cloud Platform Buckets to upload csv files and import them into our own database.
 
+The second important piece of data we use are ingredient prices from the web. We used a list of ingredients from the cocktailDB and scraped Walmart's website for drink prices. As with the data from the cocktailDB, we uploaded a a table for drink prices to our own cloud database.
+
 ### Procedure
 
-The first step in retrieving the data from cocktailDB was to query the endpoints based on the first letter of the cocktail of interest. Thus, we looped through the alphabet from A to Z, querying data for each cocktail in the database starting with each letter. Then, we compiled these 26 pieces of output into one data frame and wrote this to a csv.
+The first step in retrieving the data from cocktailDB was to query the endpoints based on the first letter of the cocktail of interest. Thus, we looped through the alphabet from A to Z, querying data for each cocktail in the database starting with each letter. Additionally, we looped through each digit from 0 to 9 for cocktails with names starting with numbers rather than letters. Then, we compiled these pieces of output into one data frame and wrote this to a csv. Ultimately, this process resulting in each of the 635 cocktails in the database.
 
-The second important step in retrieving the data from the cocktailDB was to query for additional cocktails that we had not originally extracted in our A-Z search. We noticed that when searching for "Margarita" specifically we found six entries for various types of margaritas, but when searching by "M" (in our A-Z search), we only found one entry for the base rendition. To ensure we extracted all drinks we possibly could, we queried for additional cocktails [[to be continued]]
+The second important step in retreiving data from the cocktailDB was to query a comprehensive list of ingredients. We needed a list of ingredients so that we could set up a web scraper to search and extract ingredient prices from Walmart's website. Similar to the prior step, we queried the endpoint for a comprehensive list of ingredients before converting the output to lowercase for consistency.
 
-With our extensive list of cocktails, we used GCP Buckets to upload the csv files into our own SQL cloud database.
+With our extensive list of cocktails, ingredients, and prices, we used GCP Buckets to upload the necessary csv files into our own SQL cloud database.
 
 ### Data
 
-#### Description of the Raw Data
+#### Description of the Raw cocktailDB Data
 
 The raw data contains an entry (row) for each drink and many descriptive features (columns) about that drink. In addition to a unique ID for each drink and the drink name, it contains many classification fields such as the the drink category (i.e. cocktail, shot, punch/party drink, etc.), whether or not the drink is alcoholic and the type of glass this drink typically requires. Furthermore, it contains fields containing written instructions in multiple languages including english, german, french and italian. Most importantly, each cocktail has a set of columns reporting the ingredients required and a corresponding set of columns reporting the measurements of those ingredients. In the raw data, these ingredient measurements are non-standard in format and unit, including entries such as "2 shots", "2L", or "3 parts." Because these measurements are non-standard, this represented the biggest data cleaning effort to make our data useable for analysis.
 
+#### Description of the Ingredient Prices Scraping Process
+
+[[AUSTIN TO FILL HERE]]
+
 #### Cleaning Process
 
-[[To be continued]]
-
-
+[[KASHAF TO FILL HERE]]
 
 ## Analysis
 
@@ -52,19 +56,27 @@ The raw data contains an entry (row) for each drink and many descriptive feature
 __NOTE__: [[Need to think about and verify what the system requirements are. We are going to have requirements for access to cloud buckets to upload the CSVs I think, along with GCP for normal stuff. Perhaps other for an app if we try to run one]]
 
 1) Set-up Instructions:
-	* Run `pip install -r requirements.txt`
+    * Clone this repository to your local machine.
+	* Run `pip install -r requirements.txt` or `python3 -m pip install -r requirements.txt`, depending on your system.
 	* Run `cd the-manhattan-project`
 
 2) Instructions to create the database:
-    * Make a database instance in GCP.
+    * Create a database instance in Google Cloud Platform ("GCP").
     * Create a database in GCP SQL and name it `drinks`.
+    * [[PEDRO- we need instructions here on the linking process to the database. We need to say something about credentials and connection to DBeaver. Note that these can probably follow very closely to the instructions for HW 8 and HW 9]]
     * In DBeaver, navigate to `drinks` > `databases` > `drinks`. Right-click the database `drinks`, then select `SQL Editor` > `New SQL Script`. 
-    * Copy the commands from [create_tables.sql](https://github.com/ElliottMetzler/the-manhattan-project/blob/get_data/setup/create_tables.sql) into the SQL Script and execute it to create the database table.
-    * Create a bucket in GCP Cloud Storage
+    * Copy the commands from [create_tables.sql](https://github.com/ElliottMetzler/the-manhattan-project/blob/get_data/setup/create_tables.sql) into the SQL Script and execute the script to create the database table.
+    * Create a bucket in GCP Cloud Storage.
     * Upload the [clean_data_no_header.csv](https://github.com/ElliottMetzler/the-manhattan-project/blob/get_data/data/clean_data_no_header.csv) to the newly created bucket.
     * Import the CSV from the bucket into the created table. To do so, you can go to [GCP's SQL](https://console.cloud.google.com/sql/instances/python-pedro/overview?project=deft-diode-342909) and use the import option, when prompt to choose a source, choose the CSV file from the bucket, with file format "CSV". For the "Destination", select the `drinks` database and the `all_cocktails` table.
+    * [[PEDRO - we will need more instructions here on how to add the second table with ingredient prices from Austin]]
 
-3) Instructions to produce figures:
+3) Instructions to set up environment to connect SQLAlchemy engine to database:
+    * Open the `demo.env` file and save a copy of this file as `.env`
+    * Open the `.env` file and populate the variables with the appropriate credentials. Note that these credentials should be consistent with the credentials used to connect to the database using DBeaver in the prior step. 
+    * Save the `.env` file and close.
 
-4) Instructions to produce quantitative analysis:
+4) Instructions to produce figures:
+
+5) Instructions to produce quantitative analysis:
 
