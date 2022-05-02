@@ -11,3 +11,4 @@ black
 
 python-dotenv==0.20.0
 SQLAlchemy==1.4.34
+psycopg2-binary==2.9.3
