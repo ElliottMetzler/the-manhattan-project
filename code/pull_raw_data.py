@@ -15,7 +15,7 @@ NUM.remove("8")
 
 
 def create_raw_data(BASE_URL):
-    """INSERT DOCSTRING"""
+    """Creates a url for each character of the NUM list and append the url to a list. Go through the list of urls and for each, requests the drinks, check if the url exists, returns a JSON response, normalize it by opening the results whenever it reads "drinks", then attach it to a list. Goes through list of results and separate the appended JSONs into separate rows. Creates a dataframe with the list. Split each row relating to one JSON result into separate drinks, then creates a new dataframe. Remove the JSON result index from the dataframe and give new index for all drinks."""
 
     page_links = []
 
@@ -40,7 +40,7 @@ def create_raw_data(BASE_URL):
 
 
 def create_ingredients_data(BASE_URL):
-    """INSERT DOCSTRING"""
+    """Sends a request to search all the ingredients in the database. Return a JSON with the results. Normalize the JSON by opening the file whenever it reads "drinks". Creates a dataframe with the results. Lowercase all the ingredient's names. Return the finished dataframe"""
 
     response = requests.get(BASE_URL)
     response.raise_for_status()
