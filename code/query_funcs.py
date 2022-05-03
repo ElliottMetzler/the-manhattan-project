@@ -2,11 +2,9 @@ import pandas as pd
 from database import engine
 
 
-num_ingredients = 3
-
-def query_table_1(liquor, num_ingredients):
+def query_table_1(liquor1, num_ingredients):
 	"""Function accepts a liquor and a number of ingredients, queries the database using these values, and returns a dataframe for use on streamlit"""
-	liquor = str.lower(liquor)
+	liquor1 = str.lower(liquor1)
 
 	query = f"""
 	select
@@ -58,34 +56,73 @@ def query_table_1(liquor, num_ingredients):
 	from 
 	    all_cocktails
 	where 
-	    total_ingredients <= {num_ingredients} and
-	    (lower(stringredient1) = '{liquor}' or
-	    lower(stringredient2) = '{liquor}' or
-	    lower(stringredient3) = '{liquor}')
+	    total_ingredients = {num_ingredients}
 	order by
-	    total_ingredients desc
+		total_ingredients desc
 	;
 	"""
 
-	cols = ["strdrink",
-	            "stralcoholic",
-	            "strglass",
-	            "strinstructions",
-	            "total_ingredients",
-	            "stringredient1",
-	            "stringredient2",
-	            "stringredient3"]
 
-	rename_map = {
-	    "strdrink" : "Drink Name",
-	    "strglass" : "Glass Type",
-	    "strinstructions" : "Instructions",
-	    "total_ingredients" : "Total Ingredients Required",
-	    "stringredient1" : "Ingredient 1",
-	    "stringredient2" :"Ingredient 2",
-	    "stringredient3" : "Ingredient 3"
-	}
 
-	df = pd.read_sql_query(query, engine)[cols].rename(rename_map,axis=1)
+	cols = [
+	"strdrink",
+	"strglass",
+      "strinstructions",
+      "total_ingredients",
+      "proportions_list",
+     "ingredients_list"]
 
-	return df
+	ingredient_cols = [
+	    "stringredient1",
+	    "stringredient2",
+	    "stringredient3",
+	    "stringredient4",
+	    "stringredient5",
+	    "stringredient6",
+	    "stringredient7",
+	    "stringredient8",
+	    "stringredient9",
+	    "stringredient10",
+	    "stringredient11",
+	    "stringredient12"
+	]
+
+	raw_prop_cols = [
+	    "strmeasure1",
+	    "strmeasure2",
+	    "strmeasure3",
+	    "strmeasure4",
+	    "strmeasure5",
+	    "strmeasure6",
+	    "strmeasure7",
+	    "strmeasure8",
+	    "strmeasure9",
+	    "strmeasure10",
+	    "strmeasure11",
+	    "strmeasure12"
+	]
+
+
+	df = (
+		pd.
+    	read_sql_query(query,engine).
+	    assign(ingredients_list = lambda df_: df_[ingredient_cols].
+	          apply(lambda x: ", ".join(x[x.notnull()].str.lower()), axis=1),
+	          proportions_list = lambda df_: df_[raw_prop_cols].
+	          apply(lambda x: ", ".join(x[x.notnull()]), axis=1))
+	    [cols]
+	)
+
+	criteria = (
+		df["ingredients_list"].str.contains(liquor1)
+	)
+
+	one_drink = df[criteria].sample(1)
+
+	return one_drink
+
+
+# Testing area
+if __name__ == "__main__":
+
+	print(query_table_1("vodka",3))
