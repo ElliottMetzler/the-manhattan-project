@@ -15,7 +15,7 @@ NUM.remove("8")
 
 
 def create_raw_data(BASE_URL):
-    """INSERT DOCSTRING"""
+    """Takes a base url, creates a list of urls, then for each url it get drinks and returns a dataframe."""
 
     page_links = []
 
@@ -40,7 +40,7 @@ def create_raw_data(BASE_URL):
 
 
 def create_ingredients_data(BASE_URL):
-    """INSERT DOCSTRING"""
+    """Takes a base url and get the list of ingredients from it, then creates a dataframe."""
 
     response = requests.get(BASE_URL)
     response.raise_for_status()
