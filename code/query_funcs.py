@@ -2,9 +2,9 @@ import pandas as pd
 from database import engine
 
 
-def query_table_1(liquor1, num_ingredients):
-	"""Function accepts a liquor and a number of ingredients, queries the database using these values, and returns a dataframe for use on streamlit"""
-	liquor1 = str.lower(liquor1)
+def main_query(num_ingredients):
+	"""Function accepts a number of ingredients, queries the database using these values, and returns a dataframe for use on streamlit"""
+	# liquor1 = str.lower(liquor1)
 
 	query = f"""
 	select
@@ -13,6 +13,8 @@ def query_table_1(liquor1, num_ingredients):
 	    strglass,
 	    strinstructions,
 	    total_ingredients,
+
+	    strdrinkthumb,
 	    
 	    stringredient1,
 	    stringredient2,
@@ -56,13 +58,11 @@ def query_table_1(liquor1, num_ingredients):
 	from 
 	    all_cocktails
 	where 
-	    total_ingredients = {num_ingredients}
+	    total_ingredients <= {num_ingredients}
 	order by
 		total_ingredients desc
 	;
 	"""
-
-
 
 	cols = [
 	"strdrink",
@@ -70,7 +70,8 @@ def query_table_1(liquor1, num_ingredients):
       "strinstructions",
       "total_ingredients",
       "proportions_list",
-     "ingredients_list"]
+     "ingredients_list",
+     "strdrinkthumb"]
 
 	ingredient_cols = [
 	    "stringredient1",
@@ -113,16 +114,53 @@ def query_table_1(liquor1, num_ingredients):
 	    [cols]
 	)
 
+	"""
 	criteria = (
 		df["ingredients_list"].str.contains(liquor1)
 	)
 
 	one_drink = df[criteria].sample(1)
+	"""
+	return df
 
-	return one_drink
+def get_ingredients_list():
+	"""Function accepts no arguments and returns a comprehensive, unique, lowercase list of ingredients"""
+
+	query = f"""
+	select
+		stringredient1,
+	    stringredient2,
+	    stringredient3,
+	    stringredient4,
+	    stringredient5,
+	    stringredient6,
+	    stringredient7,
+	    stringredient8,
+	    stringredient9,
+	    stringredient10,
+	    stringredient11,
+	    stringredient12
+	from
+		all_cocktails
+
+	"""
+	df = pd.read_sql_query(query, engine)
+
+	list_ = []
+
+	for col in df.columns:
+		as_list = df[col].tolist()
+
+		list_ += as_list
+
+	list_lower = [x.lower() for x in list_ if x is not None]
+
+	return sorted(list(set(list_lower)))
+
 
 
 # Testing area
 if __name__ == "__main__":
 
-	print(query_table_1("vodka",3))
+	print(main_query(3))
+	# print(get_ingredients_list())
