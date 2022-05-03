@@ -76,7 +76,7 @@ __NOTE__: [[Need to think about and verify what the system requirements are. We 
     * Open the `.env` file and populate the variables with the appropriate credentials. Note that these credentials should be consistent with the credentials used to connect to the database using DBeaver in the prior step. 
     * Save the `.env` file and close.
 
-4) Instructions to produce figures:
-
-5) Instructions to produce quantitative analysis:
-
+4) Instructions to run Streamlit:
+    * Run `streamlit run code/streamlitty.py`
+    * Open a browser and copy the url.
+    * View and use the applet!
