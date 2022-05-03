@@ -4,7 +4,6 @@ from database import engine
 
 def main_query(num_ingredients):
 	"""Function accepts a number of ingredients, queries the database using these values, and returns a dataframe for use on streamlit"""
-	# liquor1 = str.lower(liquor1)
 
 	query = f"""
 	select
@@ -114,13 +113,6 @@ def main_query(num_ingredients):
 	    [cols]
 	)
 
-	"""
-	criteria = (
-		df["ingredients_list"].str.contains(liquor1)
-	)
-
-	one_drink = df[criteria].sample(1)
-	"""
 	return df
 
 def get_ingredients_list():
@@ -163,4 +155,4 @@ def get_ingredients_list():
 if __name__ == "__main__":
 
 	print(main_query(3))
-	# print(get_ingredients_list())
+	print(get_ingredients_list())

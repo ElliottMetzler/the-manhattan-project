@@ -1,16 +1,17 @@
 import streamlit as st
 import pandas as pd
 from database import engine
-from query_funcs import main_query
-from query_funcs import get_ingredients_list
+from streamlit_query_functions import main_query
+from streamlit_query_functions import get_ingredients_list
 
 # Import comprehensive list of ingredients
 ingredients_list = get_ingredients_list()
+ingredients_list.insert(0, "N/A")
 
 # Functions
-def gen_ingredient_selectbox(num):
-	"""Function accepts a number and creates a selectbox"""
-	prompt = f"Ingredient Selection {num}"
+def gen_ingredient_selectbox():
+	"""Function Creates a broad ingredient selectbox"""
+	prompt = f"Other Ingredient Selection:"
 	return st.sidebar.selectbox(prompt, ingredients_list)
 
 
@@ -18,17 +19,7 @@ def gen_ingredients_slider():
 	"""Function accepts no parameters and creates a slider"""
 	prompt = f"Select the maximum number of ingredients you would like in your cocktail"
 
-	return st.sidebar.slider(prompt, 2, 12)
-
-def gen_ingredient_selection_slider(total_ingredients):
-	"""Function accepts a total ingredients parameter which specifies how many incredients in the cocktail. and creates slider for the number of ingredients the user would like to say they have handy"""
-
-	# Can't input more desired ingredients than total in cocktail
-	# Max at three desired ingredients.
-	max_ = min(total_ingredients, 3)
-
-	prompt = f"Select how many ingredients you would like to use to filter your cocktail query"
-	return st.sidebar.slider(prompt, 1, max_)
+	return st.sidebar.slider("", 2, 12)
 
 
 ###########################################################
@@ -46,9 +37,30 @@ col1, col2 = st.columns(2)
 #######################################
 
 # First, select the number of ingredients with a min of 2
+st.sidebar.write("""
+	# Ingredients:
+	First, select the *maximum* number of ingredients you'd like in your cocktail""")
 num_ingredients_tot = gen_ingredients_slider()
-# Next, select an ingredient
-ingredient_1 = gen_ingredient_selectbox(1)
+
+# Select some main Boozes as ingredients
+st.sidebar.write("""
+	# Main Liquors:
+
+	Next, select some of the main booze options you have handy or would like to use in your cocktail.""")
+
+vodka = st.sidebar.checkbox("vodka")
+whiskey = st.sidebar.checkbox("whiskey")
+tequila = st.sidebar.checkbox("tequila")
+mezcal = st.sidebar.checkbox("mezcal")
+gin = st.sidebar.checkbox("gin")
+
+# Next, select another ingredient
+
+st.sidebar.write("""
+	# Other Ingredient:
+
+	Finally, select another ingredient you'd like to include in your cocktail""")
+alt_ingredient = gen_ingredient_selectbox()
 
 #######################################
 # First Column
@@ -72,9 +84,38 @@ col1.write("""
 
 col2.header("Featured Drink Result")
 
+# Query Database and filter based on criteria
 df = main_query(num_ingredients_tot)
-df = df[df["ingredients_list"].str.contains(ingredient_1)]
 
+# Create Contains (Or) based on Main Boozes
+booze_criteria = []
+if vodka:
+	booze_criteria.append("vodka")
+if whiskey:
+	booze_criteria.append("whiskey")
+if tequila:
+	booze_criteria.append("tequila")
+if mezcal:
+	booze_criteria.append("mezcal")
+if gin:
+	booze_criteria.append("gin")
+
+# If none are selected, don't filter
+if len(booze_criteria) > 0:
+	booze_mask = df["ingredients_list"].str.contains("|".join(booze_criteria))
+else:
+	booze_mask = pd.Series([True] * len(df.index))
+
+# If N/A is selected, don't filter
+if alt_ingredient != "N/A":
+	alt_ingredient_mask = df["ingredients_list"].str.contains(alt_ingredient)
+else:
+	alt_ingredient_mask = pd.Series([True] * len(df.index))
+
+# Perform data filtering
+df = df[booze_mask & alt_ingredient_mask]
+
+# Sample a random drink from the list
 featured_drink = df.sample(1)
 
 name = featured_drink["strdrink"].values[0]
@@ -110,27 +151,3 @@ col2.write(f"""
 col2.image(image)
 
 col2.write("Cheers!")
-
-
-#######################################
-# Archive
-#######################################
-
-"""
-# Next, select the number of ingredients you'd like to use in your filter
-num_ingredients_filter = gen_ingredient_selection_slider(num_ingredients_tot)
-
-# Depending on the output, generate a number of select boxes
-# Also generate the masks to filter the output
-if num_ingredients_filter == 1:
-	ingredient_1 = gen_ingredient_selectbox(1)
-
-elif num_ingredients_filter == 2:
-	ingredient_1 = gen_ingredient_selectbox(1)
-	ingredient_2 = gen_ingredient_selectbox(2)
-
-else:
-	ingredient_1 = gen_ingredient_selectbox(1)
-	ingredient_2 = gen_ingredient_selectbox(2)
-	ingredient_3 = gen_ingredient_selectbox(3)
-"""
