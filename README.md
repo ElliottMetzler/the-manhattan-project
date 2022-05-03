@@ -65,9 +65,10 @@ __NOTE__: [[Need to think about and verify what the system requirements are. We 
     * Create a database in GCP SQL and name it `drinks`.
     * [[PEDRO- we need instructions here on the linking process to the database. We need to say something about credentials and connection to DBeaver. Note that these can probably follow very closely to the instructions for HW 8 and HW 9]]
     * In DBeaver, navigate to `drinks` > `databases` > `drinks`. Right-click the database `drinks`, then select `SQL Editor` > `New SQL Script`. 
-    * Copy the commands from [create_tables.sql](https://github.com/ElliottMetzler/the-manhattan-project/blob/get_data/setup/create_tables.sql) into the SQL Script and execute the script to create the database table.
-    * Create a bucket in GCP Cloud Storage.
-    * Upload the [clean_data_no_header.csv](https://github.com/ElliottMetzler/the-manhattan-project/blob/get_data/data/clean_data_no_header.csv) to the newly created bucket.
+    * Copy the commands from [create_tables.sql](https://github.com/ElliottMetzler/the-manhattan-project/blob/get_data/setup/create_tables.sql) into the SQL Script and execute it to create the database table.
+    * Create a bucket in GCP Cloud Storage
+    * Upload the [clean_data_no_header.csv](https://github.com/ElliottMetzler/the-manhattan-project/blob/get_data/data/drinks_data_clean_no_header.csv) to the newly created bucket.
+
     * Import the CSV from the bucket into the created table. To do so, you can go to [GCP's SQL](https://console.cloud.google.com/sql/instances/python-pedro/overview?project=deft-diode-342909) and use the import option, when prompt to choose a source, choose the CSV file from the bucket, with file format "CSV". For the "Destination", select the `drinks` database and the `all_cocktails` table.
     * [[PEDRO - we will need more instructions here on how to add the second table with ingredient prices from Austin]]
 
