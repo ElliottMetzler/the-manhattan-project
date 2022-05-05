@@ -37,6 +37,7 @@ col1, col2 = st.columns(2)
 #######################################
 st.sidebar.write("""Once you select all of your drink specifications click here:""")
 button=st.sidebar.button("Find My Drink")
+
 # First, select the number of ingredients with a min of 2
 st.sidebar.write("""
 	# Ingredients:
@@ -84,78 +85,79 @@ with st.container():
 	#######################################
 	# Second Column
 	#######################################
+	df = []
+	if button:
+		col2.header("Featured Drink Result")
 
-	col2.header("Featured Drink Result")
+		# Query Database and filter based on criteria
+		df = main_query(num_ingredients_tot)
 
-	# Query Database and filter based on criteria
-	df = main_query(num_ingredients_tot)
+		# Create Contains (Or) based on Main Boozes
+		booze_criteria = []
+		if vodka:
+			booze_criteria.append("vodka")
+		if whiskey:
+			booze_criteria.append("whiskey")
+		if tequila:
+			booze_criteria.append("tequila")
+		if mezcal:
+			booze_criteria.append("mezcal")
+		if gin:
+			booze_criteria.append("gin")
+		if rum:
+			booze_criteria.append("rum")
 
-	# Create Contains (Or) based on Main Boozes
-	booze_criteria = []
-	if vodka:
-		booze_criteria.append("vodka")
-	if whiskey:
-		booze_criteria.append("whiskey")
-	if tequila:
-		booze_criteria.append("tequila")
-	if mezcal:
-		booze_criteria.append("mezcal")
-	if gin:
-		booze_criteria.append("gin")
-	if rum:
-		booze_criteria.append("rum")
+		# If none are selected, don't filter
+		if len(booze_criteria) > 0:
+			booze_mask = df["ingredients_list"].str.contains("|".join(booze_criteria))
+		else:
+			booze_mask = pd.Series([True] * len(df.index))
 
-	# If none are selected, don't filter
-	if len(booze_criteria) > 0:
-		booze_mask = df["ingredients_list"].str.contains("|".join(booze_criteria))
-	else:
-		booze_mask = pd.Series([True] * len(df.index))
+		# If N/A is selected, don't filter
+		if alt_ingredient != "N/A":
+			alt_ingredient_mask = df["ingredients_list"].str.contains(alt_ingredient)
+		else:
+			alt_ingredient_mask = pd.Series([True] * len(df.index))
 
-	# If N/A is selected, don't filter
-	if alt_ingredient != "N/A":
-		alt_ingredient_mask = df["ingredients_list"].str.contains(alt_ingredient)
-	else:
-		alt_ingredient_mask = pd.Series([True] * len(df.index))
+		# Perform data filtering
+		df = df[booze_mask & alt_ingredient_mask]
 
-	# Perform data filtering
-	df = df[booze_mask & alt_ingredient_mask]
+		# Sample a random drink from the list
+		featured_drink = df.sample(1)
 
-	# Sample a random drink from the list
-	featured_drink = df.sample(1)
+		name = featured_drink["strdrink"].values[0]
+		glass = featured_drink["strglass"].values[0]
+		instructions = featured_drink["strinstructions"].values[0]
+		image = featured_drink["strdrinkthumb"].values[0]
 
-	name = featured_drink["strdrink"].values[0]
-	glass = featured_drink["strglass"].values[0]
-	instructions = featured_drink["strinstructions"].values[0]
-	image = featured_drink["strdrinkthumb"].values[0]
+		ingredients_list = featured_drink["ingredients_list"].values[0].split(",")
+		proportions_list = featured_drink["proportions_list"].values[0].split(",")
 
-	ingredients_list = featured_drink["ingredients_list"].values[0].split(",")
-	proportions_list = featured_drink["proportions_list"].values[0].split(",")
+		col2.write(f"""
+			
+		Congratulations! You have selected the **{name}**!
 
-	col2.write(f"""
-		
-	Congratulations! You have selected the **{name}**!
+		First, you will need to get out a **{glass}**.
 
-	First, you will need to get out a **{glass}**.
+		Next, grab the following ingredients:
+		"""
+		)
 
-	Next, grab the following ingredients:
-	"""
-	)
+		for prop, ing in zip(proportions_list, ingredients_list):
+			col2.write(f"* {prop} {ing}")
 
-	for prop, ing in zip(proportions_list, ingredients_list):
-		col2.write(f"* {prop} {ing}")
+		col2.write(f"""
+			Finally, here are the instructions to make your cocktail!
 
-	col2.write(f"""
-		Finally, here are the instructions to make your cocktail!
+			{instructions}
 
-		{instructions}
+			If it looks anything like this, you're probably in good shape!
 
-		If it looks anything like this, you're probably in good shape!
+			""")
 
-		""")
+		col2.image(image)
 
-	col2.image(image)
-
-	col2.write("Cheers!")
+		col2.write("Cheers!")
 with st.container():
 	col1,col2=st.columns(2)
 	col1.header("""If you aren't feeling our featured cocktail maybe one of these would be more your speed:""")
@@ -165,11 +167,11 @@ with st.container():
 	alt_3=alt_sample["strdrink"].values[2]
 	alt_4=alt_sample["strdrink"].values[3]
 	alt_5=alt_sample["strdrink"].values[4]
-	option1=col1.checkbox(f"Option 1:{alt_1}")
-	option2=col1.checkbox(f"Option 2:{alt_2}")
-	option3=col1.checkbox(f"Option 3:{alt_3}")
-	option4=col1.checkbox(f"Option 4:{alt_4}")
-	option5=col1.checkbox(f"Option 5:{alt_5}")
+	option1=col1.checkbox(f"Option 1: {alt_1}")
+	option2=col1.checkbox(f"Option 2: {alt_2}")
+	option3=col1.checkbox(f"Option 3: {alt_3}")
+	option4=col1.checkbox(f"Option 4: {alt_4}")
+	option5=col1.checkbox(f"Option 5: x{alt_5}")
 
 	option5 = True
 
