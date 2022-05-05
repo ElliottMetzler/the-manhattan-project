@@ -35,7 +35,8 @@ col1, col2 = st.columns(2)
 #######################################
 # Side Bar Selections
 #######################################
-
+st.sidebar.write("""Once you select all of your drink specifications click here:""")
+button=st.sidebar.button("Find My Drink")
 # First, select the number of ingredients with a min of 2
 st.sidebar.write("""
 	# Ingredients:
@@ -62,6 +63,7 @@ st.sidebar.write("""
 
 	Finally, select another ingredient you'd like to include in your cocktail""")
 alt_ingredient = gen_ingredient_selectbox()
+
 
 #######################################
 # First Column
