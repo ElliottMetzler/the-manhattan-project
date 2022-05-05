@@ -160,8 +160,10 @@ with st.container():
 	alt_3=alt_sample["strdrink"].value[2]
 	alt_4=alt_sample["strdrink"].value[3]
 	alt_5=alt_sample["strdrink"].value[4]
-	st.checkbox(f"Option 1:{alt_1}")
-	st.checkbox(f"Option 1:{alt_2}")
-	st.checkbox(f"Option 1:{alt_3}")
-	st.checkbox(f"Option 1:{alt_4}")
-	st.checkbox(f"Option 1:{alt_5}")
+	col1():
+	col1.checkbox(f"Option 1:{alt_1}")
+	col1.checkbox(f"Option 1:{alt_2}")
+	col1.checkbox(f"Option 1:{alt_3}")
+	col1.checkbox(f"Option 1:{alt_4}")
+	col1.checkbox(f"Option 1:{alt_5}")
+
