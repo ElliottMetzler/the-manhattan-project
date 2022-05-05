@@ -160,9 +160,62 @@ with st.container():
 	alt_3=alt_sample["strdrink"].values[2]
 	alt_4=alt_sample["strdrink"].values[3]
 	alt_5=alt_sample["strdrink"].values[4]
-	col1.checkbox(f"Option 1:{alt_1}")
-	col1.checkbox(f"Option 1:{alt_2}")
-	col1.checkbox(f"Option 1:{alt_3}")
-	col1.checkbox(f"Option 1:{alt_4}")
-	col1.checkbox(f"Option 1:{alt_5}")
+	option1=col1.checkbox(f"Option 1:{alt_1}")
+	option2=col1.checkbox(f"Option 2:{alt_2}")
+	option3=col1.checkbox(f"Option 3:{alt_3}")
+	option4=col1.checkbox(f"Option 4:{alt_4}")
+	option5=col1.checkbox(f"Option 5:{alt_5}")
+
+	option5 = True
+
+	if option1:
+		alt_drink=alt_sample[alt_sample["strdrink"]==alt_1]
+	if option2:
+		alt_drink=alt_sample[alt_sample["strdrink"]==alt_2]
+	if option3:
+		alt_drink=alt_sample[alt_sample["strdrink"]==alt_3]
+	if option4:
+		alt_drink=alt_sample[alt_sample["strdrink"]==alt_4]
+	if option5:
+		alt_drink=alt_sample[alt_sample["strdrink"]==alt_5]
+
+
+	
+	if option1 or option2 or option3 or option4 or option5:
+		alt_name = alt_drink["strdrink"].values[0]
+		alt_glass = alt_drink["strglass"].values[0]
+		alt_instructions = alt_drink["strinstructions"].values[0]
+		alt_image = alt_drink["strdrinkthumb"].values[0]
+
+		alt_ingredients_list = alt_drink["ingredients_list"].values[0].split(",")
+		alt_proportions_list = alt_drink["proportions_list"].values[0].split(",")
+
+		col2.write(f"""
+			
+		Congratulations! You have selected the **{alt_name}**!
+
+		First, you will need to get out a **{alt_glass}**.
+
+		Next, grab the following ingredients:
+		"""
+		)
+
+		for prop, ing in zip(alt_proportions_list, alt_ingredients_list):
+			col2.write(f"* {prop} {ing}")
+
+		col2.write(f"""
+			Finally, here are the instructions to make your cocktail!
+
+			{alt_instructions}
+
+			If it looks anything like this, you're probably in good shape!
+
+			""")
+
+		col2.image(alt_image)
+
+		col2.write("Cheers!")
+		
+
+
 
