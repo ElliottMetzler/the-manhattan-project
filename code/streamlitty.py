@@ -53,6 +53,7 @@ whiskey = st.sidebar.checkbox("whiskey")
 tequila = st.sidebar.checkbox("tequila")
 mezcal = st.sidebar.checkbox("mezcal")
 gin = st.sidebar.checkbox("gin")
+rum= st.sidebar.checkbox("rum")
 
 # Next, select another ingredient
 
@@ -99,6 +100,8 @@ with st.container():
 		booze_criteria.append("mezcal")
 	if gin:
 		booze_criteria.append("gin")
+	if rum:
+		booze_criteria.append("rum")
 
 	# If none are selected, don't filter
 	if len(booze_criteria) > 0:
