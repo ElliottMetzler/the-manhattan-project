@@ -151,3 +151,9 @@ with st.container():
 	col2.image(image)
 
 	col2.write("Cheers!")
+with st.container():
+	col1,col2=st.columns(2)
+	col1.header("""If you aren't feeling our featured cocktail maybe one of these would be more your speed:""")
+	alt_sample=df.sample(5)
+	alt_1=alt_sample["strdrink"].value[0]
+	st.checkbox(f"Option 1:{alt_1}")
