@@ -50,12 +50,12 @@ st.sidebar.write("""
 
 	Next, select some of the main booze options you have handy or would like to use in your cocktail.""")
 
-vodka = st.sidebar.checkbox("vodka")
-whiskey = st.sidebar.checkbox("whiskey")
-tequila = st.sidebar.checkbox("tequila")
-mezcal = st.sidebar.checkbox("mezcal")
-gin = st.sidebar.checkbox("gin")
-rum= st.sidebar.checkbox("rum")
+vodka = st.sidebar.checkbox("Vodka")
+whiskey = st.sidebar.checkbox("Whiskey")
+tequila = st.sidebar.checkbox("Tequila")
+mezcal = st.sidebar.checkbox("Mezcal")
+gin = st.sidebar.checkbox("Gin")
+rum= st.sidebar.checkbox("Rum")
 
 # Next, select another ingredient
 
@@ -171,7 +171,7 @@ with st.container():
 	option2=col1.checkbox(f"Option 2: {alt_2}")
 	option3=col1.checkbox(f"Option 3: {alt_3}")
 	option4=col1.checkbox(f"Option 4: {alt_4}")
-	option5=col1.checkbox(f"Option 5: x{alt_5}")
+	option5=col1.checkbox(f"Option 5: {alt_5}")
 
 	option5 = True
 
