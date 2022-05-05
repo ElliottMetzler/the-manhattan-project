@@ -1,41 +1,43 @@
 import pandas as pd
 import numpy as np
 from database import engine
+from ingredient_map import create_ingredient_map
 
 
+# Functions
 def query_data():
     """Query Database and return Data Frame"""
     query = """
     select
-	    strdrink,
-	    stringredient1,
-	    stringredient2,
-	    stringredient3,
-	    stringredient4,
-	    stringredient5,
-	    stringredient6,
-	    stringredient7,
-	    stringredient8,
-	    stringredient9,
-	    stringredient10,
-	    stringredient11,
-	    stringredient12,
-	    strmeasure1_clean,
-	    strmeasure2_clean,
-	    strmeasure3_clean,
-	    strmeasure4_clean,
-	    strmeasure5_clean,
-	    strmeasure6_clean,
-	    strmeasure7_clean,
-	    strmeasure8_clean,
-	    strmeasure9_clean,
-	    strmeasure10_clean,
-	    strmeasure11_clean,
+        strdrink,
+        stringredient1,
+        stringredient2,
+        stringredient3,
+        stringredient4,
+        stringredient5,
+        stringredient6,
+        stringredient7,
+        stringredient8,
+        stringredient9,
+        stringredient10,
+        stringredient11,
+        stringredient12,
+        strmeasure1_clean,
+        strmeasure2_clean,
+        strmeasure3_clean,
+        strmeasure4_clean,
+        strmeasure5_clean,
+        strmeasure6_clean,
+        strmeasure7_clean,
+        strmeasure8_clean,
+        strmeasure9_clean,
+        strmeasure10_clean,
+        strmeasure11_clean,
         strmeasure12_clean
-	    
-	from 
-	    all_cocktails
-	;
+        
+    from 
+        all_cocktails
+    ;
         """
 
     return pd.read_sql_query(query, engine)
@@ -67,7 +69,7 @@ def shape_data_long(df, list_of_cols, col_start_string, col_end_string, new_name
     )
 
 
-def merge_long_pivot_wide(table_1, table_2):
+def merge_long(table_1, table_2):
     """Merges ingredients and measurements table, converts to wide and returns Data Frame"""
     return (
         table_1.merge(table_2, on=["strdrink", "ingred_num"])
@@ -75,12 +77,21 @@ def merge_long_pivot_wide(table_1, table_2):
         .drop("ingred_num", axis=1)
         .dropna()
         .reset_index(drop=True)
-        .pivot_table(
+    )
+
+
+def pivot_wide(df):
+    return (
+        df.pivot_table(
             index="strdrink", columns="ingredient", values="amount", aggfunc=np.sum
         )
         .fillna(0)
         .reset_index()
     )
+
+
+def recode_ingredients(df, dictionary):
+    return df.assign(ingredient=lambda df_: df_["ingredient"].replace(dictionary))
 
 
 def calculate_row_sum(df):
@@ -102,7 +113,6 @@ def calculate_row_prop(df, prop_cols):
 
 
 def query_and_preprocess_data():
-    """Function queries the database, preprocesses the data, and returns a dataframe in a format suitable for ML applications. The return format is each row is a cocktail, with a column for each unique ingredient in the database, and the value in each column is the proportion of the cocktail made up of that ingredient. The data is not normalized using mean or sd preprocessing."""
 
     df = query_data()
 
@@ -116,11 +126,20 @@ def query_and_preprocess_data():
     )
     measure_long = shape_data_long(df, measure_cols, "strmeasure", "_clean", "amount")
 
-    combined = merge_long_pivot_wide(ingredient_long, measure_long)
+    combined_long = merge_long(ingredient_long, measure_long)
+    # Added recoding here
+    ingredient_dict = create_ingredient_map()
+    recoded_long = recode_ingredients(combined_long, ingredient_dict)
 
-    w_rowsum = calculate_row_sum(combined)
+    combined_wide = pivot_wide(recoded_long)
+
+    w_rowsum = calculate_row_sum(combined_wide)
 
     prop_cols = get_prop_cols(w_rowsum)
     w_rowsum[prop_cols] = calculate_row_prop(w_rowsum, prop_cols)
 
     return w_rowsum.drop("row_sum", axis=1)
+
+if __name__ == "__main__":
+    df = query_and_preprocess_data()
+    print(df.head(25))
