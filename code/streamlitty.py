@@ -155,12 +155,11 @@ with st.container():
 	col1,col2=st.columns(2)
 	col1.header("""If you aren't feeling our featured cocktail maybe one of these would be more your speed:""")
 	alt_sample=df.sample(5)
-	alt_1=alt_sample["strdrink"].value[0]
-	alt_2=alt_sample["strdrink"].value[1]
-	alt_3=alt_sample["strdrink"].value[2]
-	alt_4=alt_sample["strdrink"].value[3]
-	alt_5=alt_sample["strdrink"].value[4]
-	col1():
+	alt_1=alt_sample["strdrink"].values[0]
+	alt_2=alt_sample["strdrink"].values[1]
+	alt_3=alt_sample["strdrink"].values[2]
+	alt_4=alt_sample["strdrink"].values[3]
+	alt_5=alt_sample["strdrink"].values[4]
 	col1.checkbox(f"Option 1:{alt_1}")
 	col1.checkbox(f"Option 1:{alt_2}")
 	col1.checkbox(f"Option 1:{alt_3}")
