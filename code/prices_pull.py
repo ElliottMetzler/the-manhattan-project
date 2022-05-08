@@ -13,7 +13,6 @@ params = {
 INGRED_PATH = 'https://raw.githubusercontent.com/ElliottMetzler/the-manhattan-project/main/data/ingredients_data_raw.csv'
 OUT_DIR = "data"
 JSON_PATH = os.path.join(OUTPUT_DIR, 'items.txt')
-OUT_PATH = os.path.join(OUTPUT_DIR, 'ingredient_prices.csv')
 
 ###notes:
 # have done indexes0:3, salt(find the index), and 200:296 - total: 100
@@ -51,20 +50,10 @@ def json_to_text(jsons, path):
         f.write(i + "\n")
     f.close()
 
-def to_csv(price_dict, path):
-""" Takes the list of (ingredient, price/oz) tuples and writes them to a csv"""
-#this is from my old scraper so just a placeholder
 
-    with open(OUT_PATH, 'w+') as out_file:
-        csv_writer = csv.writer(out_file)
-        header = ['ingredient', 'price_per_oz']
-        csv_writer.writerow(header)
-        csv_writer.writerows(price_dict)
 
 
 if __name__ == '__main__':
 
-    os.makedirs(OUT_DIR, exist_ok = True)
-    jsons = get_item_jsons(params)
     json_to_text(jsons, JSON_PATH)
-    to_csv(item_dict, OUT_PATH)
+
