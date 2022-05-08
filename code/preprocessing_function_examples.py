@@ -14,6 +14,10 @@ print("Sample Output of query_and_reshape_long")
 print("="*75)
 print(df.head(10))
 
+summary = df[["ingredient", "amount"]].groupby("ingredient").agg(["mean", "sum"])
+
+print(summary)
+
 # recode_long_data: this will take the output of query_and_reshape_long and recode the ingredients according to the mapping I drafted in "ingredient_map.py" Same long format, just fewer rows and simpler ingredients.
 
 recoded = recode_long_data(df)
@@ -22,7 +26,13 @@ print("Sample Output of calling recode_long_data on output from query_and_reshap
 print("="*75)
 print(recoded.head(10))
 
-# query_and_preprocess_data: This is the original one - it takes the long data that has been recoded and first pivots wide so that each column is an ingredient then calculates the proportions for each row. Thus, each row will sum to 1 and each value is the percentage of that cocktail that is made up of that ingredient
+summary = recoded[["ingredient", "amount"]].groupby("ingredient").agg(["mean", "sum"])
+
+print(summary)
+
+
+
+# # query_and_preprocess_data: This is the original one - it takes the long data that has been recoded and first pivots wide so that each column is an ingredient then calculates the proportions for each row. Thus, each row will sum to 1 and each value is the percentage of that cocktail that is made up of that ingredient
 
 df = query_and_preprocess_data()
 print("="*75)
