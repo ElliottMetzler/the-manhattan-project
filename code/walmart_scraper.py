@@ -8,8 +8,9 @@ import re
 
 # the actual file is on a different branch so ill replace this github link with the csv once this is there
 INGRED_PATH = 'https://raw.githubusercontent.com/ElliottMetzler/the-manhattan-project/get_data/data/ingredients.csv'
-OUTPUT_DIR = "data"
-OUTPUT_PATH = os.path.join(OUTPUT_DIR, 'ingredient_prices.csv')
+OUT_DIR = "data"
+JSON_PATH = os.path.join(OUT_DIR, 'items.txt')
+OUT_PATH = os.path.join(OUTPUT_DIR, 'ingredient_prices.csv')
 
 
 header = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:99.0) Gecko/20100101 Firefox/99.0',
