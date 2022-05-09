@@ -154,12 +154,17 @@ with st.container():
 	if button:
 		alt_sample=df.sample(5)
 		alt_1=alt_sample["strdrink"].values[0]
+		alt_drink1=alt_sample[alt_sample["strdrink"]==alt_1]
 		alt_2=alt_sample["strdrink"].values[1]
+		alt_drink2=alt_sample[alt_sample["strdrink"]==alt_2]
 		alt_3=alt_sample["strdrink"].values[2]
+		alt_drink3=alt_sample[alt_sample["strdrink"]==alt_3]
 		alt_4=alt_sample["strdrink"].values[3]
+		alt_drink4=alt_sample[alt_sample["strdrink"]==alt_4]
 		alt_5=alt_sample["strdrink"].values[4]
+		alt_drink5=alt_sample[alt_sample["strdrink"]==alt_5]
 		with st.expander(f"{alt_1}"):
-			st.write("""HELLO""")
+			st.write(f"""So the {name} wasn't up you alley? Well, hopefully the {alt_1} is better suited for you.""")
 		with st.expander(f"{alt_2}"):
 			st.write("""TEXT""")
 		with st.expander(f"{alt_3}"):
@@ -168,4 +173,5 @@ with st.container():
 			st.write("""TEXT""")
 		with st.expander(f"{alt_5}"):
 			st.write("""TEXT""")
-	
+
+		
