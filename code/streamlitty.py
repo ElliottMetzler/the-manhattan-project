@@ -160,4 +160,12 @@ with st.container():
 		alt_5=alt_sample["strdrink"].values[4]
 		with st.expander(f"{alt_1}"):
 			st.write("""HELLO""")
+		with st.expander(f"{alt_2}"):
+			st.write("""TEXT""")
+		with st.expander(f"{alt_3}"):
+			st.write("""TEXT""")
+		with st.expander(f"{alt_4}"):
+			st.write("""TEXT""")
+		with st.expander(f"{alt_5}"):
+			st.write("""TEXT""")
 	
