@@ -2,38 +2,36 @@ import pandas as pd
 from pandas import json_normalize
 import requests
 import json
-import csv
 import os
-import re
+from quant_preprocess import query_and_preprocess_data
+from quant_preprocess import query_and_reshape_long
+from quant_preprocess import recode_long_data
 params = {
     'api_key':'4F60666AD7F14FE49237DE1B9E2FB925',
     'type':'search',
     'sort_by': 'best_seller',
 }
-INGRED_PATH = 'https://raw.githubusercontent.com/ElliottMetzler/the-manhattan-project/main/data/ingredients_data_raw.csv'
-OUT_DIR = "data"
+
+OUTPUT_DIR = "data"
 JSON_PATH = os.path.join(OUTPUT_DIR, 'items.txt')
 
-###notes:
-# have done indexes0:3, salt(find the index), and 200:296 - total: 100
-# need to buy the membership or get more emails to get more5
 
 
 
-def load_ingredients(path):
+def load_ingredients():
     """Loads the list of ingredients to a list"""
-    #i'm gonna change the path to the file that we have and the function will be less dumb
 
-    ingredients = pd.read_csv(INGRED_PATH, header = None)[200:296]
-    return ingredients[0].values.tolist()
-
+    df = query_and_reshape_long()
+    recoded = recode_long_data(df)
+    summary = recoded[["ingredient", "amount"]].groupby("ingredient").agg(["mean", "sum"])
+    return summary.index.values.tolist()
 
 
 def get_item_jsons(params):
     """Loops though a list of ingredients and outputs a list of jsons."""
 
     json_list = []
-    ingredients = load_ingredients(INGRED_PATH)
+    ingredients = load_ingredients()
     for i in ingredients:
         params['search_term'] = i
         result = requests.get('https://api.bluecartapi.com/request',
@@ -55,5 +53,6 @@ def json_to_text(jsons, path):
 
 if __name__ == '__main__':
 
+    jsons = get_item_jsons(params)
     json_to_text(jsons, JSON_PATH)
 
