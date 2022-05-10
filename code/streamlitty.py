@@ -115,38 +115,40 @@ with st.container():
 		df = df[booze_mask & alt_ingredient_mask]
 
 		# Sample a random drink from the list
-		featured_drink = df.sample(1)
+		if len(df["strdrink"])>0:
+			featured_drink = df.sample(1)
 
-		name = featured_drink["strdrink"].values[0]
-		glass = featured_drink["strglass"].values[0]
-		instructions = featured_drink["strinstructions"].values[0]
-		image = featured_drink["strdrinkthumb"].values[0]
+			name = featured_drink["strdrink"].values[0]
+			glass = featured_drink["strglass"].values[0]
+			instructions = featured_drink["strinstructions"].values[0]
+			image = featured_drink["strdrinkthumb"].values[0]
 
-		ingredients_list = featured_drink["ingredients_list"].values[0].split(",")
-		proportions_list = featured_drink["proportions_list"].values[0].split(",")
+			ingredients_list = featured_drink["ingredients_list"].values[0].split(",")
+			proportions_list = featured_drink["proportions_list"].values[0].split(",")
 
-		col2.write(f"""
-			
-		Congratulations! You have selected the **{name}**!
-		First, you will need to get out a **{glass}**.
-		Next, grab the following ingredients:
-		"""
-		)
+			col2.write(f"""
+				
+			Congratulations! You have selected the **{name}**!
+			First, you will need to get out a **{glass}**.
+			Next, grab the following ingredients:
+			"""
+			)
 
-		for prop, ing in zip(proportions_list, ingredients_list):
-			col2.write(f"* {prop} {ing}")
+			for prop, ing in zip(proportions_list, ingredients_list):
+				col2.write(f"* {prop} {ing}")
 
-		col2.write(f"""
-			Finally, here are the instructions to make your cocktail!
-			{instructions}
-			If it looks anything like this, you're probably in good shape!
-			""")
+			col2.write(f"""
+				Finally, here are the instructions to make your cocktail!
+				{instructions}
+				If it looks anything like this, you're probably in good shape!
+				""")
 
-		col2.image(image)
+			col2.image(image)
 
-		col2.write("Cheers!")
+			col2.write("Cheers!")
+		else:
+			col2.write("""There are no unique cocktails that follow your drink specifications. Try changing the maximum number of ingredients, selecting a different liquor, or choosing a different specified ingredient.""")
 with st.container():
-	st.header("""If you aren't feeling our featured cocktail maybe one of these would be more your speed:""")
 	alt_sample=[]
 	alt_1=[]
 	alt_2=[]
@@ -159,8 +161,11 @@ with st.container():
 		else:
 			alt_sample=df
 
-		if len(alt_sample["strdrink"])==0:
-			st.write("""There are no alternative drinks with this combination of ingredient and liquor.""")
+		st.header("""If you aren't feeling our featured cocktail maybe one of these would be more your speed:""")
+
+
+		if len(alt_sample["strdrink"])==1:
+			st.write("""There are no alternative drinks with this selection of ingredients, liquor, or number of ingredients.""")
 
 
 		if len(alt_sample["strdrink"])>=1:
