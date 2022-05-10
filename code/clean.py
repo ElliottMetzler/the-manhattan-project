@@ -72,15 +72,15 @@ def add_drop_columns(in_path):
 
     df[pd.Index(cols2) + "_clean"] = (
         df[cols2]
-        .apply(lambda col: col.str.replace(r"\(|\)|,", ""))
-        .replace(r"\r\n|\n", " ")
+        .apply(lambda col: col.str.replace(r"\(|\)|,", "", regex=True))
+        .replace(r"\r\n|\n", " ", regex=True)
     )
 
     df[pd.Index(cols3)] = (
-        df[cols3].apply(lambda col: col.str.replace(",", ".")).replace(r"\r\n|\n", " ")
+        df[cols3].apply(lambda col: col.str.replace(",", ".", regex=True)).replace(r"\r\n|\n", " ", regex=True)
     )
 
-    df[pd.Index(cols4)] = df[cols4].apply(lambda col: col.str.replace("\r\n", " "))
+    df[pd.Index(cols4)] = df[cols4].apply(lambda col: col.str.replace("\r\n", " ", regex=True))
 
     return df
 
