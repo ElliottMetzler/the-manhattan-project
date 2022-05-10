@@ -160,10 +160,32 @@ with st.container():
 			alt_sample=df.sample(5)
 		else:
 			alt_sample=df
+		if len(alt_sample["strdrink"])>=1:
+			st.header("""If you aren't feeling our featured cocktail maybe one of these would be more your speed:""")
+			if alt_sample["strdrink"].values[0]!=featured_drink["strdrink"].values[0]:
+				alt_1=alt_sample["strdrink"].values[0]
+				alt_drink_1=alt_sample[alt_sample["strdrink"]==alt_1]
+				name_1 = alt_drink_1["strdrink"].values[0]
+				glass_1 = alt_drink_1["strglass"].values[0]
+				instructions_1 = alt_drink_1["strinstructions"].values[0]
+				image_1 = alt_drink_1["strdrinkthumb"].values[0]
+				ingredients_list_1 = alt_drink_1["ingredients_list"].values[0].split(",")
+				proportions_list_1 = alt_drink_1["proportions_list"].values[0].split(",")
+				with st.expander(f"{alt_1}"):
+					st.write(f"""So the {name} wasn't up you alley? Well, hopefully the {alt_1} is better suited for you.
+					You'll need a **{glass_1}**,
+					and the following ingredients:
+					""")
 
-		st.header("""If you aren't feeling our featured cocktail maybe one of these would be more your speed:""")
+					for prop, ing in zip(proportions_list_1, ingredients_list_1):
+						st.write(f"* {prop} {ing}")
 
+					st.write(f"""
+					To make a {alt_1} follow these instructions:
 
+					{instructions_1}
+					""") 
+		
 		if len(alt_sample["strdrink"])==1:
 			st.write("""There are no alternative drinks with this selection of ingredients, liquor, or number of ingredients.""")
 
