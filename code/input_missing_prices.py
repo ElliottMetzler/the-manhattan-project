@@ -67,7 +67,8 @@ def final_prices(path):
     df.loc["price","rum"] = 0.5
     df.loc["price","gin"] = 0.788
     df.loc["price", "port"] = 0.788
-    df.to_csv(path, index=False)
+    df = df.transpose()
+    df.to_csv(path, index=False, header=False)
 
 
 if __name__ == "__main__":
