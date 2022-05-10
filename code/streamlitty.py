@@ -165,15 +165,11 @@ with st.container():
 			if alt_sample["strdrink"].values[0]!=featured_drink["strdrink"].values[0]:
 				alt_1=alt_sample["strdrink"].values[0]
 				alt_drink_1=alt_sample[alt_sample["strdrink"]==alt_1]
-				name_1 = alt_drink_1["strdrink"].values[0]
-				glass_1 = alt_drink_1["strglass"].values[0]
-				instructions_1 = alt_drink_1["strinstructions"].values[0]
-				image_1 = alt_drink_1["strdrinkthumb"].values[0]
 				ingredients_list_1 = alt_drink_1["ingredients_list"].values[0].split(",")
 				proportions_list_1 = alt_drink_1["proportions_list"].values[0].split(",")
 				with st.expander(f"{alt_1}"):
 					st.write(f"""So the {name} wasn't up you alley? Well, hopefully the {alt_1} is better suited for you.
-					You'll need a **{glass_1}**,
+					You'll need a **{alt_drink_1["strglass"].values[0]}**,
 					and the following ingredients:
 					""")
 
@@ -183,7 +179,7 @@ with st.container():
 					st.write(f"""
 					To make a {alt_1} follow these instructions:
 
-					{instructions_1}
+					{alt_drink_1["strinstructions"].values[0]}
 					""") 
 		
 		if len(alt_sample["strdrink"])==1:
@@ -221,8 +217,11 @@ with st.container():
 					""")
 					for prop, ing in zip(proportions_list_3, ingredients_list_3):
 						st.write(f"* {prop} {ing}")
-					st.write(f"""A {alt_3} isn't too hard to make! Just follow these instructions:
-					{alt_drink_3["strinstructions"].values[0]}""")
+					st.write(f"""
+					A {alt_3} isn't too hard to make! Just follow these instructions:
+
+					{alt_drink_3["strinstructions"].values[0]}
+					""")
 
 		if len(alt_sample["strdrink"])>=4:
 			if alt_sample["strdrink"].values[3]!=featured_drink["strdrink"].values[0]:
@@ -238,15 +237,16 @@ with st.container():
 					""")
 					for prop, ing in zip(proportions_list_4, ingredients_list_4):
 						st.write(f"* {prop} {ing}")
-					st.write(f"""With those ingredients just follow these steps, and presto a {alt_4}!
-					{alt_drink_4["strinstructions"].values[0]}""")
+					st.write(f"""
+					With those ingredients just follow these steps, and presto a {alt_4}!
+
+					{alt_drink_4["strinstructions"].values[0]}
+					""")
 
 		if len(alt_sample["strdrink"])>=5:
 			if alt_sample["strdrink"].values[4]!=featured_drink["strdrink"].values[0]:
 				alt_5=alt_sample["strdrink"].values[4]
 				alt_drink_5=alt_sample[alt_sample["strdrink"]==alt_5]
-				glass_5 = alt_drink_5["strglass"].values[0]
-				instructions_5 = alt_drink_5["strinstructions"].values[0]
 				ingredients_list_5 = alt_drink_5["ingredients_list"].values[0].split(",")
 				proportions_list_5 = alt_drink_5["proportions_list"].values[0].split(",")
 				with st.expander(f"{alt_5}"):
@@ -255,7 +255,10 @@ with st.container():
 					""")
 					for prop, ing in zip(proportions_list_5, ingredients_list_5):
 						st.write(f"* {prop} {ing}")
-					st.write(f"""No need to just throw the ingredients together. Follow these steps and you'll have a {alt_5}!
-					{alt_drink_5["strinstructions"].values[0]}""")
+					st.write(f"""
+					No need to just throw the ingredients together. Follow these steps and you'll have a {alt_5}!
+
+					{alt_drink_5["strinstructions"].values[0]}
+					""")
 
 		
