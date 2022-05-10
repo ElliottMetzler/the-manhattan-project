@@ -238,7 +238,7 @@ with st.container():
 					for prop, ing in zip(proportions_list_4, ingredients_list_4):
 						st.write(f"* {prop} {ing}")
 					st.write(f"""
-					With those ingredients just follow these steps, and presto a {alt_4}.
+					With those ingredients just follow these steps, and presto a {alt_4}!
 
 					{alt_drink_4["strinstructions"].values[0]}
 					""")
