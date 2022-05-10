@@ -6,7 +6,7 @@ from ingredient_map import create_ingredient_map
 
 # Functions
 def query_data():
-    """Query Database and return Data Frame"""
+    """Query Database and return Data Frame with relevant columns"""
     query = """
     select
         strdrink,
@@ -45,6 +45,7 @@ def query_data():
 
 def cols_to_lower(df, columns):
     """Convert batch of columns to lowercase"""
+
     return df[columns].apply(lambda col: col.str.lower())
 
 
@@ -70,7 +71,7 @@ def shape_data_long(df, list_of_cols, col_start_string, col_end_string, new_name
 
 
 def merge_long(table_1, table_2):
-    """Merges ingredients and measurements table, converts to wide and returns Data Frame"""
+    """Merges ingredients and measurements table and returns a long format dataframe"""
     return (
         table_1.merge(table_2, on=["strdrink", "ingred_num"])
         .sort_values(["strdrink", "ingred_num"])
@@ -81,6 +82,7 @@ def merge_long(table_1, table_2):
 
 
 def pivot_wide(df):
+    """Takes long format dataframe and pivots wide so that each column is a unique ingredient and each row is a drink. Values are the amount included in each drink in ounces"""
     return (
         df.pivot_table(
             index="strdrink", columns="ingredient", values="amount", aggfunc=np.sum
@@ -91,6 +93,7 @@ def pivot_wide(df):
 
 
 def recode_ingredients(df, dictionary):
+    """Accepts the dataframe and a dictionary to recode the ingredients and applies"""
     return df.assign(ingredient=lambda df_: df_["ingredient"].replace(dictionary))
 
 
@@ -112,10 +115,9 @@ def calculate_row_prop(df, prop_cols):
     return df[prop_cols].apply(lambda col: col / df["row_sum"])
 
 
-def query_and_preprocess_data():
-
+def query_and_reshape_long():
+    """Function queries the database and reshapes the data in long format with three columns - drink, ingredient, and amount in ounces"""
     df = query_data()
-
     ingred_cols = get_cols_list(df, "stringredient")
     measure_cols = get_cols_list(df, "strmeasure")
 
@@ -124,12 +126,25 @@ def query_and_preprocess_data():
     ingredient_long = shape_data_long(
         df, ingred_cols, "stringredient", "", "ingredient"
     )
+
     measure_long = shape_data_long(df, measure_cols, "strmeasure", "_clean", "amount")
 
-    combined_long = merge_long(ingredient_long, measure_long)
-    # Added recoding here
+    return merge_long(ingredient_long, measure_long)
+
+
+def recode_long_data(df):
+    """Function takes the long format data and recodes the ingredients"""
+
     ingredient_dict = create_ingredient_map()
-    recoded_long = recode_ingredients(combined_long, ingredient_dict)
+    return recode_ingredients(df, ingredient_dict)
+
+
+def query_and_preprocess_data():
+    """Function performs full preprocessing: Queries the database, recodes incredients, reshapes in wide format with a column for each ingredient and a row for each drink. Values are the proportion of that drink that is made up of that ingredient (rows sum to 1)"""
+
+    df = query_and_reshape_long()
+
+    recoded_long = recode_long_data(df)
 
     combined_wide = pivot_wide(recoded_long)
 
@@ -140,6 +155,11 @@ def query_and_preprocess_data():
 
     return w_rowsum.drop("row_sum", axis=1)
 
+
 if __name__ == "__main__":
     df = query_and_preprocess_data()
     print(df.head(25))
+
+    df = query_and_reshape_long()
+    recoded = recode_long_data(df)
+    print(recoded.head(25))

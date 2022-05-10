@@ -53,3 +53,8 @@ CREATE TABLE all_cocktails (
     strMeasure11_clean float,
     strMeasure12_clean float
     );
+    
+CREATE TABLE ingredient_prices (
+    Ingredient varchar(100) PRIMARY KEY,
+    Price float
+    );

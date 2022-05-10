@@ -1,17 +1,24 @@
 from pandas import json_normalize
+from dotenv import load_dotenv
 import requests
 import pandas as pd
 import os
 import string
 
+load_dotenv()
+
+COCKTAIL_KEY = os.environ["COCKTAIL_KEY"]
+
 BASE_DIR = "data"
 DATA_OUT_PATH = os.path.join(BASE_DIR, "drinks_data_raw.csv")
 INGREDIENTS_OUT_PATH = os.path.join(BASE_DIR, "ingredients_data_raw.csv")
+COCKTAIL_KEY = os.environ["COCKTAIL_KEY"]
 ALPHA = list(string.ascii_lowercase)
 NUM = list(string.digits)
 NUM.extend(ALPHA)
 NUM.remove("0")
 NUM.remove("8")
+
 
 
 def create_raw_data(BASE_URL):
@@ -58,11 +65,11 @@ if __name__ == "__main__":
     os.makedirs(BASE_DIR, exist_ok=True)
 
     raw_data = create_raw_data(
-        "http://www.thecocktaildb.com/api/json/v1/1/search.php?f="
+        f"http://www.thecocktaildb.com/api/json/v2/{COCKTAIL_KEY}/search.php?f="
     )
     raw_data.to_csv(DATA_OUT_PATH, index=False)
 
     ingredients = create_ingredients_data(
-        "http://www.thecocktaildb.com/api/json/v1/1/list.php?i=list"
+        f"http://www.thecocktaildb.com/api/json/v2/{COCKTAIL_KEY}/list.php?i=list"
     )
     ingredients.to_csv(INGREDIENTS_OUT_PATH, index=False, header=False)
