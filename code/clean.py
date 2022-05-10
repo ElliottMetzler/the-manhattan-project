@@ -10,7 +10,7 @@ HEADER_PATH = os.path.join(BASE_DIR, "drinks_data_headers.csv")
 
 
 def add_drop_columns(in_path):
-    """Drop extraneous columns with few to no observations. Add a total ingredient count column and 12 new ingredient measurement columns with commas, and parentheses removed. Add 1 oz for entries where ingrdient is specified but measurement is not. Replace commas in instructions columns with periods. Replace new line characters in the measurement, instructions, and image attribution columns with space."""
+    """Drop extraneous columns with no observations. Add a total ingredient count column and 12 new ingredient measurement columns with commas, and parenthesis removed. Add 1 oz for entries where ingredient is specified but measurement is not. Replace new line characters in the measurement, instructions, and image attribution columns with space."""
 
     cols = [
         "strDrinkAlternate",
@@ -77,7 +77,7 @@ def add_drop_columns(in_path):
     )
 
     df[pd.Index(cols3)] = (
-        df[cols3].apply(lambda col: col.str.replace(",", ".", regex=True)).replace(r"\r\n|\n", " ", regex=True)
+        df[cols3].apply(lambda col: col.str.replace(r"\r\n|\n", " ", regex=True)
     )
 
     df[pd.Index(cols4)] = df[cols4].apply(lambda col: col.str.replace("\r\n", " ", regex=True))
@@ -124,7 +124,7 @@ def create_units_list(dataframe):
 
 
 def create_dict():
-    """Create a dictionary for converting measurments units to ounces."""
+    """Create a dictionary for converting measurements units to ounces."""
     convert_dict = {
         "": 1,
         "oz light": 1,
