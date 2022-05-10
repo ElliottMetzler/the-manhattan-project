@@ -154,7 +154,10 @@ with st.container():
 	alt_4=[]
 	alt_5=[]
 	if button:
-		alt_sample=df
+		if len(df["strdrink"])>5:
+			alt_sample=df.sample(5)
+		else:
+			alt_sample=df
 
 		if len(alt_sample["strdrink"])==0:
 			st.write("""There are no alternative drinks with this combination of ingredient and liquor.""")
