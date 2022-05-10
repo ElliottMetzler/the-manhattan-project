@@ -263,4 +263,7 @@ with st.container():
 					{alt_drink_5["strinstructions"].values[0]}
 					""")
 
-		
+with st.container():
+	st.write("""
+	All data is sourced from the [Cocktail Database](https://www.thecocktaildb.com/). This dashboard was created with the free to use platform [Streamlit](https://streamlit.io/). For any inquiries on the coding or the structure of this project connect to our [GitHub](https://github.com/ElliottMetzler/the-manhattan-project). Enjoy your drinks!
+	""")
