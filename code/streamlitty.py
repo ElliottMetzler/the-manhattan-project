@@ -160,8 +160,13 @@ with st.container():
 			alt_sample=df.sample(5)
 		else:
 			alt_sample=df
-		if len(alt_sample["strdrink"])>=1:
+
+		if len(alt_sample["strdrink"])==1:
+			st.header("""There are no alternative drinks with this selection of ingredients, liquor, or number of ingredients.""")
+		if len(alt_sample["strdrink"])>1:
 			st.header("""If you aren't feeling our featured cocktail maybe one of these would be more your speed:""")
+
+		if len(alt_sample["strdrink"])>=1:
 			if alt_sample["strdrink"].values[0]!=featured_drink["strdrink"].values[0]:
 				alt_1=alt_sample["strdrink"].values[0]
 				alt_drink_1=alt_sample[alt_sample["strdrink"]==alt_1]
@@ -181,9 +186,6 @@ with st.container():
 
 					{alt_drink_1["strinstructions"].values[0]}
 					""") 
-		
-		if len(alt_sample["strdrink"])==1:
-			st.write("""There are no alternative drinks with this selection of ingredients, liquor, or number of ingredients.""")
 
 		if len(alt_sample["strdrink"])>=2:
 			if alt_sample["strdrink"].values[1]!=featured_drink["strdrink"].values[0]:
