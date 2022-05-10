@@ -69,15 +69,21 @@ def add_drop_columns(in_path):
 
     for col1, col2 in zip(cols1, cols2):
         df[col2] = df[col2].mask(df[col1].notna() & df[col2].isna(), "1 oz")
+        
+    df[pd.Index(cols2)] = (
+        df[cols2]
+        .apply(lambda col: col.str.replace(r"\r\n|\n", " ", regex=True))
+        
+    )
 
     df[pd.Index(cols2) + "_clean"] = (
         df[cols2]
         .apply(lambda col: col.str.replace(r"\(|\)|,", "", regex=True))
-        .replace(r"\r\n|\n", " ", regex=True)
+        
     )
 
     df[pd.Index(cols3)] = (
-        df[cols3].apply(lambda col: col.str.replace(r"\r\n|\n", " ", regex=True)
+        df[cols3].apply(lambda col: col.str.replace(r"\r\n|\n", " ", regex=True))
     )
 
     df[pd.Index(cols4)] = df[cols4].apply(lambda col: col.str.replace("\r\n", " ", regex=True))
