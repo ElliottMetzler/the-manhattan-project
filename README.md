@@ -71,16 +71,16 @@ __NOTE__: [[Need to think about and verify what the system requirements are. We 
     * Run `python3 code/clean.py` to create two csv files: [drinks_data_clean_no_header.csv](https://github.com/ElliottMetzler/the-manhattan-project/blob/main/data/drinks_data_clean_no_header.csv) which contains clean data with no headers to faciliate merging it into the SQL table and [drinks_data_headers.csv](https://github.com/ElliottMetzler/the-manhattan-project/blob/main/data/drinks_data_headers.csv) to serve as a reference for setting up the SQL table schema.
 
 3) Instructions to create the database:
-    * Create a database instance in Google Cloud Platform ("GCP").
-    * Create a database in GCP SQL and name it `drinks`.
-    * [[PEDRO- we need instructions here on the linking process to the database. We need to say something about credentials and connection to DBeaver. Note that these can probably follow very closely to the instructions for HW 8 and HW 9]]
-    * In DBeaver, navigate to `drinks` > `databases` > `drinks`. Right-click the database `drinks`, then select `SQL Editor` > `New SQL Script`. 
-    * Copy the commands from [create_tables.sql](https://github.com/ElliottMetzler/the-manhattan-project/blob/get_data/setup/create_tables.sql) into the SQL Script and execute it to create the database table.
-    * Create a bucket in GCP Cloud Storage
-    * Upload the [clean_data_no_header.csv](https://github.com/ElliottMetzler/the-manhattan-project/blob/get_data/data/drinks_data_clean_no_header.csv) to the newly created bucket.
-
-    * Import the CSV from the bucket into the created table. To do so, you can go to [GCP's SQL](https://console.cloud.google.com/sql/instances/python-pedro/overview?project=deft-diode-342909) and use the import option, when prompt to choose a source, choose the CSV file from the bucket, with file format "CSV". For the "Destination", select the `drinks` database and the `all_cocktails` table.
-    * [[PEDRO - we will need more instructions here on how to add the second table with ingredient prices from Austin]]
+    * 1) Make a database instance in Google Cloud Platform ("GCP"). Go to GCP SQL and create a PostgreSQL 13 database instance, you can use the ["Create an instance"](https://console.cloud.google.com/sql/choose-instance-engine?project=deft-diode-342909) to do so. Make sure you whitelist the IPs in block 0.0.0.0/0 and select a password for it.
+    * 2) Create a database in GCP SQL and name it `drinks`. You can do that by going to the "Databases" tab in the newly created instance.
+    * 3) Connect to your database with DBeaver. Your host is the `Public IP Address` found in GCP SQL on the "Overview" tab. The port will be the default Postgres port: `5432` and the username is the default Postgres username: `postgres`, you don't have to change it. The password is the same password you created for the instance. The database you need to select is `drinks`.
+    * 4) In DBeaver, navigate to `drinks` > `databases` > `drinks`. Right-click the database `drinks`, then select `SQL Editor` > `New SQL Script`. 
+    * 5) Copy the commands from [create_tables.sql](https://github.com/ElliottMetzler/the-manhattan-project/blob/get_data/setup/create_tables.sql) into the SQL Script and execute it to create the database tables.
+    * 6) Create a bucket in GCP Cloud Storage. You can do that by accessing ["Cloud Storage"](https://console.cloud.google.com/storage/browser?_ga=2.133749006.1075698642.1652116044-1317346431.1646212364&_gac=1.195626590.1651155734.CjwKCAjw9qiTBhBbEiwAp-GE0Yk6cV8xAcydrJuB-bCw6AUvFJOwOvxnNvhWUdilN62kp9mxZnKz_hoCepoQAvD_BwE&project=deft-diode-342909&prefix=) in the GCP platform.
+    * 7) Upload the `clean_data_no_header.csv` and the `ingredient_prices_clean.csv` to the newly created bucket. 
+    * 8) Import the `clean_data_no_header.csv` from the bucket into the created table. To do so, you can go to GCP's SQL and use the import option, when prompt to choose a source, choose the CSV file from the bucket, with file format "CSV". For the "Destination", select the `drinks` database and the `all_cocktails` table. 
+    * 9) After that import the `ingredient_prices_clean.csv` from the bucket into the created table. You should repeat the following step, but select the `ingredient_prices` table instead of the `all_cocktails`.
+    * 10) Before you can run query commands, you must give it the right credentials to connect to your database. Copy the file demo.env to .env and modify it by providing the credentials you created in step (3). An easy way to do this is to run cp demo.env .env and then modify the file.
 
 4) Instructions to set up environment to connect SQLAlchemy engine to database:
     * Open the `demo.env` file and save a copy of this file as `.env`
