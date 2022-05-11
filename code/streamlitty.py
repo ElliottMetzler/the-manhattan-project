@@ -3,6 +3,7 @@ import pandas as pd
 from database import engine
 from streamlit_query_functions import main_query
 from streamlit_query_functions import get_ingredients_list
+from streamlit_query_functions import calculate_drink_prices 
 
 # Import comprehensive list of ingredients
 ingredients_list = get_ingredients_list()
@@ -20,6 +21,9 @@ def gen_ingredients_slider():
 	prompt = f"Select the maximum number of ingredients you would like in your cocktail"
 
 	return st.sidebar.slider("", 2, 12)
+
+prices=calculate_drink_prices()
+
 
 
 ###########################################################
@@ -80,6 +84,7 @@ with st.container():
 	# Second Column
 	#######################################
 	df=[]
+	combine=[]
 	if button:
 		col2.header("Featured Drink Result")
 
@@ -113,15 +118,20 @@ with st.container():
 
 		# Perform data filtering
 		df = df[booze_mask & alt_ingredient_mask]
+		combine=pd.merge(df,prices)
 
 		# Sample a random drink from the list
-		if len(df["strdrink"])>0:
-			featured_drink = df.sample(1)
+		if len(combine["strdrink"])>0:
+			featured_drink = combine.sample(1)
 
 			name = featured_drink["strdrink"].values[0]
 			glass = featured_drink["strglass"].values[0]
 			instructions = featured_drink["strinstructions"].values[0]
 			image = featured_drink["strdrinkthumb"].values[0]
+			cost = featured_drink["cost"].values[0]
+			
+
+			
 
 			ingredients_list = featured_drink["ingredients_list"].values[0].split(",")
 			proportions_list = featured_drink["proportions_list"].values[0].split(",")
@@ -140,6 +150,9 @@ with st.container():
 			col2.write(f"""
 				Finally, here are the instructions to make your cocktail!
 				{instructions}
+
+				Making this at home would only cost you about ${cost} per drink! That's a steal!
+
 				If it looks anything like this, you're probably in good shape!
 				""")
 
@@ -148,6 +161,8 @@ with st.container():
 			col2.write("Cheers!")
 		else:
 			col2.write("""There are no unique cocktails that follow your drink specifications. Try changing the maximum number of ingredients, selecting a different liquor, or choosing a different specified ingredient.""")
+		
+
 with st.container():
 	alt_sample=[]
 	alt_1=[]
@@ -157,9 +172,9 @@ with st.container():
 	alt_5=[]
 	if button:
 		if len(df["strdrink"])>5:
-			alt_sample=df.sample(5)
+			alt_sample=combine.sample(5)
 		else:
-			alt_sample=df
+			alt_sample=combine
 
 		if len(alt_sample["strdrink"])==1:
 			st.header("""There are no alternative drinks with this selection of ingredients, liquor, or number of ingredients.""")
@@ -185,6 +200,8 @@ with st.container():
 					To make a {alt_1} follow these instructions:
 
 					{alt_drink_1["strinstructions"].values[0]}
+
+					When it costs only ${alt_drink_1["cost"].values[0]} per drink, why ever go to a bar again?
 					""") 
 
 		if len(alt_sample["strdrink"])>=2:
@@ -205,6 +222,8 @@ with st.container():
 					Once you follow these instructions, you'll have the perfect {alt_2}.
 
 				{alt_drink_2["strinstructions"].values[0]}
+
+				You'll pay a lot more than ${alt_drink_2["cost"].values[0]} per drink at bar. So just kick your feet up and relax with a {alt_2}.
 				""")
 
 		if len(alt_sample["strdrink"])>=3:
@@ -223,6 +242,8 @@ with st.container():
 					A {alt_3} isn't too hard to make! Just follow these instructions:
 
 					{alt_drink_3["strinstructions"].values[0]}
+
+					${alt_drink_3["cost"].values[0]} per drink? Wow, that's a cheap and delicious cocktail!
 					""")
 
 		if len(alt_sample["strdrink"])>=4:
@@ -243,6 +264,8 @@ with st.container():
 					With those ingredients just follow these steps, and presto a {alt_4}!
 
 					{alt_drink_4["strinstructions"].values[0]}
+
+					At home is always cheaper and when its only ${alt_drink_4["cost"].values[0]} per drink, the addage continues to hold!
 					""")
 
 		if len(alt_sample["strdrink"])>=5:
@@ -261,6 +284,8 @@ with st.container():
 					No need to just throw the ingredients together. Follow these steps and you'll have a {alt_5}!
 
 					{alt_drink_5["strinstructions"].values[0]}
+
+					${alt_drink_5["cost"].values[0]} per drink? Imagine ordering that at a bar it would cost double maybe even triple that!
 					""")
 
 with st.container():
