@@ -10,7 +10,7 @@ HEADER_PATH = os.path.join(BASE_DIR, "drinks_data_headers.csv")
 
 
 def add_drop_columns(in_path):
-    """Drop extraneous columns with no observations. Add a total ingredient count column and 12 new ingredient measurement columns with commas, and parentheses removed. Add 1 oz for entries where ingredient is specified but measurement is not. Replace new line characters in the measurement, instructions, and image attribution columns with space."""
+    """Drop extraneous columns with no observations. Add a total ingredient count column and 12 new ingredient measurement columns with commas, parentheses, and words appearing before digits removed. Add 1 oz for entries where ingredient is specified but measurement is not. Replace new line characters in the measurement, instructions, and image attribution columns with space."""
 
     cols = [
         "strDrinkAlternate",
