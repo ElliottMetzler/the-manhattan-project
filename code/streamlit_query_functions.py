@@ -1,5 +1,7 @@
 import pandas as pd
 from database import engine
+from quant_preprocess import query_and_reshape_long
+from quant_preprocess import recode_long_data
 
 
 def main_query(num_ingredients):
@@ -149,10 +151,41 @@ def get_ingredients_list():
 
 	return sorted(list(set(list_lower)))
 
+def query_ingredient_prices():
+	"""Function queries the database for ingredient prices and returns data frame"""
+	query = f"""
+	select *
+	from ingredient_prices;
+	"""
+
+	return pd.read_sql_query(query, engine)
+
+
+def calculate_drink_prices():
+	"""Function calculates estimated drink prices. Returns databrame with drink and corresponding estimated price"""
+
+	df = query_and_reshape_long()
+	recoded = recode_long_data(df)
+
+	price_table = query_ingredient_prices()
+
+	with_prices = (
+		recoded
+		.merge(price_table, how = "left", on = "ingredient")
+		.assign(cost = lambda df_: df_["amount"] * df_["price"])
+		.groupby("strdrink")
+		.sum()
+		.round(2)
+		.drop(["amount", "price"], axis=1)
+		.reset_index())
+
+	return with_prices
+
 
 
 # Testing area
 if __name__ == "__main__":
 
-	print(main_query(3))
-	print(get_ingredients_list())
+	# print(main_query(3))
+	# print(get_ingredients_list())
+	print(calculate_drink_prices())
