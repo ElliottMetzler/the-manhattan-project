@@ -29,7 +29,19 @@ The second important piece of data we use are ingredient prices from the web. We
 
 The first step in retrieving our data was to query the cocktailDB API endpoints for each drink in their database. To effectuate this, we cycled through each letter of the alphabet and digit 0-9, querying the database for cocktails starting with each letter or number. This approach yielded all 635 cocktails and their complete information.
 
-The second step was to retrieve data on ingredient prices. To do so, we started with the list of unique ingredients in the cocktailDB, performed a combination of programatic and manual cleaning on the ingredients, then queried the Walmart API for as many ingredients as we could find. Finally, we implemented some additional manual web searching for certain missing ingredients to round out our data.
+The second step was to retrieve data on ingredient prices. 
+
+1. Used BlueCart API which is a database of products sold by Walmart.
+2. Used the ingredient list to query each ingredient and retrieved the description and price. 
+3. First, we searched results for "best seller" in order to get an array of products that one would realistically purchase.
+4. Then, we searched results for "best match" in order to get an array of products that would most closely represent the ingredient we are searching for.
+5. The prices listed on BlueCart are not converted into ounces, which is why we also grabbed the description. In most cases, the description included the total measurement of the product in different units. However, the description also may have included numbers that did not relate to measurements. We noticed that the measurement and units was always at the end of the description, so we iterated through the description in reverse order, breaking once the full number was grabbed. We had a similar process for grabbing the units in which we iterated through the description in reverse order and grabbed the word if it exactly matched a unit measurement name. 
+6. We did have to drop things like water and beer because these had descriptions such as "12 oz bottles, 12-count." Given the variablility in measurements and counts, we had to drop these and map them manually in the next cleaning process.
+7. Next, we converted the total prices into prices per oz.
+8. For the items not included in Walmart or with items that we were unable to convert with the above process, we mapped prices per oz based on the average of the first three prices online for the given ingredients.
+
+To do so, we started with the list of unique ingredients in the cocktailDB, performed a combination of programatic and manual cleaning on the ingredients, then queried the Walmart API for as many ingredients as we could find. Finally, we implemented some additional manual web searching for certain missing ingredients to round out our data.
+
 
 With our list of cocktails, ingredients, and prices, we used GCP Buckets to upload the necessary csv files into our SQL cloud database.
 
