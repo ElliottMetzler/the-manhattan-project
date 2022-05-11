@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-from database import engine
 from streamlit_query_functions import main_query
 from streamlit_query_functions import get_ingredients_list
 from streamlit_query_functions import calculate_drink_prices 
@@ -49,7 +48,7 @@ def gen_alt_ingredient_mask(df, alt_ingredient):
 	return alt_ingredient_mask
 
 def extract_singleton_drink_info(df):
-	"""Function takes in a drink (row of dataframe) and extracts info as tuples"""
+	"""Function takes in a drink (row of dataframe) and extracts info"""
 	name = df["strdrink"].values[0]
 	glass = df["strglass"].values[0]
 	instructions = df["strinstructions"].values[0]
@@ -59,7 +58,7 @@ def extract_singleton_drink_info(df):
 	return name, glass, instructions, image, cost
 
 def extract_list_drink_info(df):
-	"""Function takes in a drink (row of dataframe) and extracts the lists as tuples"""
+	"""Function takes in a drink (row of dataframe) and extracts the lists split on the commas"""
 	ingredients_list = df["ingredients_list"].values[0].split(",")
 	proportions_list = df["proportions_list"].values[0].split(",")
 
@@ -170,16 +169,10 @@ with st.container():
 			col2.write("""There are no unique cocktails that follow your drink specifications. Try changing the maximum number of ingredients, selecting a different liquor, or choosing a different specified ingredient.""")
 
 #######################################
-# Secondary Container - Alternate Drinks
+# Second Container - Alternate Drinks
 #######################################
 
 with st.container():
-	# alt_sample=[]
-	alt_1=[]
-	alt_2=[]
-	alt_3=[]
-	alt_4=[]
-	alt_5=[]
 
 	if button:
 		if len(combine["strdrink"]) > 5:
@@ -312,6 +305,10 @@ with st.container():
 
 				${alt5_cost} per drink? Imagine ordering that at a bar it would cost double maybe even triple that!
 				""")
+
+#######################################
+# Third Container - Acknowledgements
+#######################################
 
 with st.container():
 	st.write("""
