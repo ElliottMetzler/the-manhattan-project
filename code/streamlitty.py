@@ -9,21 +9,66 @@ from streamlit_query_functions import calculate_drink_prices
 ingredients_list = get_ingredients_list()
 ingredients_list.insert(0, "N/A")
 
+# Import Drink Prices
+prices = calculate_drink_prices()
+
+
 # Functions
 def gen_ingredient_selectbox():
 	"""Function Creates a broad ingredient selectbox"""
 	prompt = f"Other Ingredient Selection:"
 	return st.sidebar.selectbox(prompt, ingredients_list)
 
+def gen_booze_criteria(vodka, whiskey, tequila, gin, rum):
+	"""Function accepts the flags for checkboxes and returns a list of associated alcohols"""
+	booze_criteria = []
+	if vodka:
+		booze_criteria.append("vodka")
+	if whiskey:
+		booze_criteria.append("whiskey")
+	if tequila:
+		booze_criteria.append("tequila")
+	if gin:
+		booze_criteria.append("gin")
+	if rum:
+		booze_criteria.append("rum")
 
-def gen_ingredients_slider():
-	"""Function accepts no parameters and creates a slider"""
-	prompt = f"Select the maximum number of ingredients you would like in your cocktail"
+	return booze_criteria
 
-	return st.sidebar.slider("", 2, 12)
+def gen_booze_mask(df, booze_criteria):
+	"""Function accepts the data and the criteria and generates a mask to filter"""
+	if len(booze_criteria) > 0:
+		booze_mask = df["ingredients_list"].str.contains("|".join(booze_criteria))
+	else:
+		booze_mask = pd.Series([True] * len(df.index))
 
-prices=calculate_drink_prices()
+	return booze_mask
 
+def gen_alt_ingredient_mask(df, alt_ingredient):
+	"""Function accepts the data and the alt_ingredient selected and generates a mask to filter"""
+	if alt_ingredient != "N/A":
+		alt_ingredient_mask = df["ingredients_list"].str.contains(alt_ingredient)
+	else:
+		alt_ingredient_mask = pd.Series([True] * len(df.index))
+
+	return alt_ingredient_mask
+
+def extract_singleton_drink_info(df):
+	"""Function takes in a drink (row of dataframe) and extracts info as tuples"""
+	name = df["strdrink"].values[0]
+	glass = df["strglass"].values[0]
+	instructions = df["strinstructions"].values[0]
+	image = df["strdrinkthumb"].values[0]
+	cost = df["cost"].values[0]
+
+	return name, glass, instructions, image, cost
+
+def extract_list_drink_info(df):
+	"""Function takes in a drink (row of dataframe) and extracts the lists as tuples"""
+	ingredients_list = df["ingredients_list"].values[0].split(",")
+	proportions_list = df["proportions_list"].values[0].split(",")
+
+	return ingredients_list, proportions_list
 
 
 ###########################################################
@@ -31,36 +76,33 @@ prices=calculate_drink_prices()
 ###########################################################
 
 st.set_page_config(layout="wide")
-
 st.header("The Manhattan Project")
 
-col1, col2 = st.columns(2)
+#######################################
+# Side Bar - Search Parameters
+#######################################
 
-#######################################
-# Side Bar Selections
-#######################################
+# Refresh Button
 st.sidebar.write("""Once you select all of your drink specifications click here:""")
 button=st.sidebar.button("Find My Drink")
 
-# First, select the number of ingredients with a min of 2
+# Ingredient Count Slider
 st.sidebar.write("""
 	# Ingredients:
 	First, select the *maximum* number of ingredients you'd like in your cocktail""")
-num_ingredients_tot = gen_ingredients_slider()
+num_ingredients_tot = st.sidebar.slider("", 2, 12)
 
-# Select some main Boozes as ingredients
+# Main Booze Options Checkboxes
 st.sidebar.write("""
 	# Main Liquors:
 	Next, select some of the main booze options you have handy or would like to use in your cocktail.""")
-
 vodka = st.sidebar.checkbox("Vodka")
 whiskey = st.sidebar.checkbox("Whiskey")
 tequila = st.sidebar.checkbox("Tequila")
 gin = st.sidebar.checkbox("Gin")
-rum=st.sidebar.checkbox("Rum")
+rum = st.sidebar.checkbox("Rum")
 
-# Next, select another ingredient
-
+# Other Ingredient Dropdown
 st.sidebar.write("""
 	# Other Ingredient:
 	Finally, select another ingredient you'd like to include in your cocktail""")
@@ -68,11 +110,17 @@ alt_ingredient = gen_ingredient_selectbox()
 
 
 #######################################
-# First Column
+# Main Container - 2 columns
 #######################################
 with st.container():
-	col1.header("Welcome to our Page")
 
+	col1, col2 = st.columns(2)
+
+	#######################################
+	# Column 1 - Page Welcome Message
+	#######################################	
+
+	col1.header("Welcome to our Page")
 	col1.write("""
 		Hello! Welcome to The Manhattan Project. This webpage is designed to help fuel Friday night. We get it, you've had a long week, you don't want to go to the store, and you sure as hell don't want to think too hard about what you want to drink to unwind tonight. That's where we come in. 
 		With our site, you can search through a vast database of cocktails and concoctions using a variety of search parameters and settings to find exactly what you're looking for - whether thats a night in with a movie and a bowl of popcorn, a night out with some strangers, or a Saturday morning tailgate.
@@ -81,63 +129,27 @@ with st.container():
 		""")
 
 	#######################################
-	# Second Column
+	# Column 2 - Featured Drink Result
 	#######################################
-	df=[]
-	combine=[]
+
 	if button:
 		col2.header("Featured Drink Result")
 
-		# Query Database and filter based on criteria
 		df = main_query(num_ingredients_tot)
 
-		# Create Contains (Or) based on Main Boozes
-		booze_criteria = []
-		if vodka:
-			booze_criteria.append("vodka")
-		if whiskey:
-			booze_criteria.append("whiskey")
-		if tequila:
-			booze_criteria.append("tequila")
-		if gin:
-			booze_criteria.append("gin")
-		if rum:
-			booze_criteria.append("rum")
+		booze_criteria = gen_booze_criteria(vodka, whiskey, tequila, gin, rum)
+		booze_mask = gen_booze_mask(df, booze_criteria)
+		alt_ingredient_mask = gen_alt_ingredient_mask(df, alt_ingredient)
 
-		# If none are selected, don't filter
-		if len(booze_criteria) > 0:
-			booze_mask = df["ingredients_list"].str.contains("|".join(booze_criteria))
-		else:
-			booze_mask = pd.Series([True] * len(df.index))
+		combine = df[booze_mask & alt_ingredient_mask].merge(prices, how = "left", on = "strdrink")
 
-		# If N/A is selected, don't filter
-		if alt_ingredient != "N/A":
-			alt_ingredient_mask = df["ingredients_list"].str.contains(alt_ingredient)
-		else:
-			alt_ingredient_mask = pd.Series([True] * len(df.index))
-
-		# Perform data filtering
-		df = df[booze_mask & alt_ingredient_mask]
-		combine=pd.merge(df,prices)
-
-		# Sample a random drink from the list
 		if len(combine["strdrink"])>0:
+
 			featured_drink = combine.sample(1)
-
-			name = featured_drink["strdrink"].values[0]
-			glass = featured_drink["strglass"].values[0]
-			instructions = featured_drink["strinstructions"].values[0]
-			image = featured_drink["strdrinkthumb"].values[0]
-			cost = featured_drink["cost"].values[0]
-			
-
-			
-
-			ingredients_list = featured_drink["ingredients_list"].values[0].split(",")
-			proportions_list = featured_drink["proportions_list"].values[0].split(",")
+			name, glass, instructions, image, cost = extract_singleton_drink_info(featured_drink)
+			ingredients_list, proportions_list = extract_list_drink_info(featured_drink)
 
 			col2.write(f"""
-				
 			Congratulations! You have selected the **{name}**!
 			First, you will need to get out a **{glass}**.
 			Next, grab the following ingredients:
@@ -161,7 +173,10 @@ with st.container():
 			col2.write("Cheers!")
 		else:
 			col2.write("""There are no unique cocktails that follow your drink specifications. Try changing the maximum number of ingredients, selecting a different liquor, or choosing a different specified ingredient.""")
-		
+
+#######################################
+# Secondary Container - Alternate Drinks
+#######################################
 
 with st.container():
 	alt_sample=[]
@@ -170,8 +185,9 @@ with st.container():
 	alt_3=[]
 	alt_4=[]
 	alt_5=[]
+	
 	if button:
-		if len(df["strdrink"])>5:
+		if len(combine["strdrink"])>5:
 			alt_sample=combine.sample(5)
 		else:
 			alt_sample=combine
