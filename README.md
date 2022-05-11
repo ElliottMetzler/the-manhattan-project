@@ -6,7 +6,7 @@ Team Members:
 * [Kashaf Oneeb](https://github.com/koneeb) - Data engineering, Report
 * [Austin Longoria](https://github.com/galongoria) - Quantitative/Qualitative Analysis
 * [Arpan Chatterji](https://github.com/achatterji1) - Quantitative/Qualitative Analysis
-* [Colin McNally](https://github.com/cmcnally23) - TBD
+* [Colin McNally](https://github.com/cmcnally23) - Streamlit Development
 * [Elliott Metzler](https://github.com/ElliottMetzler) - Project Management, Git Management, Report Writing
 
 Due: 5/13/2022
