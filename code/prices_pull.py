@@ -12,39 +12,39 @@ from prices_cleaning import load_best_match_batch
 
 
 params = {
-    "api_key": "4F60666AD7F14FE49237DE1B9E2FB925",
+    "api_key": "INSTER_API_KEY",
     "type": "search"
 }
 
 OUTPUT_DIR = "data"
-JSON_PATH = os.path.join(OUTPUT_DIR, "items.txt")
-JSON_PATH_1 = os.path.join(OUTPUT_DIR, "items_1.txt")
+JSON_PATH_BS = os.path.join(OUTPUT_DIR, "items_best_seller.txt")
+JSON_PATH_BM = os.path.join(OUTPUT_DIR, "items_best_match.txt")
 
-# def load_ingredients():
-#     """Loads the list of ingredients to a list"""
+def load_ingredients():
+    """Loads the list of ingredients to a list"""
 
-#     df = query_and_reshape_long()
-#     recoded = recode_long_data(df)
-#     summary = (
-#         recoded[["ingredient", "amount"]].groupby("ingredient").agg(["mean", "sum"])
-#     )
-#     return summary.index.values.tolist()
+    df = query_and_reshape_long()
+    recoded = recode_long_data(df)
+    summary = (
+        recoded[["ingredient", "amount"]].groupby("ingredient").agg(["mean", "sum"])
+    )
+    return summary.index.values.tolist()
 
 
-# def get_item_jsons(params):
-#     """Loops though a list of ingredients and outputs a list of jsons."""
+def get_item_jsons_best_seller(params):
+    """Loops though a list of ingredients and outputs a list of jsons for best seller results."""
 
-#     json_list = []
-#     ingredients = load_ingredients()
-#     params["sort_by"] = "best_seller"
-#     for i in ingredients:
-#         params["search_term"] = i
-#         result = requests.get("https://api.bluecartapi.com/request", params)
-#         json_list.append(json.dumps(result.json()))
-#     return json_list
+    json_list = []
+    ingredients = load_ingredients()
+    params["sort_by"] = "best_seller"
+    for i in ingredients:
+        params["search_term"] = i
+        result = requests.get("https://api.bluecartapi.com/request", params)
+        json_list.append(json.dumps(result.json()))
+    return json_list
 
-def get_item_jsons_1(params):
-    """Loops though a list of ingredients and outputs a list of jsons."""
+def get_item_jsons_best_match(params):
+    """Loops though a list of ingredients and outputs a list of jsons for best match results."""
 
     json_list = []
     ingredients = load_best_match_batch()
@@ -56,15 +56,15 @@ def get_item_jsons_1(params):
     return json_list
 
 
-# def json_to_text(jsons, path):
-#     """Takes the list of jsons and writes them to a text file."""
+def json_to_text_best_seller(jsons, path):
+    """Takes the list of jsons for best seller and writes them to a text file."""
 
-#     f = open(path, "w+")
-#     for i in jsons:
-#         f.write(i + "\n")
-#     f.close()
+    f = open(path, "w+")
+    for i in jsons:
+        f.write(i + "\n")
+    f.close()
 
-def json_to_text_1(jsons, path):
+def json_to_text_best_match(jsons, path):
     """Takes the list of jsons and writes them to a text file."""
 
     f = open(path, "w+")
@@ -75,7 +75,7 @@ def json_to_text_1(jsons, path):
 
 if __name__ == "__main__":
 
-    # jsons = get_item_jsons(params)
-    # json_to_text(jsons, JSON_PATH)
-    jsons_1 = get_item_jsons_1(params)
-    json_to_text_1(jsons_1, JSON_PATH_1)
+    jsons_bs = get_item_jsons(params)
+    json_to_text_best_seller(jsons_bs, JSON_PATH_BM)
+    jsons_bm = get_item_jsons_best_match(params)
+    json_to_text_best_match(jsons_bm, JSON_PATH_BS)
