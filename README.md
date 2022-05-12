@@ -74,22 +74,28 @@ Table***
 
 This table shows that only three types of liquor–rum, gin, and vodka–are in at least 15% of the drinks. This was our first clue that some of the drinks in our dataset may not include liquor at all. Since we were interested in alcoholic cocktails...
 
-Our next step was to determine the types of drinks we were interested in. Given this is a project on cocktails, we decided to focus on alcoholic beverages that include liquor. The 5 types of distilled spirits are: brandy, gin, rum, tequila, vodka, and whiskey. We reduced our dataset to include only drinks that included liquor falling into one of these 5 categories. We then looked at the most used spirits in cocktails that include liquor. The results can be seen below:
+Our next step was to determine the types of drinks we were interested in. The focus of our analysis became alcoholic beverages that include liquor. The 5 types of distilled spirits are: brandy, gin, rum, tequila, vodka, and whiskey, so we reduced our dataset to include drinks that include one or more of these types of alcohol. Next, we viewed the most used spirits in our list of cocktail recipes. The results can be seen below:
 
 Table2***
 
-Next, we looked at the prices of drinks and ingredients. It was clear to us that the most expensive ingredients were the different types of liquor, so our next step was to compare the price per ounce of the different types of spirits, which can be seen in the chart below:
+somethin semthing ....i forgot what this graph looks like
+
+At this point be began our price analysis. It was clear to us that the most expensive ingredients were the different types of liquor, so our next step was to compare the price per ounce of the different types of spirits, which can be seen in the chart below:
 
 BarChart****
 
 
-Comparing this chart with the previous table (Table2), we can see that the most expensive spirits are used the least often. Interestingly, the least expensive liquor (grain alcohol) is also used the least often. We acknowledge the fact that there may be sampling bias associated with these proportions. However, it should be noted that rum and vodka were subdivided into "rum" and "vodka" and "flavored rum" and "flavored vodka". Even so, the "rum" and "vodka" categories lie in the top 3 most used spirits. We assume this is either because these spirits mix well with other ingredients or people just like the taste of them.
+Comparing this chart with the previous table (Table2), we can see that the most expensive spirits are used the least often. Interestingly, the least expensive liquor (grain alcohol) is also used the least often. We acknowledge the fact that there may be sampling bias associated with these proportions. However, it should be noted that rum and vodka were subdivided into "rum" and "vodka" and "flavored rum" and "flavored vodka". Even so, the "rum" and "vodka" categories lie in the top 3 most used spirits. We assume this is either because rum, gin, and vodka mix well with other ingredients or people just like the taste of them.
 
-<!-- To determine this relationship, we ran an OLS regression of the amount of ingredients on the type of liquor, while controlling for the total ounces in a drink. Our dataset at this point included drinks that were tens of ounces or more. Since the impact of total ounces on number of ingredients for large drinks is so significant, we further subdivied our data into cocktails that are less than or equal to 8 ounces. This is a reasonable number for a person who is drinking a given cocktail in one sitting. -->  MIGHT GET RID OF THIS BC WE HAVE AN ABV ANALYSIS NOW
 
-Another part of our analysis included whether or not certain types of alcohol are mixed together. Our dataset at this point included drinks that were tens of ounces or more, so further subdivied our data into cocktails that are less than or equal to 8 ounces. This is a reasonable number for a person who is drinking a given cocktail in one sitting. We found that the correlation between spirits is negative but close to zero. Thus, typically single-person cocktails in our dataset are using only one type of liquor. The results are shown in a heat map below:
+####
+
+*****this will be before ols to say that there is no perfect collinearity**** part of our analysis included whether or not certain types of alcohol are mixed together. Our dataset at this point included drinks that were tens of ounces or more, so further subdivied our data into cocktails that are less than or equal to 8 ounces. This is a reasonable number for a person who is drinking a given cocktail in one sitting. We found that the correlation between spirits is negative but close to zero. Thus, typically single-person cocktails in our dataset are using only one type of liquor. The results are shown in a heat map below:
 
 **heat map**
+
+
+####
 
 ## Conclusion
 
