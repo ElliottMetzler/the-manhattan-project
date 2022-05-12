@@ -56,7 +56,16 @@ The raw ingredient prices data returned from the BlueCart API importantly includ
 
 To clean the Ingredient Prices Data, we utilized the descriptions for the products. We found that the measurement and units were consistently appearing at the end of the product description, so we iterated through descriptions in reverse order to extract the unit and portion size. For certain ingredients, we were unable to systematically perform conversions, so we implemented a manual verification and review step separately to fill in necessary missing entries and convert in certain cases. For our final step, we converted prices to a per ounce basis.
 
+## Streamlit Dashboard
+
+The first component of this project was to use our database to produce a handy Streamlit dashboard to allow users to query for drinks using various search parameters. We allow users to query based on the following parameters:
+* Ingredient Count: the maximum number of ingredients they have available or would be willing to include in their cocktail
+* Main Liquors: Some main liquors like Vodka, Whiskey, or Tequila to allow users to easily search on the common stuff.
+* Other Ingredients: Using a unique list of ingredients appearing in the database, we allow users to get specific if they have something they'd like to focus on or use up.
+
 ## Analysis [[Elliott left this alone for now]]
+
+The second component of this project was to use our database to perform some analysis of the cocktail data.
 
 We began our analysis by looking at ingredient prevalence. To do so, we checked the top 10 most used ingredients among the entire dataset. Our results are shown below:
 
@@ -84,7 +93,7 @@ Another part of our analysis included whether or not certain types of alcohol ar
 
 ## Conclusion
 
-[[Elliott to fill]]
+[[Elliott to fill TODAY]]
 
 ## Reproducability Instructions
 
@@ -95,7 +104,7 @@ __NOTE__: [[Need to think about and verify what the system requirements are. We 
 	* Run `pip install -r requirements.txt` or `python3 -m pip install -r requirements.txt`, depending on your system.
 	* Run `cd the-manhattan-project`
 
-2) Instructions to scrape and clean data:
+2) Instructions to source and clean the data:
     * Run `python3 code/pull_raw_data.py` to scrape data from [The Cocktail DB](https://www.thecocktaildb.com) website and create two csv files: [drinks_data_raw.csv](https://github.com/ElliottMetzler/the-manhattan-project/blob/main/data/drinks_data_raw.csv) which contains raw data on drink recipes and [ingredients_data_raw.csv](https://github.com/ElliottMetzler/the-manhattan-project/blob/main/data/ingredients_data_raw.csv) which contains a list of all the ingredients specified in the recipes. The ingredient list will be utilized in pulling prices for the ingredients. 
     * Run `python3 code/clean.py` to create two csv files: [drinks_data_clean_no_header.csv](https://github.com/ElliottMetzler/the-manhattan-project/blob/main/data/drinks_data_clean_no_header.csv) which contains clean data with no headers to faciliate merging it into the SQL table and [drinks_data_headers.csv](https://github.com/ElliottMetzler/the-manhattan-project/blob/main/data/drinks_data_headers.csv) to serve as a reference for setting up the SQL table schema.
     * Run `python3 code/prices_pull.py` to scrape data from the BlueCart API. Note that you will need to acquire an API key and insert it into the file in the parameters section. Specifically, replace the string "INSERT_API_KEY" with your API key.
