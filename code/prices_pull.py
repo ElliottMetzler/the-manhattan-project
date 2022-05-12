@@ -3,13 +3,9 @@ from pandas import json_normalize
 import requests
 import json
 import os
-from quant_preprocess import query_and_preprocess_data
 from quant_preprocess import query_and_reshape_long
 from quant_preprocess import recode_long_data
-from prices_cleaning import load_best_match_batch
-from prices_cleaning import load_best_match_batch
-
-
+from prices_clean import load_best_match_batch
 
 params = {
     "api_key": "INSERT_API_KEY",
@@ -56,15 +52,7 @@ def get_item_jsons_best_match(params):
     return json_list
 
 
-def json_to_text_best_seller(jsons, path):
-    """Takes the list of jsons for best seller and writes them to a text file."""
-
-    f = open(path, "w+")
-    for i in jsons:
-        f.write(i + "\n")
-    f.close()
-
-def json_to_text_best_match(jsons, path):
+def json_to_text(jsons, path):
     """Takes the list of jsons and writes them to a text file."""
 
     f = open(path, "w+")
@@ -75,7 +63,8 @@ def json_to_text_best_match(jsons, path):
 
 if __name__ == "__main__":
 
-    jsons_bs = get_item_jsons(params)
-    json_to_text_best_seller(jsons_bs, JSON_PATH_BM)
+    jsons_bs = get_item_jsons_best_seller(params)
+    json_to_text(jsons_bs, JSON_PATH_BS)
+
     jsons_bm = get_item_jsons_best_match(params)
-    json_to_text_best_match(jsons_bm, JSON_PATH_BS)
+    json_to_text(jsons_bm, JSON_PATH_BM)

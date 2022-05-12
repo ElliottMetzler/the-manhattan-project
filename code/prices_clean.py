@@ -1,12 +1,7 @@
 import pandas as pd
 import numpy as np
-from pandas import json_normalize
-import requests
 import json
-import csv
 import os
-import re
-from quant_preprocess import query_and_preprocess_data
 from quant_preprocess import query_and_reshape_long
 from quant_preprocess import recode_long_data
 
@@ -19,11 +14,10 @@ from quant_preprocess import recode_long_data
 
 measurements = ["oz", "ml", "lb", "l", "ounces", "g"]
 numbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9","0", "."]
-IN_FILE_PATH_BS = os.path.join("data", "items.txt")
-IN_FILE_PATH_BM = os.path.join("data", "items_1.txt")
-OUTPUT_DIR = "data"
-OUTPUT_PATH = os.path.join(OUTPUT_DIR, 'ingredient_prices_raw.csv')
-
+DIR = "data"
+IN_FILE_PATH_BS = os.path.join(DIR, "items_best_seller.txt")
+IN_FILE_PATH_BM = os.path.join(DIR, "items_best_match.txt")
+OUTPUT_PATH = os.path.join(DIR, 'ingredient_prices_raw.csv')
 
 def load_ingredients():
 
@@ -302,7 +296,7 @@ def to_csv(df):
     data.to_csv(OUTPUT_PATH)
 
 if __name__ == "__main__":
-    os.makedirs(OUTPUT_DIR,exist_ok=True)
+    os.makedirs(DIR,exist_ok=True)
     d_bm = get_products_best_match()
     d_bm = drop_bad_products(d_bm)
     df_bm = set_index(d_bm)

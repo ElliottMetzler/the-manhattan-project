@@ -1,15 +1,10 @@
 import os
 import pandas as pd
 import numpy as np
-#verify:
-#cornstarch, cognac, grain alcohol, bitters, champagne, egg, frangelico
-#look at the type of herbs in the list
 
-IN_PATH = os.path.join("data", "ingredient_prices_raw.csv")
-OUTPUT_DIR = "data"
-OUTPUT_PATH = os.path.join(OUTPUT_DIR, "ingredient_prices_clean.csv")
-
-
+DIR = "data"
+IN_PATH = os.path.join(DIR, "ingredient_prices_raw.csv")
+OUTPUT_PATH = os.path.join(DIR, "ingredient_prices_clean.csv")
 
 def final_prices(path):
     index = ["ingredient", "price"]
@@ -73,6 +68,6 @@ def final_prices(path):
 
 if __name__ == "__main__":
 
-    os.makedirs(OUTPUT_DIR, exist_ok = True)
+    os.makedirs(DIR, exist_ok = True)
     final_prices(OUTPUT_PATH)
 
