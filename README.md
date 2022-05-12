@@ -95,6 +95,10 @@ Another part of our analysis included whether or not certain types of alcohol ar
 
 [[Elliott to fill TODAY]]
 
+* Limitations
+* Summarize Findings
+* Extensions (to do but also what data extensions would help)
+
 ## Reproducability Instructions
 
 __NOTE__: [[Need to think about and verify what the system requirements are. We are going to have requirements for access to cloud buckets to upload the CSVs I think, along with GCP for normal stuff. Perhaps other for an app if we try to run one]]
