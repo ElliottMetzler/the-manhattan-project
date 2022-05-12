@@ -92,6 +92,14 @@ Comparing this chart with the previous table (Table2), we can see that the most 
 
 <!-- To determine this relationship, we ran an OLS regression of the amount of ingredients on the type of liquor, while controlling for the total ounces in a drink. Our dataset at this point included drinks that were tens of ounces or more. Since the impact of total ounces on number of ingredients for large drinks is so significant, we further subdivied our data into cocktails that are less than or equal to 8 ounces. This is a reasonable number for a person who is drinking a given cocktail in one sitting. -->  MIGHT GET RID OF THIS BC WE HAVE AN ABV ANALYSIS NOW
 
+Another part of our analysis included whether or not certain types of alcohol are mixed together. Our dataset at this point included drinks that were tens of ounces or more, so further subdivied our data into cocktails that are less than or equal to 8 ounces. This is a reasonable number for a person who is drinking a given cocktail in one sitting. We found that the correlation between spirits is negative but close to zero. Thus, typically single-person cocktails in our dataset are using only one type of liquor. The results are shown in a heat map below:
+
+***heat map****
+
+
+
+
+
 
 
 ## Conclusion
