@@ -154,12 +154,3 @@ def query_and_preprocess_data():
     w_rowsum[prop_cols] = calculate_row_prop(w_rowsum, prop_cols)
 
     return w_rowsum.drop("row_sum", axis=1)
-
-
-if __name__ == "__main__":
-    df = query_and_preprocess_data()
-    print(df.head(25))
-
-    df = query_and_reshape_long()
-    recoded = recode_long_data(df)
-    print(recoded.head(25))
