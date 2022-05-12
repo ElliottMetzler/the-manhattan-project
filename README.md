@@ -63,7 +63,7 @@ The first component of this project was to use our database to produce a handy S
 * Main Liquors: Some main liquors like Vodka, Whiskey, or Tequila to allow users to easily search on the common stuff.
 * Other Ingredients: Using a unique list of ingredients appearing in the database, we allow users to get specific if they have something they'd like to focus on or use up.
 
-## Analysis [[Elliott left this alone for now]]
+## Analysis
 
 The second component of this project was to use our database to perform some analysis of the cocktail data.
 
@@ -96,8 +96,6 @@ Comparing this chart with the previous table (Table2), we can see that the most 
 
 
 By initial inspection, we can see a lot of red towards the upper left side of the graph. This is good for the purposes of our regression since wkamchatkae know that no two types of liquor are correlated with one another. If we look at the bottom to the right, we can see that the graph gets a bit more colorful. There are some interesting relationships here to point out. First, cost and abv show a strong relationship and similarly for alcohol content per dollar and cost. As stated previously, alcohol is the most expensive ingredient, so this should not be surprising. We also see that there is a strong relationship between cost and alcohol per dollar. Given this, we should include abv as one of our covariates to control for total ounces. This should not be a big problem since abv and total ounces to not display a strong relationship. However, we 
-
-####
 
 ## Conclusion
 
