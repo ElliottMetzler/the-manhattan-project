@@ -10,7 +10,7 @@ HEADER_PATH = os.path.join(BASE_DIR, "drinks_data_headers.csv")
 
 
 def add_drop_columns(in_path):
-    """Drop extraneous columns with no observations. Add a total ingredient count column and 12 new ingredient measurement columns with commas, and parentheses removed. Add 1 oz for entries where ingredient is specified but measurement is not. Replace new line characters in the measurement, instructions, and image attribution columns with space."""
+    """Drop extraneous columns with no observations. Add a total ingredient count column and 12 new ingredient measurement columns with commas, parentheses, and words appearing before digits removed. Add 1 oz for entries where ingredient is specified but measurement is not. Replace new line characters in the measurement, instructions, and image attribution columns with space."""
 
     cols = [
         "strDrinkAlternate",
@@ -84,7 +84,7 @@ def add_drop_columns(in_path):
         
     df[pd.Index(cols2) + "_clean"] = (
         df[cols2]
-        .apply(lambda col: col.str.replace(r"\(|\)|,", "", regex=True))
+        .apply(lambda col: col.str.replace(r"\(|\)|,|Add|Around rim put|About|Juice of", "", regex=True))
         
     )
 
@@ -177,7 +177,6 @@ def create_dict():
         "oz red": 1,
         "oz Grape": 1,
         "oz light or dark": 1,
-        "Add  oz": 1,
         "Fill to top": 1,
         "top up with": 1,
         "for topping": 1,
@@ -220,7 +219,6 @@ def create_dict():
         "ml white": 0.033814,
         "ml frozen": 0.033814,
         "ml": 0.033814,
-        "Add  ml": 0.033814,
         "cL": 0.33814,
         "cl": 0.33814,
         "cl hot": 0.33814,
@@ -250,7 +248,6 @@ def create_dict():
         "cups hot": 8,
         "cup Thai": 8,
         "cup fruit": 8,
-        "Add  cup": 8,
         "cup crushed": 8,
         "cup skimmed": 8,
         "cups boiling": 8,
@@ -260,11 +257,11 @@ def create_dict():
         "full glass": 8,
         "Full Glass": 8,
         "glass": 8,
-        "Around rim put pinch": 0.010,
         "pinches": 0.010,
         "pinch": 0.010,
         "Pinch": 0.010,
         "oneinch": 0.554113,
+        "one-inch":0.554113,
         "inch": 0.554113,
         "inch strips": 0.554113,
         "drops yellow": 0.0016907,
@@ -273,7 +270,6 @@ def create_dict():
         "drop": 0.0016907,
         "drops blue": 0.0016907,
         "drop yellow": 0.0016907,
-        "About  drops": 0.0016907,
         "drops red": 0.0016907,
         "pint": 16,
         "pint Jamaican": 16,
@@ -299,7 +295,6 @@ def create_dict():
         "part": 1,
         "part Bass pale": 1,
         "parts": 1,
-        "Juice of  wedge": 1,
         "wedges": 1,
         "wedge": 1,
         "Wedges": 1,
@@ -320,7 +315,7 @@ def create_dict():
         "Fresh leaves": 0.2,
         "fresh": 0.2,
         "cubes": 4,
-        "cube": 4,
+        "cube": 0.08,
         "Ground": 0.33,
         "ground": 0.33,
         "crushed": 0.33,
@@ -328,7 +323,6 @@ def create_dict():
         "Whole": 0.5,
         "whole": 0.5,
         "whole green": 0.5,
-        "About  bottle": 25.4,
         "bottle": 25.4,
         "bottles": 25.4,
         "large bottle": 25.4,
@@ -346,7 +340,7 @@ def create_dict():
         "garnish": 0.2,
         "gr": 0.035274,
         "kg chopped": 35.274,
-        "fifth": 0.2,
+        "fifth": 5,
         "Chopped": 0.0705479,
         "if needed": 1,
         "or": 1,
@@ -354,7 +348,6 @@ def create_dict():
         "fifth Smirnoff red label": 5,
         "pods": 1,
         "handful": 0.5,
-        "Juice of": 1,
         "A little bit of": 1,
         "to taste": 0.166667,
         "By taste": 0.166667,
@@ -371,7 +364,6 @@ def create_dict():
         "Bacardi": 0.5,
         "Float Bacardi": 0.5,
         "spoons": 0.5,
-        "Add": 4,
         "lots": 6,
         "Squeeze": 1,
         "Unsweetened": 0.5,
@@ -424,12 +416,12 @@ def make_pattern(str_list):
 def unit_unify(list_of_texts, unit_dict):
     """Take a list of strings that contains measurement units, and converts them into ounces."""
 
-    str_pattern = make_pattern(units_list)
-    pattern = rf"(^[\d -/]*)({str_pattern})"
+    pattern = r"(^[\d -/]*)(Squeeze|oz finely chopped dark|cup|large|scoops|cup skimmed|Turkish apple|oz cold|drop green|very sweet|drop|oz chopped bittersweet or semisweet|pint hard|gr|oz unsweetened|sprigs|cracked|Ground|cup fruit|piece textural|Sprig|tsp crushed|fifth Smirnoff red label|part Bass pale|glass|to taste|cups|beaten|Slice|splash|Chilled|cups cold|shot Bacardi|long strip|cup hot|drops red|cl cold|package|fresh|twist of|Wedges|Dashes|bottle|Large Sprig|splashes|black|oz blue|oz skimmed|Fill to top with|Fresh|stick|tblsp fresh chopped|oz fine|Fill with|if needed|dl|dl Schweppes|quart black|tblsp instant|dashes|tblsp ground|Grated|Strong cold|oz|oz hot|seltzer water|wedge|cup Thai|oz sweet|cubes|frozen|tablespoons|Garnish with|Chopped|tsp ground roasted|cup boiling|oz dry|oz Bacardi|cups fresh|gal|fill|cl|drops yellow|oz cream|cl hot|oz light|gal Tropical Berry|oz lemon|drop yellow|mlfl oz|Dash|cL|cup cold|Top up with|kg chopped|chunk dried|tsp superfine|cups boiling|Pinch|oz whole|cup instant|oz plain|wedges|Fresh leaves|inch strips|orange|top up|shot|tsp ground|ml white|cube|drops blue|lb|tsp dried and chopped|part|can|ground|oz Green Ginger|pieces|Over|glass strong black|dash|jigger|pint|L|crushed|spoons|pods|tsp sweetened|ml frozen|to fill|cups white|glass crushed|cans|full glass|pint sweet or dry|Shot|garnish|slice|cup plain|mini|oz Chilled|sticks|Top|tblsp chopped|bottles|oz Mexican|L Jamaican|jiggers|top up with|or lime|measures|Coarse|oz white or|pinches|large bottle|qt|Float Bacardi|tblsp hot|Bacardi|quart|oneinch|one-inch|Fill to top|shots|oz sweetened|oz pure|cup black|oz Jamaican|cup mild|fifth|drops|lb frozen|lots|piece|Garnish|oz Blended|handful|can frozen|Whole|oz white|cup granulated|tsp dried|Full Glass|oz light or dark|whole green|oz Stoli|cup crushed|or|ripe|pinch|tsp instant|oz frozen|can sweetened|pint Jamaican|oz chilled|inch|oz instant|cup superfine|tsp Tropical|ml pure|oz Hazlenut|tblsp|chunks|Unsweetened|small bottle|tsp powdered|Top it up with|cup pure|glass cold|parts|cups hot|tbsp|oz Grape|oz Muscatel|cup iced|cl Smirnoff|whole|ml|By taste|Cup|Rimmed|A little bit of|mikey bottle|tblsp green|packages|bottle Boone Strawberry Hill|Twist of|Claret|tsp|tblsp fresh|for topping|oz double|tsp grated|oz red|shot Jamaican|)"
 
     new_list = []
 
     for text in list_of_texts:
+
         re_result = re.search(pattern, text)
 
         if re_result:
