@@ -68,11 +68,11 @@ Though we broadly attempted to upload the data to our database in as raw of a fo
 
 #### Description of the Ingredient Prices Cleaning Process
 
-[[Austin to fill here / tell Elliott what to fill]]
+[[Elliott to shift notes down when reviewing and drafting]]
 
 ## Analysis
 
-[[Arpan to fill here / tell Elliott what to fill]]
+[[Arpan and Austin to fill here]]
 
 ## Conclusion
 
