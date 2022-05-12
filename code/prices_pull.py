@@ -12,7 +12,7 @@ from prices_cleaning import load_best_match_batch
 
 
 params = {
-    "api_key": "INSTER_API_KEY",
+    "api_key": "INSERT_API_KEY",
     "type": "search"
 }
 
