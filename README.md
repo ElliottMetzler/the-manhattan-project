@@ -6,7 +6,7 @@ Team:
 * [Kashaf Oneeb](https://github.com/koneeb) - Data Engineering
 * [Austin Longoria](https://github.com/galongoria) - Data Engineering, Analysis
 * [Arpan Chatterji](https://github.com/achatterji1) - Analysis
-* [Colin McNally](https://github.com/cmcnally23) - Streamlit Front End Devel
+* [Colin McNally](https://github.com/cmcnally23) - Streamlit Front End Dev
 * [Elliott Metzler](https://github.com/ElliottMetzler) - Project Management, Git Management, Report, Streamlit Back End Dev
 
 Due: 5/13/2022
