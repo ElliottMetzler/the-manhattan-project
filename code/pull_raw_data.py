@@ -1,24 +1,20 @@
 from pandas import json_normalize
-from dotenv import load_dotenv
 import requests
 import pandas as pd
 import os
 import string
 
-load_dotenv()
-
-COCKTAIL_KEY = os.environ["COCKTAIL_KEY"]
-
 BASE_DIR = "data"
 DATA_OUT_PATH = os.path.join(BASE_DIR, "drinks_data_raw.csv")
 INGREDIENTS_OUT_PATH = os.path.join(BASE_DIR, "ingredients_data_raw.csv")
-COCKTAIL_KEY = os.environ["COCKTAIL_KEY"]
+
+COCKTAIL_KEY = "INSERT_API_KEY"
+
 ALPHA = list(string.ascii_lowercase)
 NUM = list(string.digits)
 NUM.extend(ALPHA)
 NUM.remove("0")
 NUM.remove("8")
-
 
 
 def create_raw_data(BASE_URL):
