@@ -2,6 +2,9 @@ import pandas as pd
 import numpy as np
 from database import engine
 from ingredient_map import create_ingredient_map
+import os
+
+ABV_DATA = os.path.join("data", "ABV_data.csv")
 
 
 # Functions
@@ -39,6 +42,15 @@ def query_data():
         all_cocktails
     ;
         """
+
+    return pd.read_sql_query(query, engine)
+
+def query_ingredient_prices():
+    """Function queries the database for ingredient prices and returns data frame"""
+    query = f"""
+    select *
+    from ingredient_prices;
+    """
 
     return pd.read_sql_query(query, engine)
 
@@ -139,6 +151,41 @@ def recode_long_data(df):
     return recode_ingredients(df, ingredient_dict)
 
 
+def price_and_abv_preprocessed():
+    """Function combines the cocktails, prices, and abv data to prepare it for analysis"""
+
+    df = query_and_reshape_long()
+    recoded = recode_long_data(df)
+
+    ingredient_prices = query_ingredient_prices()
+    abv_data = pd.read_csv(ABV_DATA)
+
+    combined = (
+        recoded
+        .merge(ingredient_prices, how = "left", on = "ingredient")
+        .merge(abv_data, how = "left", on = "ingredient")
+        .fillna(0)
+        .assign(
+            ounces_alcohol = lambda df_: df_["amount"] * df_["abv_percent"])
+        .groupby("strdrink")
+        .agg({
+            "ingredient":"count",
+            "amount": "sum",
+            "price":"sum",
+            "ounces_alcohol": "sum"})
+        .assign(
+            weighted_abv = lambda df_: df_["ounces_alcohol"] / df_["amount"],
+            oz_alc_per_dollar = lambda df_: df_["ounces_alcohol"] / df_["price"])
+        .rename(columns  = {
+            "ingredient" : "num_ingredients",
+            "amount": "total_ounces",
+            "price" : "cost"
+            })
+        )
+
+    return combined
+
+
 def query_and_preprocess_data():
     """Function performs full preprocessing: Queries the database, recodes incredients, reshapes in wide format with a column for each ingredient and a row for each drink. Values are the proportion of that drink that is made up of that ingredient (rows sum to 1)"""
 
@@ -154,3 +201,9 @@ def query_and_preprocess_data():
     w_rowsum[prop_cols] = calculate_row_prop(w_rowsum, prop_cols)
 
     return w_rowsum.drop("row_sum", axis=1)
+
+if __name__ == "__main__":
+    print(new_processor())
+
+    data = new_processor()
+    data.to_csv("data/tester.csv")
