@@ -2,6 +2,7 @@ import pandas as pd
 from database import engine
 from quant_preprocess import query_and_reshape_long
 from quant_preprocess import recode_long_data
+from quant_preprocess import query_ingredient_prices
 
 
 def main_query(num_ingredients):
@@ -154,17 +155,7 @@ def get_ingredients_list():
     list_lower = [x.lower() for x in list_ if x is not None]
 
     return sorted(list(set(list_lower)))
-
-
-def query_ingredient_prices():
-    """Function queries the database for ingredient prices and returns data frame"""
-    query = f"""
-	select *
-	from ingredient_prices;
-	"""
-
-    return pd.read_sql_query(query, engine)
-
+    
 
 def calculate_drink_prices():
     """Function calculates estimated drink prices. Returns databrame with drink and corresponding estimated price"""
