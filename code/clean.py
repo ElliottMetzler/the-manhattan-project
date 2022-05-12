@@ -69,31 +69,26 @@ def add_drop_columns(in_path):
 
     for col1, col2 in zip(cols1, cols2):
         df[col2] = df[col2].mask(df[col1].notna() & df[col2].isna(), "1 oz")
-        
-    df[pd.Index(cols2)] = (
-        df[cols2]
-        .apply(lambda col: col.str.replace(r"\r\n|\n", " ", regex=True))
-        
+
+    df[pd.Index(cols2)] = df[cols2].apply(
+        lambda col: col.str.replace(r"\r\n|\n", " ", regex=True)
     )
 
-    df[pd.Index(cols2)] = (
-        df[cols2]
-        .apply(lambda col: col.str.replace(r"\r\n|\n", " "))
-    )
-        
-        
-    df[pd.Index(cols2) + "_clean"] = (
-        df[cols2]
-        .apply(lambda col: col.str.replace(r"\(|\)|,|Add|Around rim put|About|Juice of", "", regex=True))
-        
+    df[pd.Index(cols2)] = df[cols2].apply(lambda col: col.str.replace(r"\r\n|\n", " "))
+
+    df[pd.Index(cols2) + "_clean"] = df[cols2].apply(
+        lambda col: col.str.replace(
+            r"\(|\)|,|Add|Around rim put|About|Juice of", "", regex=True
+        )
     )
 
-    df[pd.Index(cols3)] = (
-        df[cols3].apply(lambda col: col.str.replace(r"\r\n|\n", " ", regex=True))
-
+    df[pd.Index(cols3)] = df[cols3].apply(
+        lambda col: col.str.replace(r"\r\n|\n", " ", regex=True)
     )
 
-    df[pd.Index(cols4)] = df[cols4].apply(lambda col: col.str.replace("\r\n", " ", regex=True))
+    df[pd.Index(cols4)] = df[cols4].apply(
+        lambda col: col.str.replace("\r\n", " ", regex=True)
+    )
 
     return df
 
@@ -261,7 +256,7 @@ def create_dict():
         "pinch": 0.010,
         "Pinch": 0.010,
         "oneinch": 0.554113,
-        "one-inch":0.554113,
+        "one-inch": 0.554113,
         "inch": 0.554113,
         "inch strips": 0.554113,
         "drops yellow": 0.0016907,
