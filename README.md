@@ -1,21 +1,21 @@
 # the-manhattan-project
 Team Good-2-Great Final project for Python, Data, and Databases at UT Austin Spring 2022.
 
-Team Members: 
-* [Pedro Rodrigues](https://github.com/PedroNBRodrigues) - Data engineering
-* [Kashaf Oneeb](https://github.com/koneeb) - Data engineering, Report
-* [Austin Longoria](https://github.com/galongoria) - Quantitative/Qualitative Analysis
-* [Arpan Chatterji](https://github.com/achatterji1) - Quantitative/Qualitative Analysis
-* [Colin McNally](https://github.com/cmcnally23) - Streamlit Development
-* [Elliott Metzler](https://github.com/ElliottMetzler) - Project Management, Git Management, Report Writing
+Team: 
+* [Pedro Rodrigues](https://github.com/PedroNBRodrigues) - Data Engineering
+* [Kashaf Oneeb](https://github.com/koneeb) - Data Engineering
+* [Austin Longoria](https://github.com/galongoria) - Data Engineering, Analysis
+* [Arpan Chatterji](https://github.com/achatterji1) - Analysis
+* [Colin McNally](https://github.com/cmcnally23) - Streamlit Front End Devel
+* [Elliott Metzler](https://github.com/ElliottMetzler) - Project Management, Git Management, Report, Streamlit Back End Dev
 
 Due: 5/13/2022
 
 ## Introduction
 
-Ever find yourself hankering for a drink but too tired to get to the store? We get it, it's been a rough week, it's Friday night, and all you want to do is quickly whip something up based on what you already have in the cabinet. That's where we come in. Our goal with The Manhattan Project is to use data on over 500 cocktails and allow you to search based on what you have handy. The Manhattan Project tool will beam you up with a handy list of delicious drinks containing what you've got on hand and how much effort you've got left in you (how many ingredients to include). Cheers!
+Ever find yourself hankering for a drink but too tired to get to the store? We get it, it's been a rough week, it's Friday night, and all you want to do is quickly whip something up based on what you already have in your cabinet. That's where we come in. Our goal with The Manhattan Project is to use data on over 500 cocktails and allow you to search based on what you have handy. The Manhattan Project tool will beam you up with a handy list of delicious drinks containing what you've got on hand and how much effort you've got left in you (how many ingredients to include). Cheers!
 
-The remainder of this report is structured as follows: first, we discuss the data used for our analysis and applet; next, we discuss the analytical approach we took [[more specific once we finalize here]]; finally, we conclude with closing thoughts on limitations of our analyis areas for potential extensions to this project and search engine.
+The remainder of this report is structured as follows: first, we discuss the data used for our analysis and applet; next, we discuss our analytical approach and results; finally, we conclude with closing thoughts on limitations of our analyis areas for potential extensions to this project and search engine.
 
 ## Database
 
@@ -23,35 +23,17 @@ The remainder of this report is structured as follows: first, we discuss the dat
 
 Since the Cocktail Database (hereafter "cocktailDB") has a JSON API and richer extraction capabilities with a $2 fee to [Patreon](https://www.patreon.com/thedatadb) (not to be confused with [Patron](https://www.patrontequila.com/age-gate/age-gate.html?origin=%2F&flc=homepage&fln=Post_Homepage_Patron)), we purchased full access. We extracted the data using python, wrote schema in Postgres, and used Google Cloud Platform Buckets to upload csv files and import them into our own database.
 
-The second important piece of data we use are ingredient prices from the web. We used a list of ingredients from the cocktailDB and leveraged Walmart's API for drink prices. As with the data from the cocktailDB, we uploaded a a table for ingredient prices to our own cloud database.
+The second important piece of data we use are ingredient prices from the web. We compile a list of ingredients from the cocktailDB and leveraged Walmart's API for drink prices. As with the data from the cocktailDB, we uploaded a table of ingredient prices to our database.
 
-### Procedure
+### Cocktail Data
 
-The first step in retrieving our data was to query the cocktailDB API endpoints for each drink in their database. To effectuate this, we cycled through each letter of the alphabet and digit 0-9, querying the database for cocktails starting with each letter or number. This approach yielded all 635 cocktails and their complete information.
+The first step in retrieving our data was to query the cocktailDB API endpoints for each drink in their database. To do this, we looped over each letter of the alphabet and digit 0-9, querying the database for cocktails starting with each letter or number. This approach yielded all 635 cocktails and their complete information.
 
-The second step was to retrieve data on ingredient prices. 
+#### Description of the Cocktail Data
 
-1. Used BlueCart API which is a database of products sold by Walmart.
-2. Used the ingredient list to query each ingredient and retrieved the description and price. 
-3. First, we searched results for "best seller" in order to get an array of products that one would realistically purchase.
-4. Then, we searched results for "best match" in order to get an array of products that would most closely represent the ingredient we are searching for.
-5. The prices listed on BlueCart are not converted into ounces, which is why we also grabbed the description. In most cases, the description included the total measurement of the product in different units. However, the description also may have included numbers that did not relate to measurements. We noticed that the measurement and units was always at the end of the description, so we iterated through the description in reverse order, breaking once the full number was grabbed. We had a similar process for grabbing the units in which we iterated through the description in reverse order and grabbed the word if it exactly matched a unit measurement name. 
-6. We did have to drop things like water and beer because these had descriptions such as "12 oz bottles, 12-count." Given the variablility in measurements and counts, we had to drop these and map them manually in the next cleaning process.
-7. Next, we converted the total prices into prices per oz.
-8. For the items not included in Walmart or with items that we were unable to convert with the above process, we mapped prices per oz based on the average of the first three prices online for the given ingredients.
+The raw data contains an entry (row) for each drink and many descriptive features (columns) about that drink. In addition to a unique ID for each drink and the drink name, it contains a handful of classification fields such as the the drink glass type (i.e. highball, shot glass, punch bowl, etc.) and whether or not the drink is alcoholic. Additionally, it contains fields containing written instructions in multiple languages including english, german, french and italian. Most importantly for our purposes, each cocktail has a batch of columns reporting the ingredients required to make that cocktail and a corresponding set of columns reporting the measurements of those ingredients. In the raw data, these ingredient measurements are non-standard in format and unit, including entries such as "2 shots", "2L", or "3 parts." Because these measurements are non-standard, this represented the biggest data cleaning effort to preprare our data for analysis.
 
-To do so, we started with the list of unique ingredients in the cocktailDB, performed a combination of programatic and manual cleaning on the ingredients, then queried the Walmart API for as many ingredients as we could find. Finally, we implemented some additional manual web searching for certain missing ingredients to round out our data.
-
-
-With our list of cocktails, ingredients, and prices, we used GCP Buckets to upload the necessary csv files into our SQL cloud database.
-
-### Data
-
-#### Description of the Raw cocktailDB Data
-
-The raw data contains an entry (row) for each drink and many descriptive features (columns) about that drink. In addition to a unique ID for each drink and the drink name, it contains many classification fields such as the the drink category (i.e. cocktail, shot, punch/party drink, etc.), whether or not the drink is alcoholic and the type of glass this drink typically requires. Furthermore, it contains fields containing written instructions in multiple languages including english, german, french and italian. Most importantly, each cocktail has a set of columns reporting the ingredients required and a corresponding set of columns reporting the measurements of those ingredients. In the raw data, these ingredient measurements are non-standard in format and unit, including entries such as "2 shots", "2L", or "3 parts." Because these measurements are non-standard, this represented the biggest data cleaning effort to make our data useable for analysis.
-
-#### CocktailDB Cleaning Process
+#### Cocktail Data Cleaning Process
 
 Though we broadly attempted to upload the data to our database in as raw of a format as possible, we took some important cleaning steps. We dropped a few columns that we were certain not to use. More importantly, we cleaned the ingredient measurements and converted these values to standard fluid ounces so that we could estimate drink prices.
 
@@ -62,13 +44,17 @@ Though we broadly attempted to upload the data to our database in as raw of a fo
 * We then replaced new-line characters in the measaurement `strMeasure1` through `strMeasure12`, instructions `strInstructions`, `strInstructionsDE`, and `strInstructionsIT`, and image attribution `strImageAttribution` columns with the space character to improve compilation and readability of the csv file. 
 * Finally, we created a unit conversion dictionary with all the units specified in the the "clean" measurement columns as keys and their respective measurement in ounces as values. We also converted fractions in the clean measurement columns to floats. Using regex and our unit conversion dictionary, we returned a csv with all the observations in the clean measurement columns converted to floats representing the ingredient measurements in ounces. This would prepare the measurement columns for the quantitative analysis. Note: our cleaning code returns two files: a csv with no headers to allow the data to fit the SQL table schema, and a csv with only headers as a reference to set up the SQL table schema.
 
-#### Description of the Ingredient Prices Scraping Process
+### Ingredient Prices Data
 
-[[Austin to fill here / tell Elliott what to fill]]
+To retrieve data on ingredient prices, we combined leveraged a list of ingredients from the cocktail database to search Walmart's API (dubbed BlueCart), performed a combination of programatic and manual cleaning on the ingredient prices, then imported the resulting data into our database. One key nuance to our approach to searching the BlueCart API is that we used two searches to achieve most representative results. We queried both for "best seller" and "best match" for each ingredient, then combined these two searches in an effort to get the closest, most accurate, representation of the price of that ingredient.
 
-#### Description of the Ingredient Prices Cleaning Process
+#### Description of the Ingredient Prices Data
 
-[[Elliott to shift notes down when reviewing and drafting]]
+The raw ingredient prices data returned from the BlueCart API importantly included information on the ingredient name (based on our search parameters) and the price of the ingredient based on the product returned by the query to the API. However, this ingredient price was also not in standardized unit format, so as with the Cocktail Data we had to perform a cleaning process to convert units into a consistent format for use. Thus, in addition to the name of the product and the price, we retreived the description to obtain the size of the portion so we could perform analysis to convert units.
+
+#### Ingredient Prices Data Cleaning Process
+
+To clean the Ingredient Prices Data, we utilized the descriptions for the products. We found that the measurement and units were consistently appearing at the end of the product description, so we iterated through descriptions in reverse order to extract the unit and portion size. For certain ingredients, we were unable to systematically perform conversions, so we implemented a manual verification and review step separately to fill in necessary missing entries and convert in certain cases. For our final step, we converted prices to a per ounce basis.
 
 ## Analysis
 
@@ -94,13 +80,7 @@ Comparing this chart with the previous table (Table2), we can see that the most 
 
 Another part of our analysis included whether or not certain types of alcohol are mixed together. Our dataset at this point included drinks that were tens of ounces or more, so further subdivied our data into cocktails that are less than or equal to 8 ounces. This is a reasonable number for a person who is drinking a given cocktail in one sitting. We found that the correlation between spirits is negative but close to zero. Thus, typically single-person cocktails in our dataset are using only one type of liquor. The results are shown in a heat map below:
 
-***heat map****
-
-
-
-
-
-
+**heat map**
 
 ## Conclusion
 
