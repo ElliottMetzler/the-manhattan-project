@@ -72,20 +72,20 @@ We began our analysis by looking at ingredient prevalence. To do so, we checked 
 Table***
 
 
-This table shows that only three types of liquor–rum, gin, and vodka–are in at least 15% of the drinks. This was our first clue that some of the drinks in our dataset may not include liquor at all. Since we were interested in alcoholic cocktails...
+Unsurprisingly, cocktail cutting agents are the most popular ingredients. Fruit juice is the most prevalent followed by liqueur, fruit, and sugar. Although liqueur contains alcohol, it is not considered a dsitilled spirit. This table shows that only three types of liquor–rum, gin, and vodka–are in at least 15% of the drinks. This was our first clue that some of the drinks in our dataset may not include liquor at all. Since our analysis focuses on alcoholic cocktails, we focused in on the most popular types of spirits in alcoholic cocktails.
 
 Our next step was to determine the types of drinks we were interested in. The focus of our analysis became alcoholic beverages that include liquor. The 5 types of distilled spirits are: brandy, gin, rum, tequila, vodka, and whiskey, so we reduced our dataset to include drinks that include one or more of these types of alcohol. Next, we viewed the most used spirits in our list of cocktail recipes. The results can be seen below:
 
 Table2***
 
-somethin semthing ....i forgot what this graph looks like
+We still see that rum, gin, and vodka rank the highest among alcoholic cocktail ingredients. This may be the result of these categories spanning over a wide variety of spirits, while other groups are subdivided into different categories. However, it should be noted that rum and vodka were subdivided into "rum" and "vodka" and "flavored rum" and "flavored vodka". Even so, the "rum" and "vodka" categories lie in the top 3 most used spirits
 
 At this point be began our price analysis. It was clear to us that the most expensive ingredients were the different types of liquor, so our next step was to compare the price per ounce of the different types of spirits, which can be seen in the chart below:
 
 BarChart****
 
 
-Comparing this chart with the previous table (Table2), we can see that the most expensive spirits are used the least often. Interestingly, the least expensive liquor (grain alcohol) is also used the least often. We acknowledge the fact that there may be sampling bias associated with these proportions. However, it should be noted that rum and vodka were subdivided into "rum" and "vodka" and "flavored rum" and "flavored vodka". Even so, the "rum" and "vodka" categories lie in the top 3 most used spirits. We assume this is either because rum, gin, and vodka mix well with other ingredients or people just like the taste of them.
+Comparing this chart with the previous table (Table2), we can see that the most expensive spirits are used the least often. Interestingly, the least expensive liquor (grain alcohol) is also used the least often. We acknowledge the fact that there may be sampling bias associated with these proportions. We assume this is either because rum, gin, and vodka mix well with other ingredients or people just like the taste of them.
 
 
 ####
