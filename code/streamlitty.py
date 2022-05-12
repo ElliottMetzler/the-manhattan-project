@@ -23,7 +23,7 @@ def gen_booze_criteria(vodka, whiskey, tequila, gin, rum):
     if tequila:
         booze_criteria.append("tequila")
     if gin:
-        booze_criteria.append("gin")
+        booze_criteria.append("gin")  # Edit here
     if rum:
         booze_criteria.append("rum")
 
@@ -88,9 +88,9 @@ button = st.sidebar.button("Find My Drink")
 st.sidebar.write(
     """
 	# Ingredients:
-	First, select the *maximum* number of ingredients you'd like in your cocktail"""
+	First, select the *maximum* number of ingredients you'd like in your cocktail (defaults to 5)"""
 )
-num_ingredients_tot = st.sidebar.slider("", 2, 12)
+num_ingredients_tot = st.sidebar.slider("", 2, 12, 5)
 
 # Main Booze Options Checkboxes
 st.sidebar.write(
@@ -124,13 +124,19 @@ with st.container():
     # Column 1 - Page Welcome Message
     #######################################
 
-    col1.header("Welcome to our Page")
+    col1.header("Welcome")
     col1.write(
         """
 		Hello! Welcome to The Manhattan Project. This webpage is designed to help fuel Friday night. We get it, you've had a long week, you don't want to go to the store, and you sure as hell don't want to think too hard about what you want to drink to unwind tonight. That's where we come in. 
-		With our site, you can search through a vast database of cocktails and concoctions using a variety of search parameters and settings to find exactly what you're looking for - whether thats a night in with a movie and a bowl of popcorn, a night out with some strangers, or a Saturday morning tailgate.
-		How to use: First, you will use the side panel on to select a search setting. We currently support a few options. You can search by glass type, which is often indicative of the type of drink (i.e. shot glass or punch bowl ought to produce a nice party). Alternatively, you can search by an ingredient you have on hand and would like to use up, with a filter for the number of ingredients in the cocktail. We also support a combination of the two previous search options. Finally, we can generate a completely random drink.
-		The panel to the right will display the featured result based on your search. Below, we also list other cocktails that fit the search parameters (if they exist), and allow you to select if you'd like to view another option.
+		With our site, you can search through a vast database of cocktails and concoctions using a variety of search parameters and settings to find *exactly* what you're looking for - whether thats a night in with a movie and a bowl of popcorn, a night out with some strangers, or a Saturday morning tailgate.
+        """
+    )
+    col1.header("How to Use")
+    col1.write(
+        """
+		How to use: First, you will use the side panel on to input your search parameters. You can filter your query based on the maximum number of ingredients you'd like to use, some common liquors, and more specific ingredients. When you're ready, click "Find My Drink" at the top of the side panel to refresh and search. If you're feeling lucky, you can skip the parameters altogether and simply click the "Find My Drink" button.
+
+		To the right, you'll find the featured drink result based on your search parameters. If you aren't excited about the featured drink, you can scroll to find additional options consistent with your search (if they exist).
 		"""
     )
 
@@ -202,200 +208,200 @@ with st.container():
 with st.container():
 
     if button:
-        if len(combine["strdrink"]) > 5:
-            alt_sample = combine[combine["strdrink"] != feat_name].sample(5)
-        else:
-            alt_sample = combine[combine["strdrink"] != feat_name]
-
-        if len(alt_sample["strdrink"]) == 0:  # If no drinks, display this message
+        if len(combine["strdrink"]) <= 1:
             st.header(
                 """There are no alternative drinks with this selection of ingredients, liquor, or number of ingredients."""
             )
+        else:
+            if len(combine["strdrink"]) > 5:
+                alt_sample = combine[combine["strdrink"] != feat_name].sample(5)
+            else:
+                alt_sample = combine[combine["strdrink"] != feat_name]
 
-        if len(alt_sample["strdrink"]) > 0:  # If any drinks, display this message
-            st.header(
-                """If you aren't feeling our featured cocktail maybe one of these would be more your speed:"""
-            )
-
-        if len(alt_sample["strdrink"]) >= 1:  # If 1 or more alternatives, do this
-
-            # Extract the drink and the information
-            alt1_drink = alt_sample.iloc[[0]]
-            (
-                alt1_name,
-                alt1_glass,
-                alt1_instructions,
-                alt1_image,
-                alt1_cost,
-            ) = extract_singleton_drink_info(alt1_drink)
-            alt1_ingredients_list, alt1_proportions_list = extract_list_drink_info(
-                alt1_drink
-            )
-
-            # Write the output
-            with st.expander(f"{alt1_name}"):
-                st.write(
-                    f"""So the {feat_name} wasn't up you alley? Well, hopefully the **{alt1_name}** is better suited for you.
-				You'll need a **{alt1_glass}**,
-				and the following ingredients:
-				"""
+            if len(alt_sample["strdrink"]) > 0:
+                st.header(
+                    """If you aren't feeling our featured cocktail maybe one of these would be more your speed:"""
                 )
 
-                for prop, ing in zip(alt1_proportions_list, alt1_ingredients_list):
-                    st.write(f"* {prop} {ing}")
+            if len(alt_sample["strdrink"]) >= 1:
 
-                st.write(
-                    f"""
-				To make a {alt1_name} follow these instructions:
-
-				{alt1_instructions}
-
-				When it costs only ${alt1_cost} per drink, why ever go to a bar again?
-				"""
+                # Extract the drink and the information
+                alt1_drink = alt_sample.iloc[[0]]
+                (
+                    alt1_name,
+                    alt1_glass,
+                    alt1_instructions,
+                    alt1_image,
+                    alt1_cost,
+                ) = extract_singleton_drink_info(alt1_drink)
+                alt1_ingredients_list, alt1_proportions_list = extract_list_drink_info(
+                    alt1_drink
                 )
 
-        if len(alt_sample["strdrink"]) >= 2:
+                # Write the output
+                with st.expander(f"{alt1_name}"):
+                    st.write(
+                        f"""So the {feat_name} wasn't up you alley? Well, hopefully the **{alt1_name}** is better suited for you.
+    				You'll need a **{alt1_glass}**,
+    				and the following ingredients:
+    				"""
+                    )
 
-            # Extract the drink and the information
-            alt2_drink = alt_sample.iloc[[1]]
-            (
-                alt2_name,
-                alt2_glass,
-                alt2_instructions,
-                alt2_image,
-                alt2_cost,
-            ) = extract_singleton_drink_info(alt2_drink)
-            alt2_ingredients_list, alt2_proportions_list = extract_list_drink_info(
-                alt2_drink
-            )
+                    for prop, ing in zip(alt1_proportions_list, alt1_ingredients_list):
+                        st.write(f"* {prop} {ing}")
 
-            # Write the expander
-            with st.expander(f"{alt2_name}"):
-                st.write(
-                    f"""Yeah, I'm not a fan of the {feat_name} either. A {alt2_name} is a much better choice.
-				Get out a **{alt2_glass}**,
-				and these ingredients:
-				"""
-                )
-                for prop, ing in zip(alt2_proportions_list, alt2_ingredients_list):
-                    st.write(f"* {prop} {ing}")
-                st.write(
-                    f"""
-				Once you follow these instructions, you'll have the perfect {alt2_name}.
+                    st.write(
+                        f"""
+    				To make a {alt1_name} follow these instructions:
 
-			{alt2_instructions}
+    				{alt1_instructions}
 
-			You'll pay a lot more than ${alt2_cost} per drink at bar. So just kick your feet up and relax with a {alt2_name}.
-			"""
-                )
+    				When it costs only ${alt1_cost} per drink, why ever go to a bar again?
+    				"""
+                    )
 
-        if len(alt_sample["strdrink"]) >= 3:
+            if len(alt_sample["strdrink"]) >= 2:
 
-            # Extract the drink and information
-            alt3_drink = alt_sample.iloc[[2]]
-            (
-                alt3_name,
-                alt3_glass,
-                alt3_instructions,
-                alt3_image,
-                alt3_cost,
-            ) = extract_singleton_drink_info(alt3_drink)
-            alt3_ingredients_list, alt3_proportions_list = extract_list_drink_info(
-                alt3_drink
-            )
-
-            # Write the expander
-            with st.expander(f"{alt3_name}"):
-                st.write(
-                    f"""I should have known that you don't like {feat_name}. Well that's what the alternative drinks are for! I hope you'll like a {alt3_name}
-				For this one you need a **{alt3_glass}** and these ingredients:
-				"""
+                # Extract the drink and the information
+                alt2_drink = alt_sample.iloc[[1]]
+                (
+                    alt2_name,
+                    alt2_glass,
+                    alt2_instructions,
+                    alt2_image,
+                    alt2_cost,
+                ) = extract_singleton_drink_info(alt2_drink)
+                alt2_ingredients_list, alt2_proportions_list = extract_list_drink_info(
+                    alt2_drink
                 )
 
-                for prop, ing in zip(alt3_proportions_list, alt3_ingredients_list):
-                    st.write(f"* {prop} {ing}")
+                # Write the expander
+                with st.expander(f"{alt2_name}"):
+                    st.write(
+                        f"""Yeah, I'm not a fan of the {feat_name} either. A **{alt2_name}** is a much better choice.
+    				Get out a **{alt2_glass}**,
+    				and these ingredients:
+    				"""
+                    )
+                    for prop, ing in zip(alt2_proportions_list, alt2_ingredients_list):
+                        st.write(f"* {prop} {ing}")
+                    st.write(
+                        f"""
+    				Once you follow these instructions, you'll have the perfect {alt2_name}.
 
-                st.write(
-                    f"""
-				A {alt3_name} isn't too hard to make! Just follow these instructions:
+    			{alt2_instructions}
 
-				{alt3_instructions}
+    			You'll pay a lot more than ${alt2_cost} per drink at bar. So just kick your feet up and relax with a {alt2_name}.
+    			"""
+                    )
 
-				${alt3_cost} per drink? Wow, that's a cheap and delicious cocktail!
-				"""
+            if len(alt_sample["strdrink"]) >= 3:
+
+                # Extract the drink and information
+                alt3_drink = alt_sample.iloc[[2]]
+                (
+                    alt3_name,
+                    alt3_glass,
+                    alt3_instructions,
+                    alt3_image,
+                    alt3_cost,
+                ) = extract_singleton_drink_info(alt3_drink)
+                alt3_ingredients_list, alt3_proportions_list = extract_list_drink_info(
+                    alt3_drink
                 )
 
-        if len(alt_sample["strdrink"]) >= 4:
+                # Write the expander
+                with st.expander(f"{alt3_name}"):
+                    st.write(
+                        f"""I should have known that you don't like {feat_name}. Well that's what the alternative drinks are for! I hope you'll like a **{alt3_name}**
+    				For this one you need a **{alt3_glass}** and these ingredients:
+    				"""
+                    )
 
-            # Extract the drink and information
-            alt4_drink = alt_sample.iloc[[3]]
-            (
-                alt4_name,
-                alt4_glass,
-                alt4_instructions,
-                alt4_image,
-                alt4_cost,
-            ) = extract_singleton_drink_info(alt4_drink)
-            alt4_ingredients_list, alt4_proportions_list = extract_list_drink_info(
-                alt4_drink
-            )
+                    for prop, ing in zip(alt3_proportions_list, alt3_ingredients_list):
+                        st.write(f"* {prop} {ing}")
 
-            # Write the expander
-            with st.expander(f"{alt4_name}"):
-                st.write(
-                    f"""Now we're talking! My favorite cocktail: {alt4_name}! No one likes a {feat_name} anyways, 
-				we should really get that out of our database.
-				{alt4_name} are simple you'll need a **{alt4_glass}** and these exact ingredients:
-				"""
+                    st.write(
+                        f"""
+    				A {alt3_name} isn't too hard to make! Just follow these instructions:
+
+    				{alt3_instructions}
+
+    				${alt3_cost} per drink? Wow, that's a cheap and delicious cocktail!
+    				"""
+                    )
+
+            if len(alt_sample["strdrink"]) >= 4:
+
+                # Extract the drink and information
+                alt4_drink = alt_sample.iloc[[3]]
+                (
+                    alt4_name,
+                    alt4_glass,
+                    alt4_instructions,
+                    alt4_image,
+                    alt4_cost,
+                ) = extract_singleton_drink_info(alt4_drink)
+                alt4_ingredients_list, alt4_proportions_list = extract_list_drink_info(
+                    alt4_drink
                 )
 
-                for prop, ing in zip(alt4_proportions_list, alt4_ingredients_list):
-                    st.write(f"* {prop} {ing}")
+                # Write the expander
+                with st.expander(f"{alt4_name}"):
+                    st.write(
+                        f"""Now we're talking! My favorite cocktail: **{alt4_name}**! No one likes a {feat_name} anyways, 
+    				we should really get that out of our database.
+    				{alt4_name} are simple you'll need a **{alt4_glass}** and these exact ingredients:
+    				"""
+                    )
 
-                st.write(
-                    f"""
-				With those ingredients just follow these steps, and presto a {alt4_name}!
+                    for prop, ing in zip(alt4_proportions_list, alt4_ingredients_list):
+                        st.write(f"* {prop} {ing}")
 
-				{alt4_instructions}
+                    st.write(
+                        f"""
+    				With those ingredients just follow these steps, and presto a {alt4_name}!
 
-				At home is always cheaper and when its only ${alt4_cost} per drink, the adage continues to hold!
-				"""
+    				{alt4_instructions}
+
+    				At home is always cheaper and when its only ${alt4_cost} per drink, the adage continues to hold!
+    				"""
+                    )
+
+            if len(alt_sample["strdrink"]) >= 5:
+
+                # Extract the drink and information
+                alt5_drink = alt_sample.iloc[[4]]
+                (
+                    alt5_name,
+                    alt5_glass,
+                    alt5_instructions,
+                    alt5_image,
+                    alt5_cost,
+                ) = extract_singleton_drink_info(alt5_drink)
+                alt5_ingredients_list, alt5_proportions_list = extract_list_drink_info(
+                    alt5_drink
                 )
 
-        if len(alt_sample["strdrink"]) >= 5:
+                # Write the expander
+                with st.expander(f"{alt5_name}"):
+                    st.write(
+                        f"""This is your last choice you have! You better like a **{alt5_name}**, it's definitely better than a {feat_name}
+    				First you will have to find a **{alt5_glass}** and these ingredients:
+    				"""
+                    )
+                    for prop, ing in zip(alt5_proportions_list, alt5_ingredients_list):
+                        st.write(f"* {prop} {ing}")
 
-            # Extract the drink and information
-            alt5_drink = alt_sample.iloc[[4]]
-            (
-                alt5_name,
-                alt5_glass,
-                alt5_instructions,
-                alt5_image,
-                alt5_cost,
-            ) = extract_singleton_drink_info(alt5_drink)
-            alt5_ingredients_list, alt5_proportions_list = extract_list_drink_info(
-                alt5_drink
-            )
+                    st.write(
+                        f"""
+    				No need to just throw the ingredients together. Follow these steps and you'll have a {alt5_name}!
 
-            # Write the expander
-            with st.expander(f"{alt5_name}"):
-                st.write(
-                    f"""This is your last choice you have! You better like a {alt5_name}, it's definitely better than a {feat_name}
-				First you will have to find a **{alt5_glass}** and these ingredients:
-				"""
-                )
-                for prop, ing in zip(alt5_proportions_list, alt5_ingredients_list):
-                    st.write(f"* {prop} {ing}")
+    				{alt5_instructions}
 
-                st.write(
-                    f"""
-				No need to just throw the ingredients together. Follow these steps and you'll have a {alt5_name}!
-
-				{alt5_instructions}
-
-				${alt5_cost} per drink? Imagine ordering that at a bar it would cost double maybe even triple that!
-				"""
-                )
+    				${alt5_cost} per drink? Imagine ordering that at a bar it would cost double maybe even triple that!
+    				"""
+                    )
 
 #######################################
 # Third Container - Acknowledgements
