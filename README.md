@@ -78,17 +78,17 @@ Our next step was to determine the types of drinks we were interested in. The fo
 
 Table2***
 
-We still see that rum, gin, and vodka rank the highest among alcoholic cocktail ingredients. This may be the result of these categories spanning over a wide variety of spirits, while other groups are subdivided into different categories. However, it should be noted that rum and vodka were subdivided into "rum" and "vodka" and "flavored rum" and "flavored vodka". Even so, the "rum" and "vodka" categories lie in the top 3 most used spirits
+We still see that rum, gin, and vodka rank the highest among alcoholic cocktail ingredients. This may be the result of these categories spanning over a wide variety of spirits, while other groups are subdivided into different categories. However, it should be noted that rum and vodka were subdivided into "rum" and "vodka" and "flavored rum" and "flavored vodka". Even so, the "rum" and "vodka" categories lie in the top 3 most used spirits. We assume this is either because rum, gin, and vodka mix well with other ingredients or people just like the taste of them.
 
 At this point be began our price analysis. It was clear to us that the most expensive ingredients were the different types of liquor, so our next step was to compare the price per ounce of the different types of spirits, which can be seen in the chart below:
 
 BarChart****
 
 
-Comparing this chart with the previous table (Table2), we can see that the most expensive spirits are used the least often. Interestingly, the least expensive liquor (grain alcohol) is also used the least often. We acknowledge the fact that there may be sampling bias associated with these proportions. We assume this is either because rum, gin, and vodka mix well with other ingredients or people just like the taste of them.
+Comparing this chart with the previous table (Table2), we can see that the most expensive spirits are used the least often. Interestingly, the least expensive liquor (grain alcohol) is also used the least often. We acknowledge the fact that there may be sampling bias associated with these proportions.
 
+Our findings with prices and popularity led us to our final question: Is less truly more? Is there grounds for any assumptions that big, fruity drinks are not as alcoholic as a smaller glasses filled with more concentrated amounts of liquor? Given drink costs and data on alcoholic content within ingredients, we conducted an analysis on this very question. We decided to run an OLS regression of dollar per ounce of pure alcohol and total ounces within a drink. We also focused on alcholoic cocktails meant to be consumed by a single person. Thus, our sample was drinks between 2.5 and 12 ounces.
 
-####
 
 *****this will be before ols to say that there is no perfect collinearity**** part of our analysis included whether or not certain types of alcohol are mixed together. Our dataset at this point included drinks that were tens of ounces or more, so further subdivied our data into cocktails that are less than or equal to 8 ounces. This is a reasonable number for a person who is drinking a given cocktail in one sitting. We found that the correlation between spirits is negative but close to zero. Thus, typically single-person cocktails in our dataset are using only one type of liquor. The results are shown in a heat map below:
 
