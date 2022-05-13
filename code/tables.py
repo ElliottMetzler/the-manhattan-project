@@ -116,6 +116,9 @@ def summary_of_usage():
 
     dfi.export(data,(os.path.join(TABLE_DIR, "usage.png")))
 
+
+
+
 def get_amount_table():
 
 
@@ -202,4 +205,155 @@ def drop_all_zero_dummies():
     data = data.replace(np.nan, 0)
 
     return data
-    
+
+
+
+def most_popular_liquor_table():
+
+
+    os.makedirs(TABLE_DIR, exist_ok=True)
+
+
+    filename = os.path.join(TABLE_DIR, 'pop_liquor.tex')
+    pdffile = os.path.join(TABLE_DIR,'pop_liquor.pdf')
+    outname = os.path.join(TABLE_DIR,'pop_liquor.png')
+    df = drop_all_zero_dummies()
+    df = df.describe().transpose().sort_values('mean',
+                                        ascending=False).head(15)
+    df = df[["mean"]]
+    df = df.rename(columns={"mean":"Proportion of Drinks"})
+    df.index.name = "Liquor"
+
+    dfi.export(df,(os.path.join(TABLE_DIR, "liquor.png")))
+
+
+
+
+
+def ounces_of_alc():
+
+    liquor = pd.read_csv('https://raw.githubusercontent.com/ElliottMetzler/the-manhattan-project/quant/data/ABV_list.csv')
+    liquor.columns = ["ingredient", "abv"]
+    l = liquor['ingredient'].values.tolist()
+    small = drop_big_drinks()
+    data = get_amount_table()
+    data = data.set_index("strdrink")
+    drinks = data.index.values.tolist()
+    data = data[l].transpose()
+    data = data[small]
+    data = pd.merge(data,liquor,how="left",on="ingredient")
+    data = data.drop("ingredient",axis=1)
+    for d in data:
+        data[d] = data[d].multiply(data["abv"])
+    data["ingredient"] = l
+    data = data.drop("abv",axis=1)
+    data = data.sum(axis=0)
+    data = pd.DataFrame(data)
+    data = data.transpose().drop("ingredient", axis=1)
+    return data
+
+def model():
+    """"Creates a dataframe that contains our dependent and independent variables for the OLS regression."""
+
+    co = get_cost_per_alc_ounce().transpose()
+    liquors = ["brandy","gin","tequila","vodka","whiskey","flavored rum","flavored vodka","cognac","bourbon","rum","scotch","grain alcohol"]
+    number = number_of_ingredients()
+    data = get_ingredient_cost()
+    amounts = get_amount_table()
+    data.columns = data.loc['strdrink']
+    drinks = data.columns.values.tolist()
+    data = data.drop("strdrink", axis=0)
+    df_cost = data.transpose()
+    cost = df_cost.sum(axis=1).values.tolist()
+    amounts = amounts.sum(axis=1).values.tolist()
+    d = {
+        "strdrink": drinks,
+        "cost": cost,
+        "total oz": amounts
+    }
+    drinks = drop_big_drinks()
+    co["drinks"] = drinks
+    df = pd.DataFrame(d).set_index("strdrink").transpose()
+    df = df[drinks].transpose()
+    df["number of ingredients"] = number
+    dummies = create_dummies().set_index("strdrink")
+    dummies = dummies[liquors]
+    dummies = dummies.replace(0, np.nan)
+    dummies = dummies.dropna(how='all', axis=0)
+    dummies = dummies.replace(np.nan, 0)
+    model = dummies.merge(df, how="inner",on="strdrink")
+    co = co.rename(columns={"drinks":"strdrink",0:"abv"})
+    model = model.merge(co,how="inner",on='strdrink')
+    model["alc per dollar"] = model["abv"]/model["cost"]
+    model["abv"] = pd.to_numeric(model["abv"])
+    model["alc per dollar"] = pd.to_numeric(model["alc per dollar"])
+
+
+    return model
+
+
+def heat_price_corr_heat():
+    model = ols_model()
+
+    corr = model.corr()
+    corr_heat = sns.heatmap(corr, xticklabels=corr.columns,yticklabels=corr.columns,cmap="RdBu")
+
+    return corr_heat
+
+
+def ols_price_on_liquor():
+    """Perform OLS regression of pure alchohol per dollar on total ounces, number of ingredient"""
+
+    df = ols_model()
+    covars = ["total_ounces","ounces_alcohol","num_ingredients","brandy","gin","tequila","vodka","whiskey","flavored rum","flavored vodka","cognac","bourbon","rum","scotch"]
+
+    x = df[covars]
+    y = df["oz_alc_per_dollar"]
+
+
+    model = sm.OLS(y.astype(float), sm.add_constant(x.astype(float))).fit()
+    model_summary = model.summary()
+
+    fig, ax = plt.subplots(figsize=(12, 7))
+
+    ax.text(
+        0.01, 0.05, str(model_summary), {"fontsize": 10}, fontproperties="monospace"
+    )
+    ax.axis("off")
+    plt.tight_layout()
+
+
+
+
+
+def check_covar_costs():
+    """"Creates dataframe for the cost of covariates in the OLS regression and outputs as a bar graph"""
+
+    df_prices = pd.read_csv(INPUT_PATH, header=None)
+    df_prices = df_prices.transpose()
+    df_prices.columns = df_prices.loc[0]
+    df_prices = df_prices.drop(0)
+    df_prices = df_prices[["brandy","gin","tequila","vodka","whiskey","flavored rum","flavored vodka","cognac","bourbon","rum","scotch","grain alcohol"]]
+    plot = df_prices.plot.bar(figsize=(15,4),title="Summary of Liquor Cost")
+    plot = plot.set(xlabel="Type of Liquor",ylabel="Cost Per Ounce")
+    return plot
+
+
+
+if __name__ == "__main__":
+
+    os.makedirs(FIGURE_DIR, exist_ok=True)
+    os.makedirs(TABLE_DIR, exist_ok=True)
+    prices = check_covar_costs()
+    plt.savefig(os.path.join(FIGURE_DIR,"prices.png"))
+
+    ols = ols_price_on_liquor()
+    plt.savefig(os.path.join(FIGURE_DIR,"ols.png"))
+
+    heat_map = heat_price_corr_heat()
+    plt.savefig(os.path.join(FIGURE_DIR,"heat_map.png"))
+
+    most_popular_liquor_table()
+
+    summary_of_usage()
+
