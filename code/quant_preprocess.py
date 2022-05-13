@@ -203,7 +203,4 @@ def query_and_preprocess_data():
     return w_rowsum.drop("row_sum", axis=1)
 
 if __name__ == "__main__":
-    print(new_processor())
-
-    data = new_processor()
-    data.to_csv("data/tester.csv")
+    print(price_and_abv_preprocessed())
