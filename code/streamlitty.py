@@ -128,13 +128,13 @@ with st.container():
     col1.write(
         """
 		Hello! Welcome to The Manhattan Project. This webpage is designed to help fuel Friday night. We get it, you've had a long week, you don't want to go to the store, and you sure as hell don't want to think too hard about what you want to drink to unwind tonight. That's where we come in. 
-		With our site, you can search through a vast database of cocktails and concoctions using a variety of search parameters and settings to find *exactly* what you're looking for - whether thats a night in with a movie and a bowl of popcorn, a night out with some strangers, or a Saturday morning tailgate.
+		With our site, you can search through a vast database of cocktails and concoctions using a variety of search parameters and settings to find *exactly* what you're looking for - whether that's a night in with a movie and a bowl of popcorn, a night out with some strangers, or a Saturday morning tailgate.
         """
     )
     col1.header("How to Use")
     col1.write(
         """
-		How to use: First, you will use the side panel on to input your search parameters. You can filter your query based on the maximum number of ingredients you'd like to use, some common liquors, and more specific ingredients. When you're ready, click "Find My Drink" at the top of the side panel to refresh and search. If you're feeling lucky, you can skip the parameters altogether and simply click the "Find My Drink" button.
+		First, you will use the side panel to input your search parameters. You can filter your query based on the maximum number of ingredients you'd like to use, some common liquors, and more specific ingredients. When you're ready, click "Find My Drink" at the top of the side panel to refresh and search. If you're feeling lucky, you can skip the parameters altogether and simply click the "Find My Drink" button.
 
 		To the right, you'll find the featured drink result based on your search parameters. If you aren't excited about the featured drink, you can scroll to find additional options consistent with your search (if they exist).
 		"""
@@ -241,7 +241,7 @@ with st.container():
                 # Write the output
                 with st.expander(f"{alt1_name}"):
                     st.write(
-                        f"""So the {feat_name} wasn't up you alley? Well, hopefully the **{alt1_name}** is better suited for you.
+                        f"""So the {feat_name} wasn't up your alley? Well, hopefully the **{alt1_name}** is better suited for you.
     				You'll need a **{alt1_glass}**,
     				and the following ingredients:
     				"""
@@ -278,7 +278,7 @@ with st.container():
                 # Write the expander
                 with st.expander(f"{alt2_name}"):
                     st.write(
-                        f"""Yeah, I'm not a fan of the {feat_name} either. A **{alt2_name}** is a much better choice.
+                        f"""Yeah, I'm not a fan of the {feat_name} either. A(n) **{alt2_name}** is a much better choice.
     				Get out a **{alt2_glass}**,
     				and these ingredients:
     				"""
@@ -313,7 +313,7 @@ with st.container():
                 # Write the expander
                 with st.expander(f"{alt3_name}"):
                     st.write(
-                        f"""I should have known that you don't like {feat_name}. Well that's what the alternative drinks are for! I hope you'll like a **{alt3_name}**
+                        f"""I should have known that you don't like {feat_name}. Well that's what the alternative drinks are for! I hope you'll like a(n) **{alt3_name}**
     				For this one you need a **{alt3_glass}** and these ingredients:
     				"""
                     )
@@ -349,7 +349,7 @@ with st.container():
                 # Write the expander
                 with st.expander(f"{alt4_name}"):
                     st.write(
-                        f"""Now we're talking! My favorite cocktail: **{alt4_name}**! No one likes a {feat_name} anyways, 
+                        f"""Now we're talking! My favorite cocktail: **{alt4_name}**! No one likes a(n) {feat_name} anyways, 
     				we should really get that out of our database.
     				{alt4_name} are simple you'll need a **{alt4_glass}** and these exact ingredients:
     				"""
@@ -386,8 +386,8 @@ with st.container():
                 # Write the expander
                 with st.expander(f"{alt5_name}"):
                     st.write(
-                        f"""This is your last choice you have! You better like a **{alt5_name}**, it's definitely better than a {feat_name}
-    				First you will have to find a **{alt5_glass}** and these ingredients:
+                        f"""This is the last choice you have! You better like a(n) **{alt5_name}**, it's definitely better than a(n) {feat_name}
+    				First, you will have to find a **{alt5_glass}** and these ingredients:
     				"""
                     )
                     for prop, ing in zip(alt5_proportions_list, alt5_ingredients_list):
@@ -399,7 +399,7 @@ with st.container():
 
     				{alt5_instructions}
 
-    				${alt5_cost} per drink? Imagine ordering that at a bar it would cost double maybe even triple that!
+    				${alt5_cost} per drink? Imagine ordering that at a bar... it would cost double or even triple that!
     				"""
                     )
 
