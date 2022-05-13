@@ -98,7 +98,7 @@ By initial inspection, we can see a lot of red towards the upper left side of th
 
 
 
-From this output we can make a few interesting observations. First, there is a negative coefficient on the coefficient for number of ingredients and we can interpret it as follows: An additional ingredient leads to an expected decrease in 0.155 ounces of alcohol per dollar. 
+From this output we can make a few interesting observations. First, the negative coefficient for number of ingredients can interpret it as follows: An additional ingredient leads to an expected decrease in 0.155 ounces of alcohol per dollar. This makes sense if we consider that the liquors showed very low negative correlations, so increasing an ingredient will lead to a non-alcoholic ingredient being added in most cases. This will result in a dilution of the total alcohol content. Since ingredients cost money, this will reduce the ounces of alcohol per dollar. Next, we see a positive coefficient for ounces of alcohol. On average, an increase in one ounce of alcohol leads to an increase in 0.52 ounces of alcohol per dollar, ceteris paribus. This is the result of a combination of factors including average abv of liquor ingredients and average abv of cocktails. Lastly, we come to our independent variable of interest, which does ot
 
 ## Conclusion
 
