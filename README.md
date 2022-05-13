@@ -98,6 +98,9 @@ Finally, we arrived at the ultimate question of our analysis: is less truly more
 Next, we needed to determine which variables to keep or discard from our model. To better visualize this relationship, we created a heatmap showing the correlations between our model's variables. We present the results in the graph below:
 
 ![Heat Map](/figures/heat_map.png)
+![image](https://user-images.githubusercontent.com/97994476/168248554-25ebf314-2cf1-4f76-af2e-969435a364d9.png)
+
+
 
 By initial inspection, we can see a lot of red on the upper left side of the graph. This result is good for our regression since we know that no two types of liquor will display multicollinearity. If we look at the bottom to the right, we can see that the graph gets a bit more colorful. There are some peculiar relationships here to point out. First, ounces of alcohol per dollar and ounces of alcohol are related; similarly, alcohol content per dollar and the number of ingredients are correlated. We also see a strong relationship between cost and alcohol per dollar.
 
@@ -106,11 +109,11 @@ In contrast, there is no significant relationship between total ounces and eithe
 
 ![OLS Output](/figures/ols.png)
 
-![image](https://user-images.githubusercontent.com/97994476/168220167-1eb4f8fe-bc92-4caf-bc5e-07bab4aa3d60.png)
+![image](https://user-images.githubusercontent.com/97994476/168248709-a41e0930-d795-4a2e-bc13-c8ff208b38e6.png)
 
 
 
-From this output, we can make a few interesting observations. First, we observe our indedependent variable of interest. The negative coefficient for the number of ingredients can be interpreted as follows: An additional ingredient leads to an expected decrease in 0.155 ounces of alcohol per dollar. This result makes sense since the liquors showed very low negative correlations, so adding an ingredient will likely add a non-alcoholic ingredient in many cases. This addition will result in a dilution of the total alcohol content. Since ingredients cost money, this should reduce the ounces of alcohol per dollar. Next, we see a positive coefficient for ounces of alcohol. On average, an increase in one ounce of alcohol leads to an increase in 0.52 ounces of alcohol per dollar, ceteris paribus. This may be the result of the cost of alcohol, which could offset the increase in ounces of alcohol per dollar in a way that prevents a one-to-one relationship. Lastly, we come to coefficient on total ounces. Although it is statistically significant, it is minimal. A one-ounce increase in total volume will lead to an expected increase in ounces of alcohol per dollar of 0.037, holding all else fixed. So, we conclude that drinks of all sizes are created equal. However, this is under the assumption that there are the same amount of ingredients.
+From this output, we can make a few interesting observations. First, we observe our indedependent variable of interest. The negative coefficient for the number of ingredients can be interpreted as follows: An additional ingredient leads to an expected decrease in 0.155 ounces of alcohol per dollar. This result makes sense since the liquors showed very low negative correlations, so adding an ingredient will likely add a non-alcoholic ingredient in many cases. This addition will result in a dilution of the total alcohol content. Since ingredients cost money, this should reduce the ounces of alcohol per dollar. Next, we see a positive coefficient for ounces of alcohol. On average, an increase in one ounce of alcohol leads to an increase in 0.52 ounces of alcohol per dollar, ceteris paribus. This may be the result of the cost of alcohol, which could offset the increase in ounces of alcohol per dollar in a way that prevents a one-to-one relationship. Lastly, we see mostly negative coefficients on the dummy variables. The dropped dummy is grain alcohol, which is simultaneously very cheap and very high in alcohol content. Thus, different spiritits have lower ounces of alcohol per dollar.
 
 ## Conclusion
 
