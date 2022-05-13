@@ -1,5 +1,5 @@
 def create_ingredient_map():
-    """Function uses a unique list of the incredients in our data and creates a mapping dictionary to simplify them."""
+    """Function uses a unique list of the ingredients in our data and creates a mapping dictionary to simplify them."""
 
     return {
         "151 proof rum": "rum",

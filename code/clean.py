@@ -74,7 +74,7 @@ def add_drop_columns(in_path):
         lambda col: col.str.replace(r"\r\n|\n", " ", regex=True)
     )
 
-    df[pd.Index(cols2)] = df[cols2].apply(lambda col: col.str.replace(r"\r\n|\n", " "))
+    df[pd.Index(cols2)] = df[cols2].apply(lambda col: col.str.replace(r"\r\n|\n", " ", regex=True))
 
     df[pd.Index(cols2) + "_clean"] = df[cols2].apply(
         lambda col: col.str.replace(
@@ -117,7 +117,7 @@ def extract_columns(dataframe):
 
 
 def create_units_list(dataframe):
-    """Remove all numbers and create a list of unique values of units of measurements"""
+    """Remove all numbers and create a list of unique values of units of measurements. Use this list as a reference to create dictionary keys for the conversion dictionary in the next function. You may add "print(units_list)" before the "return" command to view the unique unit list for your data."""
 
     all_values = list(np.unique(dataframe.values))
 
@@ -127,7 +127,7 @@ def create_units_list(dataframe):
         units_list.append(re.sub("[^a-zA-Z ]", "", unit).strip())
 
     units_list = list(set(units_list))
-
+    
     return units_list
 
 
@@ -397,15 +397,6 @@ def frac_to_dec_converter(num_strings):
         result_list.append(converted)
 
     return result_list
-
-
-def make_pattern(str_list):
-    """Divide string list into readable pattern for regex."""
-
-    str_pattern = ""
-    for string in str_list:
-        str_pattern += f"{string}|"
-    return str_pattern
 
 
 def unit_unify(list_of_texts, unit_dict):
