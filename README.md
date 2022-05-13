@@ -23,7 +23,7 @@ The remainder of this report is structured as follows: first, we discuss the dat
 
 Since the Cocktail Database (hereafter "cocktailDB") has a JSON API and richer extraction capabilities with a $2 fee to [Patreon](https://www.patreon.com/thedatadb) (not to be confused with [Patron](https://www.patrontequila.com/age-gate/age-gate.html?origin=%2F&flc=homepage&fln=Post_Homepage_Patron)), we purchased full access. We extracted and cleaned the data using Python, wrote schema in Postgres, and used Google Cloud Platform Buckets to upload csv files and import them into our own database.
 
-The second important piece of data we used are ingredient prices from the web. We compiled a list of ingredients from the cocktailDB and leveraged [Walmart's API](https://www.bluecartapi.com) for drink prices. As with the data from the cocktailDB, we uploaded a table of ingredient prices to our database.
+The second important piece of data we used are ingredient prices from the web. We compiled a list of ingredients from the cocktailDB and leveraged [BlueCart API](https://www.bluecartapi.com) for drink prices. As with the data from the cocktailDB, we uploaded a table of ingredient prices to our database.
 
 ### Cocktail Data
 
@@ -98,7 +98,7 @@ Finally, we implemented our regression. The output is shown below:
 
 
 
-***output
+***output***
 
 
 From this output, we can see that there is no statistical or economical significance of the total ounce coefficient. Thus, we can conclude that whether you decide to make a big or small drink should not determine the dollar per alcohol consumption. Ultimately, whether you like bigger drinks that taste sweet or you like more of a kick, you will be getting tipsy either way.
@@ -140,6 +140,6 @@ In the future, we look forward to expanding our cocktail search engine capabilit
     * Before you can run query commands, you must give it the right credentials to connect to your database. Copy the file demo.env to .env and modify it by providing the credentials you created above. An easy way to do this is to run `cp demo.env .env` and then modify the .env file.
 
 4) Instructions to run the Streamlit app:
-    * Run `streamlit run code/streamlitty.py`. [[Please specify what will happen after running the code]]
-    * Open a browser and copy the url from the terminal to your browser search bar. [[Specify which URL, network or external]]
+    * Run `streamlit run code/streamlitty.py`. This will produce two lines of output in your terminal window: a network url and a external url. 
+    * Open your browser of choice and copy the network url from the terminal to your browser search bar. Click enter or refresh.
     * View and use the applet!
