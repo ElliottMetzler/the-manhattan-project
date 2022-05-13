@@ -46,7 +46,7 @@ Though we broadly attempted to upload the data to our database in as raw of a fo
 
 ### Ingredient Prices Data
 
-To retrieve data on ingredient prices, we combined a list of ingredients from the cocktail database to search Walmart's API (dubbed BlueCart), performed a combination of programatic and manual cleaning on the ingredient prices, then imported the resulting data into our database. One key nuance to our approach to searching the BlueCart API was using two searches to achieve most representative results. We queried both for "best seller" and "best match" for each ingredient, then combined these two searches in an effort to get the closest, most accurate, representation of the price of that ingredient.
+To retrieve data on ingredient prices, we combined a list of ingredients from the cocktail database to search a Walmart price database called BlueCart API. Using this, we performed a combination of programatic and manual cleaning on the ingredient prices, then imported the resulting data into our database. One key nuance to our approach to searching the BlueCart API was using two searches to achieve most representative results. We queried both for "best seller" and "best match" for each ingredient.  we  then combined these two searches in an effort to get the closest, most accurate, representation of the price of that ingredient.
 
 #### Description of the Ingredient Prices Data
 
@@ -54,7 +54,7 @@ The raw ingredient prices data returned from the BlueCart API included informati
 
 #### Ingredient Prices Data Cleaning Process
 
-To clean the Ingredient Prices Data, we utilized the descriptions for the products. We found that the measurement and units were consistently appearing at the end of the product description, so we iterated through descriptions in reverse order to extract the unit and portion size. For certain ingredients, we were unable to systematically perform conversions, so we implemented a manual verification and review step separately to fill in necessary missing entries and convert in certain cases. For our final step, we converted prices to a per ounce basis.
+To clean the Ingredient Prices Data, we utilized the descriptions for the products. We found that the measurement and units were consistently appearing at the end of the product description, so we iterated through descriptions in reverse order to extract the unit and portion size. As stated before we took results on Walmart's website for both "best seller" and "best match", each of which yielded slightly different results. In the cases where we received price data for both queries, we averaged the values for both. However, in most cases there was a price for only one type of result. This is because "best seller" most times gave unrelated products. Similarly, best match did not always give the correct item. For certain ingredients, we were unable to systematically perform conversions, so we implemented a manual verification and review step separately to fill in necessary missing entries and convert in certain cases. For our final step, we converted prices to a per ounce basis.
 
 ## Streamlit Applet
 
