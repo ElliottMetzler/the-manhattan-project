@@ -128,9 +128,6 @@ In the future, we look forward to expanding our cocktail search engine capabilit
     * Run `python3 code/input_missing_prices.py`. This file will produce the [ingredient_prices_clean.csv](https://github.com/ElliottMetzler/the-manhattan-project/blob/main/data/ingredient_prices_clean.csv) file with the complete ingredient prices data.
 
 3) Instructions to create the database:
-
-Note: The file [database.py](https://github.com/ElliottMetzler/the-manhattan-project/blob/main/code/database.py) addresses database configuration using SQLAlchemy and creates an engine to initialize a DBAPI connection.
-
     * Make a database instance in [Google Cloud Platform ("GCP")](https://cloud.google.com/). Go to GCP SQL and create a PostgreSQL 13 database instance, you can use the ["Create an instance"](https://console.cloud.google.com/sql/choose-instance-engine?project=deft-diode-342909) to do so. Make sure you whitelist the IPs in block `0.0.0.0/0` and select a password for it.
     * Create a database in GCP SQL and name it `drinks`. You can do that by going to the "Databases" tab in the newly created instance.
     * Connect to your database with DBeaver. Your host is the `Public IP Address` found in GCP SQL on the "Overview" tab. The port will be the default Postgres port: `5432` and the username is the default Postgres username: `postgres`, you don't have to change it. The password is the same password you created for the instance. The database you need to select is `drinks`.
@@ -141,6 +138,8 @@ Note: The file [database.py](https://github.com/ElliottMetzler/the-manhattan-pro
     * Import the `drinks_data_clean_no_header.csv` from the bucket into the created table. To do so, you can go to GCP's SQL and use the "import" option, when prompted to choose a source, choose the CSV file from the bucket, with file format "CSV". For the "Destination", select the `drinks` database and the `all_cocktails` table. 
     * Next, import the `ingredient_prices_clean.csv` from the bucket into the created table. You should repeat the following step, but select the `ingredient_prices` table instead of the `all_cocktails` table.
     * Before you can run query commands, you must give it the right credentials to connect to your database. Copy the file demo.env to .env and modify it by providing the credentials you created above. An easy way to do this is to run `cp demo.env .env` and then modify the .env file.
+
+Note: The file [database.py](https://github.com/ElliottMetzler/the-manhattan-project/blob/main/code/database.py) addresses database configuration using SQLAlchemy and creates an engine to initialize a DBAPI connection.
 
 4) Instructions to run the Streamlit app:
     * Run `streamlit run code/streamlitty.py`. This file utilizes the file [streamlit_query_functions.py] (https://github.com/ElliottMetzler/the-manhattan-project/blob/main/code/streamlit_query_functions.py) which accepts a number of ingredients, queries the database using these ingredients, and returns a dataframe for use on Streamlit. Running this file will produce two lines of output in your terminal window: a network url and a external url. 
