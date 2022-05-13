@@ -105,18 +105,11 @@ From this output, we can see that there is no statistical or economical signific
 
 ## Conclusion
 
-[[Elliott to fill TODAY]]
-
-* Limitations
-* Summarize Findings
-* Extensions (to do but also what data extensions would help)
-[[
-* We could have used a database that only included alcoholic cocktails and more drinks, as [Cocktails API](https://cocktailsapi.xyz).
-* Create a new column with measurement and name of ingredient, then a dictionary based on measurement of the ingredients, instead of arbitrary value. For example, currently we convert "juice of orange" and "juice of lemon" to 1 oz, because they are defined as "juice of".
-* The sizes of the drinks vary from punch bowls to shots and we could have scaled them to a single size.
-* By being an open source, anyone with a key could edit or add new cocktails, which leads to contamination of the data, with random creations and with data entry errors.
-* Expand parameters of streamlit, for example, add an option to specify quantity of each ingredient that you have available and are willing to use in a drink.
-]]
+Through The Manhattan Project, we were able to provide the world a great service, though perhaps slightly less explosive than the last time around. Our Streamlit app provides the user with a handy interface to search for some fun, interesting, and unique cocktails based solely on what they've got handy and how much effort they are willing to expend. Furthermore, our quantitative analysis shows the benefits of just a little more research when evaluating your cocktail choices.
+Though we are proud of our progress, our project of course carries some important caveats. On the data side of things, we certainly are limited in some key areas. To convert units in our cocktail data from non-standard to standard, we had to make some judgement calls. When pricing our ingredients, we also had to make some judgement calls as far as producing reasonable estimates. Of course, prices are subject to change in stores around the country, and also are subject to differences based on how nice the liquor going into the cocktail is. A Kamchatka martini and a Grey Goose martini are two very different drinks carrying two very different prices, however, for our purposes, we simply are taking best selling alcohol estimates for vodka and using these in our pricing formula. 
+A limitation, or perhaps better described as an area for extension, is in our ability to categorize or rank drinks output by our search algorithm. We do not have any sort of popularity metric for our drinks, so the output based on the parameters is random so long as enough cocktails fit the search criteria. A nice extension in the future may be to find data on drink popularity and implement this into our searching algorithm.
+Another good extension requiring more robust input data would be to allow for more granular search and price estimates based on a more thorough ingredient price search. We could indeed price out Grey Goose Martinis as opposed to Kirkland brand vodka Martinis with additional data and time to implement search adjustments.
+In the future, we look forward to expanding our cocktail search engine capabilities.
 
 ## Reproducability Instructions
 
