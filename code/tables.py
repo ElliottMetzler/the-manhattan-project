@@ -201,7 +201,6 @@ def heat_price_corr_heat():
     model = ols_model()
 
     corr = model.corr()
-    print(corr)
     corr_heat = sns.heatmap(corr, xticklabels=corr.columns,yticklabels=corr.columns,cmap="RdBu")
 
     return corr_heat
