@@ -204,3 +204,6 @@ def query_and_preprocess_data():
 
 if __name__ == "__main__":
     print(price_and_abv_preprocessed())
+
+    sample = price_and_abv_preprocessed()
+    sample.to_csv("data/Sample_of_price_and_abv_preprocessed.csv")    
