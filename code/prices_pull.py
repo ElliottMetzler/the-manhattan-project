@@ -7,14 +7,12 @@ from quant_preprocess import query_and_reshape_long
 from quant_preprocess import recode_long_data
 from prices_clean import load_best_match_batch
 
-params = {
-    "api_key": "INSERT_API_KEY",
-    "type": "search"
-}
+params = {"api_key": "INSERT_API_KEY", "type": "search"}
 
 OUTPUT_DIR = "data"
 JSON_PATH_BS = os.path.join(OUTPUT_DIR, "items_best_seller.txt")
 JSON_PATH_BM = os.path.join(OUTPUT_DIR, "items_best_match.txt")
+
 
 def load_ingredients():
     """Loads the list of ingredients to a list"""
@@ -38,6 +36,7 @@ def get_item_jsons_best_seller(params):
         result = requests.get("https://api.bluecartapi.com/request", params)
         json_list.append(json.dumps(result.json()))
     return json_list
+
 
 def get_item_jsons_best_match(params):
     """Loops though a list of ingredients and outputs a list of jsons for best match results."""

@@ -46,7 +46,7 @@ Though we broadly attempted to upload the data to our database in as raw of a fo
 
 ### Ingredient Prices Data
 
-To retrieve data on ingredient prices, we combined a list of ingredients from the cocktail database to search Walmart's API (dubbed BlueCart), performed a combination of programatic and manual cleaning on the ingredient prices, then imported the resulting data into our database. One key nuance to our approach to searching the BlueCart API was using two searches to achieve most representative results. We queried both for "best seller" and "best match" for each ingredient, then combined these two searches in an effort to get the closest, most accurate, representation of the price of that ingredient.
+To retrieve data on ingredient prices, we combined a list of ingredients from the cocktail database to search a Walmart price database called BlueCart API. Using this, we performed a combination of programatic and manual cleaning on the ingredient prices, then imported the resulting data into our database. One key nuance to our approach to searching the BlueCart API was using two searches to achieve most representative results. We queried both for "best seller" and "best match" for each ingredient.  we  then combined these two searches in an effort to get the closest, most accurate, representation of the price of that ingredient.
 
 #### Description of the Ingredient Prices Data
 
@@ -54,54 +54,65 @@ The raw ingredient prices data returned from the BlueCart API included informati
 
 #### Ingredient Prices Data Cleaning Process
 
-To clean the Ingredient Prices Data, we utilized the descriptions for the products. We found that the measurement and units were consistently appearing at the end of the product description, so we iterated through descriptions in reverse order to extract the unit and portion size. For certain ingredients, we were unable to systematically perform conversions, so we implemented a manual verification and review step separately to fill in necessary missing entries and convert in certain cases. For our final step, we converted prices to a per ounce basis.
+To clean the Ingredient Prices Data, we utilized the descriptions for the products. We found that the measurement and units were consistently appearing at the end of the product description, so we iterated through descriptions in reverse order to extract the unit and portion size. As stated before we took results on Walmart's website for both "best seller" and "best match", each of which yielded slightly different results. In the cases where we received price data for both queries, we averaged the values for both. However, in most cases there was a price for only one type of result. This is because "best seller" most times gave unrelated products. Similarly, best match did not always give the correct item. For certain ingredients, we were unable to systematically perform conversions, so we implemented a manual verification and review step separately to fill in necessary missing entries and convert in certain cases. For our final step, we converted prices to a per ounce basis.
 
 ## Streamlit Applet
 
-The first goal of this project was to use our database to produce a handy Streamlit applet to allow users to query for drinks using various search parameters. We allow users to query based on the following parameters:
+The primary goal of this project was to use our database to produce a handy Streamlit applet to allow users to query for drinks using various search parameters. We allow users to query based on the following parameters:
 * Ingredient Count: the maximum number of ingredients they have available or would be willing to include in their cocktail.
 * Main Liquors: Some main liquors like Vodka, Whiskey, or Tequila to allow users to easily find recipes with common ingredients.
 * Other Ingredients: Using a unique list of ingredients appearing in the database, we allow users to get specific if they have something they'd like to focus on or use up.
 
-## Analysis [[Elliott left this alone for now]]
+## Analysis
 
-The second goal of this project was to use our database to perform some analysis of the cocktail data.
+The secondary goal of this project was to use our database to analyze the cocktail data.
 
-We began our analysis by looking at ingredient prevalence. To do so, we checked the top 10 most used ingredients among the entire dataset. Our results are shown below:
+We began our analysis by looking to understand the prevalence of various ingredients. Prior to any ingredient recoding, we found over 400 ingredients in the raw data. However, through careful review to account for things like typos and unecessary specificity, we recoded the ingredients list to ultimately include around 70 unique ingredient categories. We summarize the prevalence of various ingredient categories in Table 1.
 
-Table***
+### Table 1: Top 10 Most Prevalent Ingredient Categories
+
+![](/tables/usage.png)
+
+As shown in the table, fruit juice is the most common ingredient in our cocktail data, appearing in approximately 40 percent of all cocktails. Various types of liqueurs, fruits, and sugars also appear very frequently, with over 30 percent prevalence. The most common liquors are rum, gin, and vodka. Something that suprised us when reviewing this analysis was to find that the milk category, which includes items like milk or cream, was slightly more prevalent than soda. Perhaps there are more variations of the [White Russian](https://www.thekitchn.com/the-celluloid-p-16-8755) than we previously thought.
+
+To further drill down the focus of our analysis on liquor rather than the other ingredients, we also performed exploratory analysis on a subset of the data in which each drink contained an identified key liquor. Once we filter the data and focus on drinks containing alcohol, we are able to better understand within the alcohol category what is most common. We summarize this analysis in Table 2.
+
+### Table 2: Liquor Prevalence Summary
+
+![](/tables/liquor.png)
+
+As we would have expected, we still see rum, vodka, and gin are the most common types of liquor. We note that despite separating the rum and vodka categories into plain and flavored, we still find these as two of the top three. This analysis is consistent with our previous understanding that these three liquors tend to mix well in cocktails and thus are very common. We similarly expected liquors like bourbon, scotch, and cognac to appear at the bottom of this list since they are much more commonly consumed neat or on the rocks rather than sullied in a cocktail.
+
+In addition to understanding the prevalence of ingredients and liquors, we wanted to understand the pricing component of drinks in our database. Generally speaking, the liquor is the most expensive ingredient in a given cocktail, so we first present our estimates of cost of liquor in dollars per ounce. 
+
+### Figure 1: Liquor Price ($/ounce)
+
+![](/figures/prices.png)
+
+By comparing this chart to Table 2, we see that the most expensive spirits are used the least often. Interestingly, the least expensive liquor (grain alcohol) is also used the least often. However, we suspect that this is simply because no one *really* wants to be drinking everclear.
+
+With both of these exploratory observations in mind, we arrive at the core question of our analysis: is less truly more? Does one get more return on investment from a complex, tasty artisan cocktail with several ingredients or from drinking something concentrated and straightforward? 
+
+To help us this question, we first calculated the ounces of alcohol per dollar for each drink. For example, if a 12 ounce beer contains 10 percent alcohol by volume and cost 6 dollars, the ounces of alcohol per dollar for that beer would be (12 x 0.10) / 6 = 0.2oz/$. Similarly, a 12 ounce beer containing 5 percent alcohol by volume that costs 3 dollars would also report (12 x 0.05) / 3 = 0.2oz/$.
+
+Additionally, we filtered our data such that the drinks in question contained at least 2.5 ounces and no more than 15 ounces. We performed this filter to ensure we focused on cocktails as opposed to shots or punch bowls.
+
+Our last step prior to running the model was to analyze the relationships between candidate variables for the model. We produced a correlation table and present the results as a heatmap below in Figure 3.
+
+### Figure 3: Correlation Heat Map: OLS Model Features 
+
+![Heat Map](/figures/heat_map.png)
+
+As we can see, most variables correlations fall somewhere between 0.0 and 0.2. In the bottom right corner we can see some stronger relationships. As we would expect, ounces of alcohol and ounces of alcohol per dollar are related (since one is a function of the other). Alcohol content per dollar and number of ingredients are negatively correlated. We see a positive correlation between number of ingredients and cost.
+
+There is no significant relationship between total ounces and either ounce of alcohol or the number of ingredients. Thus, our final list of covariates includes total ounces, ounces of alcohol, number of ingredients, and dummies for each liquor type. We display the output of our regression model below.
+
+### Table 3: Regression Output
+
+![](/figures/ols.png)
 
 
-This table shows that only three types of liquor: rum, gin, and vodka are in at least 15% of the drinks. This was our first clue that some of the drinks in our dataset may not include liquor at all. Since we were interested in alcoholic cocktails... [[Note for Elliot - This is not our first clue that some drinks don't contain alcohol, we mentioned earlier in the database section that there are options for alcoholic or not, so it must be that some didn't have]]
-
-Our next step was to determine the types of drinks we were interested in. The focus of our analysis became alcoholic beverages that include liquor. The 6 types of distilled spirits are: brandy, gin, rum, tequila, vodka, and whiskey, so we reduced our dataset to include drinks that include one or more of these types of alcohol. Next, we viewed the most used spirits in our list of cocktail recipes. The results can be seen below: [[This should be the first step]]
-
-Table2***
-
-somethin semthing ....i forgot what this graph looks like
-
-At this point we began our price analysis. It was clear to us that the most expensive ingredients were the different types of liquor, so our next step was to compare the price per ounce of the different types of spirits, which can be seen in the chart below:
-
-BarChart****
-
-
-Comparing this chart with the previous table (Table2), we can see that the most expensive spirits are used the least often. Interestingly, the least expensive liquor (grain alcohol) is also used the least often. We acknowledge the fact that there may be sampling bias associated with these proportions. However, it should be noted that rum and vodka were subdivided into "rum" and "vodka" and "flavored rum" and "flavored vodka". Even so, the "rum" and "vodka" categories lie in the top 3 most used spirits. We assume this is either because rum, gin, and vodka mix well with other ingredients or people just like the taste of them. 
-
-
-First, we needed to determine which variables to keep or discard from our model. To better visualize this relationship, we created a heatmap showing the correlations between each of the variables in our model. The results are shown in a heat map below:
-
-**heat map**
-By initial inspection, we can see a lot of red towards the upper left side of the graph. This is good for the purposes of our regression since we know that no two types of liquor are correlated with one another. If we look at the bottom to the right, we can see that the graph gets a bit more colorful. There are some interesting relationships here to point out. First, cost and abv show a strong relationship and similarly for alcohol content per dollar and cost. As stated previously, alcohol is the most expensive ingredient, so this should not be surprising. We also see that there is a strong relationship between cost and alcohol per dollar. Given this, we should include abv as one of our covariates to control for total ounces. This should not be a big problem since abv and total ounces to not display a strong relationship. However, we should drop....
-
-
-Finally, we implemented our regression. The output is shown below:
-
-
-
-***output***
-
-
-From this output, we can see that there is no statistical or economical significance of the total ounce coefficient. Thus, we can conclude that whether you decide to make a big or small drink should not determine the dollar per alcohol consumption. Ultimately, whether you like bigger drinks that taste sweet or you like more of a kick, you will be getting tipsy either way.
+From this output, we can make a few interesting observations. First, we observe our independent variable of interest. The negative coefficient for the number of ingredients can be interpreted as follows: An additional ingredient leads to an expected decrease in 0.155 ounces of alcohol per dollar. This result makes sense since the liquors showed very low negative correlations, so adding an ingredient will likely add a non-alcoholic ingredient in many cases. This addition will result in a dilution of the total alcohol content. Since ingredients cost money, this should reduce the ounces of alcohol per dollar. Next, we see a positive coefficient for ounces of alcohol. On average, an increase in one ounce of alcohol leads to an increase in 0.52 ounces of alcohol per dollar, ceteris paribus. This may be the result of the cost of alcohol, which could offset the increase in ounces of alcohol per dollar in a way that prevents a one-to-one relationship. Lastly, we see mostly negative coefficients on the dummy variables. The dropped dummy is grain alcohol, which is simultaneously very cheap and very high in alcohol content. Thus, different spiritits have lower ounces of alcohol per dollar.
 
 ## Conclusion
 
