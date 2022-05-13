@@ -87,21 +87,18 @@ BarChart****
 
 Comparing this chart with the previous table (Table2), we can see that the most expensive spirits are used the least often. Interestingly, the least expensive liquor (grain alcohol) is also used the least often. We acknowledge the fact that there may be sampling bias associated with these proportions. However, it should be noted that rum and vodka were subdivided into "rum" and "vodka" and "flavored rum" and "flavored vodka". Even so, the "rum" and "vodka" categories lie in the top 3 most used spirits. We assume this is either because rum, gin, and vodka mix well with other ingredients or people just like the taste of them. 
 
+Finally, we arrived at the ultimate question of our analysis: is less truly more? Do you get more return on investment from a large, tasty artisan cocktail with several ingredients or drinking something simple and concentrated? To answer this question, we generated a variable for ounces of pure alcohol per dollar. This measurement can be thought of in the following way. For various reasons, a beer with a 11% ABV is typically more expensive than a beer with a 4% ABV. While the higher ABV beer is likely more expensive than the other, the ounces of alcohol per dollar may be more comparable.
 
-First, we needed to determine which variables to keep or discard from our model. To better visualize this relationship, we created a heatmap showing the correlations between each of the variables in our model. The results are shown in a heat map below:
+Next, we needed to determine which variables to keep or discard from our model. To better visualize this relationship, we created a heatmap showing the correlations between each of the variables in our model. The results are shown in a heat map below:
 
 **heat map**
-By initial inspection, we can see a lot of red towards the upper left side of the graph. This is good for the purposes of our regression since we know that no two types of liquor are correlated with one another. If we look at the bottom to the right, we can see that the graph gets a bit more colorful. There are some interesting relationships here to point out. First, cost and abv show a strong relationship and similarly for alcohol content per dollar and cost. As stated previously, alcohol is the most expensive ingredient, so this should not be surprising. We also see that there is a strong relationship between cost and alcohol per dollar. Given this, we should include abv as one of our covariates to control for total ounces. This should not be a big problem since abv and total ounces to not display a strong relationship. However, we should drop....
+
+By initial inspection, we can see a lot of red towards the upper left side of the graph. This is good for the purposes of our regression since we know that no two types of liquor are correlated with one another. If we look at the bottom to the right, we can see that the graph gets a bit more colorful. There are some interesting relationships here to point out. First, ounces of alcohol per dollar and ounces of alcohol relationship and similarly for alcohol content per dollar and number of ingredients. We also see that there is a strong relationship between cost and alcohol per dollar. We see no significant relationship between total ounces either ounces of alcohol nor number of ingredients. Thus, our final list of covariates include total ounces, ounces of alcohol, number of ingredients, and dummies for each of the liquor types. The output for our regression is shown below:
 
 
-Finally, we implemented our regression. The output is shown below:
 
 
-
-***output***
-
-
-From this output, we can see that there is no statistical or economical significance of the total ounce coefficient. Thus, we can conclude that whether you decide to make a big or small drink should not determine the dollar per alcohol consumption. Ultimately, whether you like bigger drinks that taste sweet or you like more of a kick, you will be getting tipsy either way.
+From this output we can make a few interesting observations. First, there is a negative coefficient on the coefficient for number of ingredients and we can interpret it as follows: An additional ingredient leads to an expected decrease in 0.155 ounces of alcohol per dollar. 
 
 ## Conclusion
 
