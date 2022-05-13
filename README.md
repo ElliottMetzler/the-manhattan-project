@@ -2,8 +2,8 @@
 Team Good-2-Great Final project for Python, Data, and Databases at UT Austin Spring 2022.
 
 Team: 
-* [Pedro Rodrigues](https://github.com/PedroNBRodrigues) - Data Engineering
-* [Kashaf Oneeb](https://github.com/koneeb) - Data Engineering
+* [Pedro Rodrigues](https://github.com/PedroNBRodrigues) - Data Engineering, Report
+* [Kashaf Oneeb](https://github.com/koneeb) - Data Engineering, Report
 * [Austin Longoria](https://github.com/galongoria) - Data Engineering, Analysis
 * [Arpan Chatterji](https://github.com/achatterji1) - Analysis
 * [Colin McNally](https://github.com/cmcnally23) - Streamlit Front End Dev
@@ -74,13 +74,16 @@ Table***
 
 This table shows that only three types of liquor: rum, gin, and vodka are in at least 15% of the drinks. This was our first clue that some of the drinks in our dataset may not include liquor at all. Since we were interested in alcoholic cocktails... [[Note for Elliot - This is not our first clue that some drinks don't contain alcohol, we mentioned earlier in the database section that there are options for alcoholic or not, so it must be that some didn't have]]
 
-Our next step was to determine the types of drinks we were interested in. The focus of our analysis became alcoholic beverages that include liquor. The 6 types of distilled spirits are: brandy, gin, rum, tequila, vodka, and whiskey, so we reduced our dataset to include drinks that include one or more of these types of alcohol. Next, we viewed the most used spirits in our list of cocktail recipes. The results can be seen below: [[This should be the first step]]
+To further drill down the focus of our analysis on liquor rather than the other ingredients, we also performed exploratory analysis on a subset of the data in which each drink contained an identified key liquor. Once we filtered the data and focused on drinks containing alcohol, we were able to better understand within the alcohol category what was most common. We summarized this analysis in Table 2.
+
 
 Table2***
 
 somethin semthing ....i forgot what this graph looks like
 
-At this point we began our price analysis. It was clear to us that the most expensive ingredients were the different types of liquor, so our next step was to compare the price per ounce of the different types of spirits, which can be seen in the chart below:
+
+As we would have expected, we still see rum, vodka, and gin as the most common types of liquor. We note that despite separating the rum and vodka categories into plain and flavored, we still found these as two of the top three. This analysis was consistent with our previous understanding that these three liquors tend to mix well in cocktails and thus are very common. We similarly expected liquors like bourbon, scotch, and cognac to appear at the bottom of this list since they are much more commonly consumed neat or on the rocks rather than sullied in a cocktail.
+
 
 BarChart****
 
@@ -90,26 +93,31 @@ Comparing this chart with the previous table (Table2), we can see that the most 
 
 First, we needed to determine which variables to keep or discard from our model. To better visualize this relationship, we created a heatmap showing the correlations between each of the variables in our model. The results are shown in a heat map below:
 
-**heat map**
-By initial inspection, we can see a lot of red towards the upper left side of the graph. This is good for the purposes of our regression since we know that no two types of liquor are correlated with one another. If we look at the bottom to the right, we can see that the graph gets a bit more colorful. There are some interesting relationships here to point out. First, cost and abv show a strong relationship and similarly for alcohol content per dollar and cost. As stated previously, alcohol is the most expensive ingredient, so this should not be surprising. We also see that there is a strong relationship between cost and alcohol per dollar. Given this, we should include abv as one of our covariates to control for total ounces. This should not be a big problem since abv and total ounces to not display a strong relationship. However, we should drop....
+To help us answer this question, we first calculated the ounces of alcohol per dollar for each drink. For example, if a 12 ounce beer contains 10 percent alcohol by volume and costs 6 dollars, the ounces of alcohol per dollar for that drink would be (12 x 0.10) / 6 = 0.2oz / $. Similarly, a 12 ounce beer containing 5 percent alcohol by volume that costs 3 dollars would also report (12 x 0.05) / 3 = 0.2oz / $.
 
 
-Finally, we implemented our regression. The output is shown below:
+Our last step prior to running the model was to analyze the relationships between candidate variables. We produced a correlation table and present the results as a heatmap below in Figure 3.
 
+As we can see, most variable correlations fall somewhere between 0.0 and 0.2. In the bottom right corner we can see some stronger relationships. As we would expect, ounces of alcohol and ounces of alcohol per dollar are related (since one is a function of the other). Alcohol content per dollar and number of ingredients are negatively correlated. We see a positive correlation between number of ingredients and cost.
 
+There is no significant relationship between total ounces and either ounce of alcohol or the number of ingredients. Thus, our final list of covariates includes ounces of alcohol, number of ingredients, and dummies for each liquor type. We display the output of our regression model below.
 
-***output***
+### Table 3: Regression Output
 
+![](/figures/ols.png)
 
-From this output, we can see that there is no statistical or economical significance of the total ounce coefficient. Thus, we can conclude that whether you decide to make a big or small drink should not determine the dollar per alcohol consumption. Ultimately, whether you like bigger drinks that taste sweet or you like more of a kick, you will be getting tipsy either way.
+From this output, we can make a few interesting observations. The negative coefficient for the number of ingredients can be interpreted as follows: An additional ingredient leads to an expected decrease of 0.141 ounces of alcohol per dollar. This result makes sense because more often than not, the incremental incredient will not be alcoholic. Furthermore, additional ingredients increase the total cost of the cocktail, driving down the expected ounces of alcohol per dollar. Next, we see a positive coefficient for ounces of alcohol. On average, an increase in one ounce of alcohol leads to an increase in 0.614 ounces of alcohol per dollar. This may be the result of the cost of alcohol, which could offset the increase in ounces of alcohol per dollar in a way that prevents a one-to-one relationship. Last, we see mostly negative coefficients on the liquor dummy variables, though some are not statistically significant. We note that the dummy variable dropped from the regression is is grain alcohol.
+
 
 ## Conclusion
 
 Through The Manhattan Project, we were able to provide the world a great service, though perhaps slightly less explosive than the last time around. Our Streamlit app provides the user with a handy interface to search for some fun, interesting, and unique cocktails based solely on what they've got handy and how much effort they are willing to expend. Furthermore, our quantitative analysis shows the benefits of just a little more research when evaluating your cocktail choices.
 
-Though we are proud of our progress, our project of course carries some important caveats. On the data side of things, we certainly are limited in some key areas. To convert units in our cocktail data from non-standard to standard, we had to make some judgement calls. When pricing our ingredients, we also had to make some judgement calls as far as producing reasonable estimates. Of course, prices are subject to change in stores around the country, and also are subject to differences based on how nice the liquor going into the cocktail is. A Kamchatka martini and a Grey Goose martini are two very different drinks carrying two very different prices, however, for our purposes, we simply are taking best selling alcohol estimates for vodka and using these in our pricing formula. Furthermore, we are limited by The Cocktail Database being an open source database where anyone with a key can edit or add new cocktails, which may lead to contamination of the data through random creations or data entry errors.
 
-A limitation, or perhaps better described as an area for extension, is in our ability to categorize or rank drinks output by our search algorithm. We do not have any sort of popularity metric for our drinks, so the output based on the parameters is random so long as enough cocktails fit the search criteria. A nice extension in the future may be to find data on drink popularity and implement this into our searching algorithm. Another good extension requiring more robust input data would be to allow for more granular search and price estimates based on a more thorough ingredient price search. We could indeed price out Grey Goose Martinis as opposed to Kirkland brand vodka Martinis with additional data and time to implement search adjustments.
+Though we are proud of our progress, our project of course carries some important caveats. On the data side of things, we certainly are limited in some key areas. To convert units in our cocktail data from non-standard to standard, we had to make some judgement calls. When pricing our ingredients, we also had to make some judgement calls as far as producing reasonable estimates. Of course, prices are subject to variability in stores around the country, and also are subject to differences in liquor quality going into the cocktail. For instance, a Kamchatka martini and a Grey Goose martini are two very different drinks carrying two very different prices, however, for our purposes, we simply are taking best selling alcohol estimates for vodka and using these in our pricing formula. Furthermore, we are limited by The Cocktail Database being an open source database where anyone with a key can edit or add new cocktails, which may lead to contamination of the data through random creations or data entry errors.
+
+
+A limitation, or perhaps better described as an area for extension, is in our ability to categorize or rank drinks in our search algorithm. We do not have any sort of popularity metric for our drinks, so the output based on the parameters is random so long as enough cocktails fit the search criteria. A nice extension in the future may be to find data on drink popularity and implement this into our search algorithm. Another good extension requiring more robust input data would be to allow for more granular search and price estimates based on a more thorough ingredient price search. We could indeed price out Grey Goose Martinis as opposed to Kirkland brand vodka Martinis with additional data and time to implement adjustments.
 
 In the future, we look forward to expanding our cocktail search engine capabilities.
 
