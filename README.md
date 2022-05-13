@@ -88,14 +88,20 @@ BarChart****
 Comparing this chart with the previous table (Table2), we can see that the most expensive spirits are used the least often. Interestingly, the least expensive liquor (grain alcohol) is also used the least often. We acknowledge the fact that there may be sampling bias associated with these proportions. However, it should be noted that rum and vodka were subdivided into "rum" and "vodka" and "flavored rum" and "flavored vodka". Even so, the "rum" and "vodka" categories lie in the top 3 most used spirits. We assume this is either because rum, gin, and vodka mix well with other ingredients or people just like the taste of them. 
 
 
-####
-
-*****this will be before ols to say that there is no perfect collinearity**** part of our analysis included whether or not certain types of alcohol are mixed together. Our dataset at this point included drinks that were tens of ounces or more, so further subdivied our data into cocktails that are less than or equal to 8 ounces. This is a reasonable number for a person who is drinking a given cocktail in one sitting. We found that the correlation between spirits is negative but close to zero. Thus, typically single-person cocktails in our dataset are using only one type of liquor. The results are shown in a heat map below:
+First, we needed to determine which variables to keep or discard from our model. To better visualize this relationship, we created a heatmap showing the correlations between each of the variables in our model. The results are shown in a heat map below:
 
 **heat map**
+By initial inspection, we can see a lot of red towards the upper left side of the graph. This is good for the purposes of our regression since we know that no two types of liquor are correlated with one another. If we look at the bottom to the right, we can see that the graph gets a bit more colorful. There are some interesting relationships here to point out. First, cost and abv show a strong relationship and similarly for alcohol content per dollar and cost. As stated previously, alcohol is the most expensive ingredient, so this should not be surprising. We also see that there is a strong relationship between cost and alcohol per dollar. Given this, we should include abv as one of our covariates to control for total ounces. This should not be a big problem since abv and total ounces to not display a strong relationship. However, we should drop....
 
 
-####
+Finally, we implemented our regression. The output is shown below:
+
+
+
+***output
+
+
+From this output, we can see that there is no statistical or economical significance of the total ounce coefficient. Thus, we can conclude that whether you decide to make a big or small drink should not determine the dollar per alcohol consumption. Ultimately, whether you like bigger drinks that taste sweet or you like more of a kick, you will be getting tipsy either way.
 
 ## Conclusion
 
