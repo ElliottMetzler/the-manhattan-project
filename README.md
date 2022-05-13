@@ -69,18 +69,24 @@ The second goal of this project was to use our database to perform some analysis
 
 We began our analysis by looking at ingredient prevalence. To do so, we checked the top 10 most used ingredients among the entire dataset. Our results are shown below:
 
-Table***
+![Ingredient Usage](/tables/usage.png)
+
+![image](https://user-images.githubusercontent.com/97994476/168220659-b0606c58-2d34-444f-be13-9a627953f24d.png)
 
 
 This table shows that only three types of liquor: rum, gin, and vodka are in at least 15% of the drinks. This confirmed our earlier observation that some of the drinks in our dataset may not include liquor at all. Since we were interested in alcoholic cocktails we then needed to determine the types of drinks we were interested in. The focus of our analysis became alcoholic beverages that include liquor. The 6 types of distilled spirits are: brandy, gin, rum, tequila, vodka, and whiskey, so we reduced our dataset to include drinks that include one or more of these types of alcohol. Within these groups, we viewed the most used types of liquor. The results can be seen below:
 
-Table2***
+![Liquor Usage](/tables/liquor.png)
+
+![image](https://user-images.githubusercontent.com/97994476/168220556-eaa43c9e-a823-48d0-abd3-a17188db872e.png)
 
 We still see that rum, vodka, and gin are the most popular types of liquor. We acknowledge the fact that there may be sampling bias associated with these proportions. However, it should be noted that rum and vodka were subdivided into "rum" and "vodka" and "flavored rum" and "flavored vodka". Even so, the "rum" and "vodka" categories lie in the top 3 most used spirits. We assume this is either because rum, gin, and vodka mix well with other ingredients or people just like the taste of them.
 
 At this point we began our price analysis. It was clear to us that the most expensive ingredients were the different types of liquor, so our next step was to compare the price per ounce of the different types of spirits, which can be seen in the chart below:
 
-BarChart****
+![Liquor Prices](/figures/prices.png)
+
+![image](https://user-images.githubusercontent.com/97994476/168220359-a2eae4bd-4899-415d-a425-464632e67ee3.png)
 
 
 Comparing this chart with the previous table (Table2), we can see that the most expensive spirits are used the least often. Interestingly, the least expensive liquor (grain alcohol) is also used the least often.
@@ -94,13 +100,15 @@ Next, we needed to determine which variables to keep or discard from our model. 
 By initial inspection, we can see a lot of red towards the upper left side of the graph. This is good for the purposes of our regression since we know that no two types of liquor are correlated with one another. If we look at the bottom to the right, we can see that the graph gets a bit more colorful. There are some interesting relationships here to point out. First, ounces of alcohol per dollar and ounces of alcohol relationship and similarly for alcohol content per dollar and number of ingredients. We also see that there is a strong relationship between cost and alcohol per dollar. We see no significant relationship between total ounces either ounces of alcohol nor number of ingredients. Thus, our final list of covariates include total ounces, ounces of alcohol, number of ingredients, and dummies for each of the liquor types. The output for our regression is shown below:
 
 
+![OLS Output](/figures/ols.png)
+
 ![image](https://user-images.githubusercontent.com/97994476/168220167-1eb4f8fe-bc92-4caf-bc5e-07bab4aa3d60.png)
 
 
 
 
 
-From this output we can make a few interesting observations. First, the negative coefficient for number of ingredients can interpret it as follows: An additional ingredient leads to an expected decrease in 0.155 ounces of alcohol per dollar. This makes sense if we consider that the liquors showed very low negative correlations, so increasing an ingredient will lead to a non-alcoholic ingredient being added in most cases. This will result in a dilution of the total alcohol content. Since ingredients cost money, this will reduce the ounces of alcohol per dollar. Next, we see a positive coefficient for ounces of alcohol. On average, an increase in one ounce of alcohol leads to an increase in 0.52 ounces of alcohol per dollar, ceteris paribus. This is the result of the cost of alcohol, which offsets the increase in ounces of alcohol per dollar in a way that prevents a one to one relationship. Lastly, we come to our independent variable of interest. Although it is statistically significant, the cofficient is very small. An one ounce increase will lead to an expected increase in ounces of alcohol per dollar of 0.037, holding all else fixed. 
+From this output we can make a few interesting observations. First, the negative coefficient for number of ingredients can interpret it as follows: An additional ingredient leads to an expected decrease in 0.155 ounces of alcohol per dollar. This makes sense if we consider that the liquors showed very low negative correlations, so increasing an ingredient will lead to a non-alcoholic ingredient being added in most cases. This will result in a dilution of the total alcohol content. Since ingredients cost money, this will reduce the ounces of alcohol per dollar. Next, we see a positive coefficient for ounces of alcohol. On average, an increase in one ounce of alcohol leads to an increase in 0.52 ounces of alcohol per dollar, ceteris paribus. This is the result of the cost of alcohol, which offsets the increase in ounces of alcohol per dollar in a way that prevents a one to one relationship. Lastly, we come to our independent variable of interest. Although it is statistically significant, the cofficient is very small. An one ounce increase will lead to an expected increase in ounces of alcohol per dollar of 0.037, holding all else fixed. So, we conclude that drinks of all sizes are created equal. No matter what cocktail size you prefer, you're going to get tipsy either way.
 
 ## Conclusion
 
