@@ -142,7 +142,7 @@ In the future, we look forward to expanding our cocktail search engine capabilit
 Note: The file [database.py](https://github.com/ElliottMetzler/the-manhattan-project/blob/main/code/database.py) addresses database configuration using SQLAlchemy and creates an engine to initialize a DBAPI connection.
 
 4) Instructions to run the Streamlit app:
-    * Run `streamlit run code/streamlitty.py`. This file utilizes the file [streamlit_query_functions.py] (https://github.com/ElliottMetzler/the-manhattan-project/blob/main/code/streamlit_query_functions.py) which accepts a number of ingredients, queries the database using these ingredients, and returns a dataframe for use on Streamlit. Running this file will produce two lines of output in your terminal window: a network url and a external url. 
+    * Run `streamlit run code/streamlitty.py`. This file utilizes the file [streamlit_query_functions.py](https://github.com/ElliottMetzler/the-manhattan-project/blob/main/code/streamlit_query_functions.py) which accepts a number of ingredients, queries the database using these ingredients, and returns a dataframe for use on Streamlit. Running this file will produce two lines of output in your terminal window: a network url and a external url. 
     * Open your browser of choice and copy the network url from the terminal to your browser search bar. Click enter or refresh.
     * View and use the applet!
     
@@ -151,7 +151,7 @@ Note: The file [database.py](https://github.com/ElliottMetzler/the-manhattan-pro
         * The `figures` directory will hold the following png's:  
             * [heat_map.png](https://github.com/ElliottMetzler/the-manhattan-project/blob/main/figures/heat_map.png) which is a heat map of correlations between various liquors and calculated attributes of drinks.
             * [ols.png](https://github.com/ElliottMetzler/the-manhattan-project/blob/main/figures/ols.png) which is a regression results table of regressing `oz_alc_per_dollar` on various covariates. 
-            * [prices.png](https://github.com/ElliottMetzler/the-manhattan-project/blob/main/figures/prices.png) which is a bar chart summarizing the cost of liqour against the type of liquor. 
+            * [prices.png](https://github.com/ElliottMetzler/the-manhattan-project/blob/main/figures/prices.png) which is a bar chart summarizing the cost of liquor against the type of liquor. 
         * The `tables` directory will hold the following png's:
             * [liquor.png](https://github.com/ElliottMetzler/the-manhattan-project/blob/main/tables/liquor.png) which displays a list of liquors and the proportion of drinks containing the respective liquor (for liquors with proportion of drinks higher than 0.29%)
             * [usage.png](https://github.com/ElliottMetzler/the-manhattan-project/blob/main/tables/usage.png) which displays a list of the remaining ingredients and the proportion of drinks containing the respective ingredient (for ingredients with proportion of drinks higher than 13%)
