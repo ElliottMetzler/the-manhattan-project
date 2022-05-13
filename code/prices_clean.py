@@ -5,13 +5,6 @@ import os
 from quant_preprocess import query_and_reshape_long
 from quant_preprocess import recode_long_data
 
-# not on walmart:
-# cherry heering, absinthe, mix, baileys,
-# port, zima, ice, bourbon, cognac, galliano,
-# ricard, fruit, sweet and sour
-# off estimates: butter,
-
-
 measurements = ["oz", "ml", "lb", "l", "ounces", "g"]
 numbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "."]
 DIR = "data"

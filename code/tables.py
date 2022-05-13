@@ -297,13 +297,7 @@ def heat_price_corr_heat():
 
     corr = model.corr()
     corr_heat = sns.heatmap(corr, xticklabels=corr.columns,yticklabels=corr.columns,cmap="RdBu")
-    fig, ax = plt.subplots(figsize=(12, 7))
 
-    ax.text(
-        0.01, 0.05, str(model_summary), {"fontsize": 10}, fontproperties="monospace"
-    )
-    ax.axis("off")
-    plt.tight_layout()
     return corr_heat
 
 
