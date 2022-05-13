@@ -4,7 +4,6 @@ from database import engine
 from ingredient_map import create_ingredient_map
 import os
 
-ABV_DATA = os.path.join("data", "ABV_data.csv")
 
 
 # Functions
@@ -153,7 +152,8 @@ def recode_long_data(df):
 
 def price_and_abv_preprocessed():
     """Function combines the cocktails, prices, and abv data to prepare it for analysis"""
-
+    
+    ABV_DATA = os.path.join("data", "ABV_data.csv")
     df = query_and_reshape_long()
     recoded = recode_long_data(df)
 
