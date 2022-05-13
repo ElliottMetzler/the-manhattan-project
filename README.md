@@ -89,7 +89,7 @@ Finally, we arrived at the ultimate question of our analysis: is less truly more
 
 Next, we needed to determine which variables to keep or discard from our model. To better visualize this relationship, we created a heatmap showing the correlations between each of the variables in our model. The results are shown in a heat map below:
 
-**heat map**
+figures/heat_map.png
 
 By initial inspection, we can see a lot of red towards the upper left side of the graph. This is good for the purposes of our regression since we know that no two types of liquor are correlated with one another. If we look at the bottom to the right, we can see that the graph gets a bit more colorful. There are some interesting relationships here to point out. First, ounces of alcohol per dollar and ounces of alcohol relationship and similarly for alcohol content per dollar and number of ingredients. We also see that there is a strong relationship between cost and alcohol per dollar. We see no significant relationship between total ounces either ounces of alcohol nor number of ingredients. Thus, our final list of covariates include total ounces, ounces of alcohol, number of ingredients, and dummies for each of the liquor types. The output for our regression is shown below:
 
