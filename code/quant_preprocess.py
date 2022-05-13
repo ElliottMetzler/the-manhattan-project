@@ -5,7 +5,6 @@ from ingredient_map import create_ingredient_map
 import os
 
 
-
 # Functions
 def query_data():
     """Query Database and return Data Frame with relevant columns"""
@@ -148,7 +147,7 @@ def recode_long_data(df):
 
     ingredient_dict = create_ingredient_map()
     return recode_ingredients(df, ingredient_dict)
-    
+
 
 def query_and_preprocess_data():
     """Function performs full preprocessing: Queries the database, recodes incredients, reshapes in wide format with a column for each ingredient and a row for each drink. Values are the proportion of that drink that is made up of that ingredient (rows sum to 1)"""
