@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 import subprocess
 from ingredient_map import create_ingredient_map
 import quant_preprocess as qp
-
 import os
+import dataframe_image as dfi
 
 
 INPUT_PATH = os.path.join("data", "ingredient_prices_clean.csv")
@@ -43,7 +43,7 @@ def create_dummies():
 def price_and_abv_preprocessed():
     """Function combines the cocktails, prices, and abv data to prepare it for analysis"""
 
-    ABV_DATA = os.path.join("\\data", "ABV_data.csv")
+    ABV_DATA = os.path.join("data", "ABV_data.csv")
     df = qp.query_and_reshape_long()
     recoded = qp.recode_long_data(df)
 
@@ -80,9 +80,7 @@ def price_and_abv_preprocessed():
 def ols_model():
 
     data = drop_all_zero_dummies()
-    display(data)
     df = price_and_abv_preprocessed()
-    display(df)
     ols_model = data.merge(df,how="left",on="strdrink")
 
     return ols_model
@@ -116,16 +114,9 @@ def summary_of_usage():
     data = data.rename(columns={"mean":"Proportion of Drinks"})
     data.index.name = "Ingredient"
 
-    template = r'''\documentclass[preview]{{standalone}}
-    \usepackage{{booktabs}}
-    \begin{{document}}
-    {}
-    \end{{document}}
-    '''
-    with open(filename, 'wt') as f:
-        f.write(template.format(data.to_latex()))
-    subprocess.call(['pdflatex', filename])
-    subprocess.call(['convert', '-density', '300', pdffile, '-quality', '90', outname])
+    dfi.export(data,(os.path.join(TABLE_DIR, "usage.png")))
+
+
 
 
 def get_amount_table():
@@ -233,16 +224,8 @@ def most_popular_liquor_table():
     df = df.rename(columns={"mean":"Proportion of Drinks"})
     df.index.name = "Liquor"
 
-    template = r'''\documentclass[preview]{{standalone}}
-    \usepackage{{booktabs}}
-    \begin{{document}}
-    {}
-    \end{{document}}
-    '''
-    with open(filename, 'wt') as f:
-        f.write(template.format(df.to_latex()))
-    subprocess.call(['pdflatex', filename])
-    subprocess.call(['convert', '-density', '300', pdffile, '-quality', '90', outname])
+    dfi.export(df,(os.path.join(TABLE_DIR, "liquor.png")))
+
 
 
 
@@ -353,7 +336,6 @@ def check_covar_costs():
     df_prices = df_prices[["brandy","gin","tequila","vodka","whiskey","flavored rum","flavored vodka","cognac","bourbon","rum","scotch","grain alcohol"]]
     plot = df_prices.plot.bar(figsize=(15,4),title="Summary of Liquor Cost")
     plot = plot.set(xlabel="Type of Liquor",ylabel="Cost Per Ounce")
-
     return plot
 
 
@@ -363,13 +345,13 @@ if __name__ == "__main__":
     os.makedirs(FIGURE_DIR, exist_ok=True)
     os.makedirs(TABLE_DIR, exist_ok=True)
     prices = check_covar_costs()
-    save_plot(prices, FIGURE_DIR, "price_figure.png")
+    plt.savefig(os.path.join(FIGURE_DIR,"prices.png"))
 
     ols = ols_price_on_liquor()
-    save_plot(ols, FIGURE_DIR, "ols.png")
+    plt.savefig(os.path.join(FIGURE_DIR,"ols.png"))
 
     heat_map = heat_price_corr_heat()
-    save_plot(heat_map, FIGURE_DIR, "heat_map.png")
+    plt.savefig(os.path.join(FIGURE_DIR,"heat_map.png"))
 
     most_popular_liquor_table()
 
