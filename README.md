@@ -105,7 +105,7 @@ Our last step prior to running the model was to analyze the relationships betwee
 
 As we can see, most variables correlations fall somewhere between 0.0 and 0.2. In the bottom right corner we can see some stronger relationships. As we would expect, ounces of alcohol and ounces of alcohol per dollar are related (since one is a function of the other). Alcohol content per dollar and number of ingredients are negatively correlated. We see a positive correlation between number of ingredients and cost.
 
-There is no significant relationship between total ounces and either ounce of alcohol or the number of ingredients. Thus, our final list of covariates includes total ounces, ounces of alcohol, number of ingredients, and dummies for each liquor type. We display the output of our regression model below.
+There is no significant relationship between total ounces and either ounce of alcohol or the number of ingredients. Thus, our final list of covariates includes ounces of alcohol, number of ingredients, and dummies for each liquor type. We display the output of our regression model below.
 
 ### Table 3: Regression Output
 
