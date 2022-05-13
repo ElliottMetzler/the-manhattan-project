@@ -4,7 +4,6 @@ from database import engine
 from ingredient_map import create_ingredient_map
 import os
 
-ABV_DATA = os.path.join("data", "ABV_data.csv")
 
 
 # Functions
@@ -153,7 +152,7 @@ def recode_long_data(df):
 
 def price_and_abv_preprocessed():
     """Function combines the cocktails, prices, and abv data to prepare it for analysis"""
-
+    
     ABV_DATA = os.path.join("data", "ABV_data.csv")
     df = query_and_reshape_long()
     recoded = recode_long_data(df)
@@ -204,7 +203,7 @@ def query_and_preprocess_data():
     return w_rowsum.drop("row_sum", axis=1)
 
 if __name__ == "__main__":
-    print(new_processor())
+    print(price_and_abv_preprocessed())
 
-    data = new_processor()
-    data.to_csv("data/tester.csv")
+    sample = price_and_abv_preprocessed()
+    sample.to_csv("data/Sample_of_price_and_abv_preprocessed.csv")    
