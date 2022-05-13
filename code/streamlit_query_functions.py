@@ -155,7 +155,7 @@ def get_ingredients_list():
     list_lower = [x.lower() for x in list_ if x is not None]
 
     return sorted(list(set(list_lower)))
-    
+
 
 def calculate_drink_prices():
     """Function calculates estimated drink prices. Returns databrame with drink and corresponding estimated price"""

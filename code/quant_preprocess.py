@@ -43,6 +43,7 @@ def query_data():
 
     return pd.read_sql_query(query, engine)
 
+
 def query_ingredient_prices():
     """Function queries the database for ingredient prices and returns data frame"""
     query = f"""
@@ -165,8 +166,9 @@ def query_and_preprocess_data():
 
     return w_rowsum.drop("row_sum", axis=1)
 
+
 if __name__ == "__main__":
     print(price_and_abv_preprocessed())
 
     sample = price_and_abv_preprocessed()
-    sample.to_csv("data/Sample_of_price_and_abv_preprocessed.csv")    
+    sample.to_csv("data/Sample_of_price_and_abv_preprocessed.csv")
